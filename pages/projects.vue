@@ -45,8 +45,6 @@
 </template>
 
 <script setup>
-import ProjectsList from '~/components/projects/ProjectsList.vue'
-import Button from '~/components/ui/Button.vue'
 // Page meta
 useHead({
   title: 'Projets | Alexis Robin',

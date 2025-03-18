@@ -41,5 +41,31 @@ export default defineNuxtConfig({
     }
   },
 
+  components: {
+    dirs: [
+      '~/components/ui',
+      '~/components/layout',
+      '~/components/home',
+      '~/components/projects',
+      '~/components/contact'
+    ],
+    global: true
+  },
+
+  imports: {
+    dirs: ['composables', 'utils']
+  },
+
+  typescript: {
+    strict: true,
+    typeCheck: false
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: ['vue', '@vueuse/core']
+    }
+  },
+
   compatibilityDate: '2025-03-18'
 })

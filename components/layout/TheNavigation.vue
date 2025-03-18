@@ -12,18 +12,17 @@
   </div>
 </template>
 
-<script setup>
-import NavLink from '../ui/NavLink.vue'
+<script setup lang="ts">
 // Props
-defineProps({
+const props = defineProps({
   mobile: {
     type: Boolean,
     default: false
   }
-})
+});
 
 // Events
-defineEmits(['navigate'])
+defineEmits(['navigate']);
 
 // Navigation items
 const navigationItems = [
@@ -42,5 +41,5 @@ const navigationItems = [
     label: 'Contact',
     icon: 'heroicons:envelope'
   }
-]
+];
 </script>

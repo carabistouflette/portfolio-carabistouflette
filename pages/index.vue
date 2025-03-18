@@ -24,10 +24,6 @@
 </template>
 
 <script setup>
-import HeroBanner from '../components/home/HeroBanner.vue'
-import AboutSection from '../components/home/AboutSection.vue'
-import TimelineSection from '../components/home/TimelineSection.vue'
-import Button from '../components/ui/Button.vue'
 // Page meta
 useHead({
   title: 'Alexis Robin | Portfolio',

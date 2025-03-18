@@ -39,17 +39,17 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
-})
+});
 
 // Check active state
-const route = useRoute()
+const route = useRoute();
 const isActive = computed(() => {
   if (props.to === '/') {
-    return route.path === '/'
+    return route.path === '/';
   }
-  return route.path.startsWith(props.to)
-})
+  return route.path.startsWith(props.to);
+});
 
 // Events
-defineEmits(['click'])
+defineEmits(['click']);
 </script>

@@ -55,8 +55,6 @@
 </template>
 
 <script setup>
-import ContactForm from '../components/contact/ContactForm.vue'
-import ContactInfo from '../components/contact/ContactInfo.vue'
 // Page meta
 useHead({
   title: 'Contact | Alexis Robin',
