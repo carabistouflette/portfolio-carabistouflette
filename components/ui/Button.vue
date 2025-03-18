@@ -4,10 +4,10 @@
       :to="to"
       :type="type"
       :class="[
-        'inline-flex items-center justify-center space-x-2 rounded-lg font-medium transition-all duration-300 focus:outline-none',
+        'inline-flex items-center justify-center space-x-2 rounded-lg font-medium transition-all duration-300 focus:outline-none transform',
         sizeClasses,
         variantClasses,
-        disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
+        disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105 active:scale-95',
         className
       ]"
       :disabled="disabled"
@@ -73,10 +73,10 @@
   
   const variantClasses = computed(() => {
     const variants = {
-      primary: 'bg-mauve hover:bg-lavender text-base shadow-md hover:shadow-lg active:shadow-sm',
-      secondary: 'bg-blue hover:bg-sapphire text-base shadow-md hover:shadow-lg active:shadow-sm',
-      outline: 'bg-transparent border-2 border-mauve text-mauve hover:bg-mauve/10',
-      ghost: 'bg-transparent hover:bg-surface0 text-subtext0 hover:text-text'
+      primary: 'bg-mauve hover:bg-lavender text-base shadow-md hover:shadow-lg active:shadow-sm hover:-translate-y-1 active:translate-y-0',
+      secondary: 'bg-blue hover:bg-sapphire text-base shadow-md hover:shadow-lg active:shadow-sm hover:-translate-y-1 active:translate-y-0',
+      outline: 'bg-transparent border-2 border-mauve text-mauve hover:bg-mauve/10 hover:-translate-y-1 active:translate-y-0',
+      ghost: 'bg-transparent hover:bg-surface0 text-subtext0 hover:text-text hover:-translate-y-1 active:translate-y-0'
     }
     return variants[props.variant as keyof typeof variants]
   })

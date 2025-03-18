@@ -1,36 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // Configuration Vite
-  vite: {
-    resolve: {
-      alias: {
-        '~': './',
-        '@': './'
-      }
-    },
-    optimizeDeps: {
-      include: [
-        'tailwindcss',
-        '@vueuse/core'
-      ]
-    },
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: ''
-        }
-      }
-    }
-  },
-
   devtools: { enabled: true },
 
   modules: [
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
     '@nuxt/image',
-    'nuxt-icon',
-    '@nuxtjs/color-mode'
+    'nuxt-icon'
   ],
 
   app: {
@@ -47,11 +23,16 @@ export default defineNuxtConfig({
     }
   },
 
-  // CSS gérés via le plugin assets.ts
-  css: [],
+  css: [
+    '~/assets/css/main.css',
+    '~/assets/css/catppuccin.css',
+    '~/assets/css/interaction-styles.css'
+  ],
 
-  colorMode: {
-    // La configuration est dans le fichier config/color-mode.ts
+  tailwindcss: {
+    configPath: '~/tailwind.config.ts',
+    exposeConfig: true,
+    viewer: true
   },
 
   nitro: {

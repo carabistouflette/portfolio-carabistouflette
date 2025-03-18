@@ -3,15 +3,15 @@
     :to="to"
     :class="[
       mobile 
-        ? 'flex items-center px-3 py-2 space-x-3 w-full rounded-lg transition-colors duration-300' 
-        : 'link-hover',
+        ? 'flex items-center px-3 py-2 space-x-3 w-full rounded-lg transition-all duration-300 cursor-pointer' 
+        : 'link-hover cursor-pointer',
       isActive
         ? mobile
           ? 'bg-surface1 text-mauve'
-          : 'text-mauve after:w-full'
+          : 'text-mauve after:w-full font-medium'
         : mobile
-          ? 'hover:bg-surface0'
-          : ''
+          ? 'hover:bg-surface0 hover:scale-105 active:scale-95'
+          : 'hover:scale-105'
     ]"
     @click="$emit('click')"
   >

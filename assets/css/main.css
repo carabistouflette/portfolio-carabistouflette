@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Appliquer les couleurs Catppuccin directement */
+:root {
+  color-scheme: dark;
+}
+
 @layer base {
   body {
     @apply bg-base text-text font-sans antialiased min-h-screen;
@@ -108,4 +113,71 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-surface2 rounded-full hover:bg-overlay0 transition-colors;
+}
+
+/* Amélioration des éléments interactifs */
+@layer utilities {
+  .interactive {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .hover-lift {
+    @apply hover:-translate-y-1 active:translate-y-0;
+  }
+
+  .hover-scale {
+    @apply hover:scale-105 active:scale-100;
+  }
+
+  .hover-shadow {
+    @apply hover:shadow-lg active:shadow-md;
+  }
+}
+
+/* Classes d'utilitaires pour les effets d'interaction */
+.clickable {
+  @apply cursor-pointer interactive hover-lift hover-shadow;
+}
+
+/* Rendre les éléments avec la classe .btn plus interactifs */
+.btn, 
+button:not([disabled]), 
+[type="button"]:not([disabled]), 
+[type="reset"]:not([disabled]), 
+[type="submit"]:not([disabled]) {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+
+/* Appliquer l'effet de ripple sur tous les boutons */
+.btn::after, 
+button:not([disabled])::after, 
+[type="button"]:not([disabled])::after, 
+[type="reset"]:not([disabled])::after, 
+[type="submit"]:not([disabled])::after {
+  content: '';
+  @apply absolute top-1/2 left-1/2 w-1 h-1 rounded-full opacity-0 bg-white/30;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center;
+}
+
+.btn:active::after, 
+button:not([disabled]):active::after, 
+[type="button"]:not([disabled]):active::after, 
+[type="reset"]:not([disabled]):active::after, 
+[type="submit"]:not([disabled]):active::after {
+  animation: ripple 0.5s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(100);
+    opacity: 0;
+  }
 }

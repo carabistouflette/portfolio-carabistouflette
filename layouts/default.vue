@@ -8,18 +8,14 @@
   </div>
 </template>
 
-<script setup>
-import TheHeader from '../components/layout/TheHeader.vue'
-import TheFooter from '../components/layout/TheFooter.vue'
-
+<script setup lang="ts">
 // Layout setup
 useHead({
   htmlAttrs: {
-    lang: 'fr',
-    class: 'dark-mode'
+    lang: 'fr'
   },
   bodyAttrs: {
-    class: 'overflow-x-hidden'
+    class: 'bg-base text-text overflow-x-hidden'
   }
 })
 </script>

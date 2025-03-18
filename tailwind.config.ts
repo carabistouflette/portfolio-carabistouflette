@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss'
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./components/**/*.{js,vue,ts}",
@@ -14,33 +13,33 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Catppuccin Mocha
-        'base': 'var(--ctp-mocha-base)',
-        'mantle': 'var(--ctp-mocha-mantle)',
-        'crust': 'var(--ctp-mocha-crust)',
-        'surface0': 'var(--ctp-mocha-surface0)',
-        'surface1': 'var(--ctp-mocha-surface1)',
-        'surface2': 'var(--ctp-mocha-surface2)',
-        'overlay0': 'var(--ctp-mocha-overlay0)',
-        'overlay1': 'var(--ctp-mocha-overlay1)',
-        'overlay2': 'var(--ctp-mocha-overlay2)',
-        'text': 'var(--ctp-mocha-text)',
-        'subtext0': 'var(--ctp-mocha-subtext0)',
-        'subtext1': 'var(--ctp-mocha-subtext1)',
-        'rosewater': 'var(--ctp-mocha-rosewater)',
-        'flamingo': 'var(--ctp-mocha-flamingo)',
-        'pink': 'var(--ctp-mocha-pink)',
-        'mauve': 'var(--ctp-mocha-mauve)',
-        'red': 'var(--ctp-mocha-red)',
-        'maroon': 'var(--ctp-mocha-maroon)',
-        'peach': 'var(--ctp-mocha-peach)',
-        'yellow': 'var(--ctp-mocha-yellow)',
-        'green': 'var(--ctp-mocha-green)',
-        'teal': 'var(--ctp-mocha-teal)',
-        'sky': 'var(--ctp-mocha-sky)',
-        'sapphire': 'var(--ctp-mocha-sapphire)',
-        'blue': 'var(--ctp-mocha-blue)',
-        'lavender': 'var(--ctp-mocha-lavender)'
+        // Catppuccin Mocha - directement avec les valeurs hexadécimales
+        'base': '#1e1e2e',
+        'mantle': '#181825',
+        'crust': '#11111b',
+        'surface0': '#313244',
+        'surface1': '#45475a',
+        'surface2': '#585b70',
+        'overlay0': '#6c7086',
+        'overlay1': '#7f849c',
+        'overlay2': '#9399b2',
+        'text': '#cdd6f4',
+        'subtext0': '#a6adc8',
+        'subtext1': '#bac2de',
+        'rosewater': '#f5e0dc',
+        'flamingo': '#f2cdcd',
+        'pink': '#f5c2e7',
+        'mauve': '#cba6f7',
+        'red': '#f38ba8',
+        'maroon': '#eba0ac',
+        'peach': '#fab387',
+        'yellow': '#f9e2af',
+        'green': '#a6e3a1',
+        'teal': '#94e2d5',
+        'sky': '#89dceb',
+        'sapphire': '#74c7ec',
+        'blue': '#89b4fa',
+        'lavender': '#b4befe'
       },
       fontFamily: {
         'sans': ['Inter', 'sans-serif'],

@@ -1,31 +1,30 @@
 /**
- * Composable for theme management using Catppuccin colors
+ * Composable pour simuler un thème Catppuccin cohérent
+ * Dans une véritable application, on utiliserait @nuxtjs/color-mode
+ * mais pour notre démo, nous allons simplement simuler un thème.
  */
 export const useTheme = () => {
-  // Dans Nuxt 3, useColorMode est disponible globalement sans importation
-  const colorMode = useColorMode()
+  // État du thème - nous utiliserons uniquement Mocha pour cet exemple
+  const isDarkMode = ref(true)
   
-  // Available color modes
+  // Thèmes disponibles (même si nous n'utilisons que Mocha pour l'instant)
   const availableThemes = [
-    { name: 'mocha', label: 'Catppuccin Mocha (Dark)', icon: 'heroicons:moon' },
-    { name: 'latte', label: 'Catppuccin Latte (Light)', icon: 'heroicons:sun' }
+    { name: 'mocha', label: 'Catppuccin Mocha (Dark)', icon: 'heroicons:moon' }
   ]
   
-  // Current theme
+  // Thème actuel
   const currentTheme = computed(() => {
-    return availableThemes.find(theme => theme.name === colorMode.preference) || availableThemes[0]
+    return availableThemes[0]
   })
   
-  // Toggle between dark and light mode
+  // Pour une future implémentation de changement de thème
   const toggleTheme = () => {
-    colorMode.preference = colorMode.preference === 'mocha' ? 'latte' : 'mocha'
+    console.log('Alternance de thème désactivée - utilisation fixe de Catppuccin Mocha')
   }
   
-  // Set a specific theme
+  // Pour une future implémentation de changement de thème
   const setTheme = (theme: string) => {
-    if (availableThemes.some(t => t.name === theme)) {
-      colorMode.preference = theme
-    }
+    console.log(`Définition du thème désactivée - utilisation fixe de Catppuccin Mocha`)
   }
 
   return {
