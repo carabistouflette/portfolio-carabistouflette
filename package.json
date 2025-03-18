@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "pages:build": "NITRO_PRESET=cloudflare-pages nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -19,6 +20,7 @@
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@vueuse/core": "^13.0.0",
     "nuxt": "^3.16.0",
+    "@nuxt/kit": "^3.16.0",
     "@nuxt/icon": "^1.11.0"
   },
   "devDependencies": {
