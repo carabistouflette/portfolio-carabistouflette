@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-base text-text font-sans antialiased min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans text-text font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+
+  p {
+    @apply text-subtext0 leading-relaxed;
+  }
+
+  code {
+    @apply font-mono text-peach bg-surface0 px-1 py-0.5 rounded;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  .link-hover {
+    @apply relative inline-block text-mauve hover:text-lavender transition-colors duration-300;
+  }
+
+  .link-hover::after {
+    @apply content-[''] absolute w-0 h-0.5 bg-mauve hover:bg-lavender bottom-0 left-0 transition-all duration-300;
+  }
+
+  .link-hover:hover::after {
+    @apply w-full;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-mauve via-blue to-lavender;
+  }
+
+  .glass-card {
+    @apply bg-surface0 bg-opacity-40 backdrop-blur-sm border border-surface1 rounded-lg shadow-lg;
+  }
+}
+
+/* Page transition effects */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Layout transition effects */
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity 0.3s;
+}
+
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0;
+}
+
+/* Focus styles for a11y */
+*:focus-visible {
+  @apply outline-none ring-2 ring-mauve ring-offset-1 ring-offset-base;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-mantle;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface2 rounded-full hover:bg-overlay0 transition-colors;
+}
