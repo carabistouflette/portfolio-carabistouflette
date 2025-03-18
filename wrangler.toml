@@ -1,0 +1,20 @@
+name = "portfolio-alexis-robin"
+main = "./.output/server/index.mjs"
+compatibility_date = "2025-03-18"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[site]
+bucket = "./.output/public"
+
+[build]
+command = "npm run build"
+
+# Contrôles d'environnement spécifiques pour la production
+[env.production]
+route = "alexis-robin.dev/*"
+vars = { ENVIRONMENT = "production" }
+
+# Contrôles d'environnement spécifiques pour la prévisualisation
+[env.preview]
+vars = { ENVIRONMENT = "preview" }

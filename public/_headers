@@ -1,0 +1,22 @@
+# En-têtes globaux pour toutes les pages
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=()
+  Cache-Control: public, max-age=3600
+
+# En-têtes pour les ressources statiques
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# En-têtes pour les images
+/*.jpg
+  Cache-Control: public, max-age=31536000
+/*.png
+  Cache-Control: public, max-age=31536000
+/*.svg
+  Cache-Control: public, max-age=31536000
+/*.webp
+  Cache-Control: public, max-age=31536000

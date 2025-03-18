@@ -9,7 +9,11 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "cf:dev": "NITRO_PRESET=cloudflare-pages nuxt dev",
+    "cf:build": "NITRO_PRESET=cloudflare-pages nuxt build",
+    "cf:preview": "wrangler pages dev .output/public --compatibility-date=2025-03-18",
+    "cf:deploy": "npm run cf:build && wrangler pages deploy .output/public"
   },
   "dependencies": {
     "@nuxt/image": "^1.0.0",
@@ -20,6 +24,7 @@
     "nuxt-icon": "^0.5.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
     "@iconify-json/heroicons": "^1.1.20",
     "@iconify-json/mdi": "^1.1.64",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
@@ -27,7 +32,9 @@
     "@typescript-eslint/parser": "^6.4.0",
     "eslint": "^8.47.0",
     "eslint-plugin-vue": "^9.17.0",
+    "terser": "^5.26.0",
     "typescript": "^5.8.2",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^2.2.8",
+    "wrangler": "^3.19.0"
   }
 }
