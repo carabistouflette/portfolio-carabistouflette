@@ -45,7 +45,7 @@
         <!-- Placeholder for a map - in a real project, replace with an actual map -->
         <div class="h-64 md:h-96 bg-surface0 rounded-lg flex items-center justify-center border border-surface1">
           <div class="text-center">
-            <Icon name="heroicons:map" class="w-12 h-12 text-overlay0 mb-4" />
+            <NuxtIcon name="heroicons:map" class="w-12 h-12 text-overlay0 mb-4" />
             <p class="text-subtext0">Carte de Montpellier</p>
           </div>
         </div>

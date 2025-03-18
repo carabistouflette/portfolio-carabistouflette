@@ -23,7 +23,7 @@
         @click="toggleMobileMenu"
         aria-label="Toggle menu"
       >
-        <Icon
+        <NuxtIcon
           :name="isMobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3'"
           class="w-6 h-6"
         />

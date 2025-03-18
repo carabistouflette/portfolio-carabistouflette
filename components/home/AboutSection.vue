@@ -39,7 +39,7 @@
                   class="w-12 h-12 rounded-lg flex items-center justify-center"
                   :class="skill.bgColor"
                 >
-                  <Icon :name="skill.icon" class="w-6 h-6 text-base" />
+                  <NuxtIcon :name="skill.icon" class="w-6 h-6 text-base" />
                 </div>
                 <h3 class="text-xl font-semibold">{{ skill.title }}</h3>
               </div>

@@ -15,7 +15,7 @@
     ]"
     @click="$emit('click')"
   >
-    <Icon v-if="icon" :name="icon" class="w-5 h-5" />
+    <NuxtIcon v-if="icon" :name="icon" class="w-5 h-5" />
     <span>{{ label }}</span>
   </NuxtLink>
 </template>

@@ -14,21 +14,21 @@
             class="text-subtext1 hover:text-mauve transition-colors duration-300"
             aria-label="LinkedIn"
           >
-            <Icon name="mdi:linkedin" class="w-5 h-5" />
+            <NuxtIcon name="mdi:linkedin" class="w-5 h-5" />
           </a>
           <a
             href="mailto:alexis.robin@etu.umontpellier.fr"
             class="text-subtext1 hover:text-mauve transition-colors duration-300"
             aria-label="Email"
           >
-            <Icon name="heroicons:envelope" class="w-5 h-5" />
+            <NuxtIcon name="heroicons:envelope" class="w-5 h-5" />
           </a>
           <a
             href="tel:+33761460496"
             class="text-subtext1 hover:text-mauve transition-colors duration-300"
             aria-label="Téléphone"
           >
-            <Icon name="heroicons:phone" class="w-5 h-5" />
+            <NuxtIcon name="heroicons:phone" class="w-5 h-5" />
           </a>
         </div>
       </div>
