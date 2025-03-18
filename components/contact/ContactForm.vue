@@ -73,11 +73,11 @@
         class="w-full md:w-auto"
       >
         <template v-if="isSubmitting">
-          <NuxtIcon name="heroicons:arrow-path" class="w-5 h-5 animate-spin mr-2" />
+          <Icon name="heroicons:arrow-path" class="w-5 h-5 animate-spin mr-2" />
           Envoi en cours...
         </template>
         <template v-else>
-          <NuxtIcon name="heroicons:paper-airplane" class="w-5 h-5 mr-2" />
+          <Icon name="heroicons:paper-airplane" class="w-5 h-5 mr-2" />
           Envoyer le message
         </template>
       </Button>
@@ -86,7 +86,7 @@
     <!-- Success message -->
     <div v-if="formStatus === 'success'" class="p-4 bg-green/20 text-green rounded-lg animate-slide-up">
       <div class="flex items-center">
-        <NuxtIcon name="heroicons:check-circle" class="w-5 h-5 mr-2" />
+        <Icon name="heroicons:check-circle" class="w-5 h-5 mr-2" />
         <p>Votre message a été envoyé avec succès. Je vous répondrai dans les plus brefs délais.</p>
       </div>
     </div>
@@ -94,7 +94,7 @@
     <!-- Error message -->
     <div v-if="formStatus === 'error'" class="p-4 bg-red/20 text-red rounded-lg animate-slide-up">
       <div class="flex items-center">
-        <NuxtIcon name="heroicons:exclamation-circle" class="w-5 h-5 mr-2" />
+        <Icon name="heroicons:exclamation-circle" class="w-5 h-5 mr-2" />
         <p>Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer plus tard.</p>
       </div>
     </div>

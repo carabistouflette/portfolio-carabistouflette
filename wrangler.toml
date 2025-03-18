@@ -18,7 +18,3 @@ vars = { ENVIRONMENT = "production" }
 # Contrôles d'environnement spécifiques pour la prévisualisation
 [env.preview]
 vars = { ENVIRONMENT = "preview" }
-
-# wrangler.toml (wrangler v3.88.0^)
-[observability.logs]
-enabled = false

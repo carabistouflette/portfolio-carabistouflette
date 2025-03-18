@@ -5,9 +5,9 @@
     :class="buttonClasses"
     @click="$emit('click', $event)"
   >
-    <NuxtIcon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
+    <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
     <span v-if="$slots.default"><slot /></span>
-    <NuxtIcon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
   </NuxtLink>
   <button
     v-else
@@ -16,9 +16,9 @@
     :disabled="disabled"
     @click="$emit('click', $event)"
   >
-    <NuxtIcon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
+    <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
     <span v-if="$slots.default"><slot /></span>
-    <NuxtIcon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
   </button>
 </template>
 

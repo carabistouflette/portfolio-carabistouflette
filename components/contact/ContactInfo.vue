@@ -19,7 +19,7 @@
           class="w-12 h-12 rounded-full flex items-center justify-center mr-4"
           :class="item.iconBg"
         >
-          <NuxtIcon :name="item.icon" class="w-6 h-6 text-base" />
+          <Icon :name="item.icon" class="w-6 h-6 text-base" />
         </div>
         <div>
           <h4 class="font-medium text-text">{{ item.title }}</h4>
@@ -38,7 +38,7 @@
     <!-- Availability info -->
     <div class="bg-mauve/10 border border-mauve/20 rounded-lg p-5">
       <div class="flex items-center mb-3">
-        <NuxtIcon name="heroicons:clock" class="w-5 h-5 mr-2 text-mauve" />
+        <Icon name="heroicons:clock" class="w-5 h-5 mr-2 text-mauve" />
         <h4 class="font-medium">Disponibilité</h4>
       </div>
       <p class="text-subtext0">

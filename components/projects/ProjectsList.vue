@@ -9,7 +9,7 @@
           placeholder="Rechercher un projet..."
           class="w-full sm:w-64 px-4 py-2 pl-10 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-colors"
         />
-        <NuxtIcon
+        <Icon
           name="heroicons:magnifying-glass"
           class="absolute left-3 top-1/2 transform -translate-y-1/2 text-overlay0 w-5 h-5"
         />
@@ -54,7 +54,7 @@
     
     <!-- Empty state -->
     <div v-else class="text-center py-12">
-      <NuxtIcon name="heroicons:folder-open" class="w-16 h-16 mx-auto text-overlay0 mb-4" />
+      <Icon name="heroicons:folder-open" class="w-16 h-16 mx-auto text-overlay0 mb-4" />
       <h3 class="text-xl mb-2">Aucun projet trouvé</h3>
       <p class="text-subtext0">Essayez de modifier vos critères de recherche ou de réinitialiser les filtres.</p>
       <Button @click="clearFilters" variant="outline" class="mt-4">
