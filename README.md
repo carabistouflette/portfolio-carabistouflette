@@ -29,7 +29,12 @@ portfolio-alexis-robin/
 ├── layouts/              # Layouts de l'application
 ├── pages/                # Pages de l'application
 ├── public/               # Fichiers publics (favicon, robots.txt)
-└── utils/                # Fonctions utilitaires
+├── server/               # Logique serveur et middleware
+│   ├── middleware/       # Middleware personnalisés
+│   └── plugins/          # Plugins spécifiques au serveur
+├── scripts/              # Scripts utilitaires
+├── types/                # Définitions TypeScript
+├── utils/                # Fonctions utilitaires
 ```
 
 ## Pages
@@ -82,7 +87,97 @@ portfolio-alexis-robin/
 - `npm run lint` : Vérifie le code avec ESLint
 - `npm run lint:fix` : Corrige automatiquement les problèmes détectés par ESLint
 
+## Configuration avancée
+
+### Configuration TypeScript
+
+Le projet utilise une configuration TypeScript avancée avec :
+
+- Typage strict activé (`strict: true` dans tsconfig.json)
+- Path aliases pour les imports (`@/`, `~/`)
+- Définitions de types personnalisées dans `types/`
+- Intégration avec Vue 3 et Nuxt 3 via `@nuxt/typescript-build`
+
+Exemple de configuration dans `tsconfig.json` :
+```json
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": ["./*"],
+      "~/*": ["./*"]
+    }
+  }
+}
+```
+
+### Configuration Tailwind CSS
+
+Le projet utilise Tailwind CSS avec une configuration personnalisée :
+
+- Thème étendu avec les couleurs Catppuccin
+- Configuration des breakpoints responsive
+- Ajout de classes utilitaires personnalisées
+
+Exemple de configuration dans `tailwind.config.ts` :
+```ts
+import { defineConfig } from 'tailwindcss'
+import colors from './constants/colors'
+
+export default defineConfig({
+  content: [
+    './components/**/*.{js,vue,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './plugins/**/*.{js,ts}',
+    './app.vue'
+  ],
+  theme: {
+    extend: {
+      colors: {
+        ...colors,
+      },
+    },
+  },
+  plugins: [],
+})
+```
+
 ## Déploiement
+
+### Déploiement sur Cloudflare
+
+Le projet est configuré pour un déploiement optimal sur Cloudflare Pages et Workers :
+
+1. Installez Wrangler (CLI de Cloudflare) :
+   ```bash
+   npm install -g wrangler
+   ```
+
+2. Authentifiez-vous avec votre compte Cloudflare :
+   ```bash
+   wrangler login
+   ```
+
+3. Configurez votre projet dans `wrangler.toml` :
+   ```toml
+   name = "portfolio-alexis-robin"
+   compatibility_date = "2024-01-01"
+   main = "./.output/server/index.mjs"
+   ```
+
+4. Déployez sur Cloudflare Pages :
+   ```bash
+   npm run build
+   wrangler pages deploy .output/public
+   ```
+
+5. Pour déployer en tant que Worker (SSR) :
+   ```bash
+   npm run build
+   wrangler deploy
+   ```
 
 ### Déploiement sur un serveur web statique
 
@@ -107,13 +202,27 @@ portfolio-alexis-robin/
 
 ## Principes de conception
 
-Ce portfolio a été conçu en respectant les principes SOLID :
+Ce portfolio a été conçu en respectant les principes SOLID avec des exemples concrets :
 
-- **S** (Single Responsibility) : Chaque composant a une seule responsabilité
-- **O** (Open/Closed) : Les composants sont ouverts à l'extension mais fermés à la modification
-- **L** (Liskov Substitution) : Les composants peuvent être substitués par leurs sous-types
-- **I** (Interface Segregation) : Les interfaces sont spécifiques à chaque cas d'utilisation
-- **D** (Dependency Inversion) : Les composants dépendent d'abstractions et non d'implémentations
+### Single Responsibility Principle (SRP)
+- `components/ui/Button.vue` : Gère uniquement le rendu et le comportement d'un bouton
+- `composables/useTheme.ts` : Gère uniquement la logique du thème
+
+### Open/Closed Principle (OCP)
+- Les composants comme `ProjectCard.vue` sont extensibles via props sans modification du code existant
+- Le système de thème permet d'ajouter de nouvelles variantes sans modifier le code existant
+
+### Liskov Substitution Principle (LSP)
+- Tous les composants de `components/ui/` peuvent être remplacés par leurs sous-types sans affecter le comportement
+- Les composables fournissent des interfaces cohérentes quel que soit leur implémentation
+
+### Interface Segregation Principle (ISP)
+- `ContactForm.vue` utilise des interfaces spécifiques pour les données de formulaire
+- Les props des composants sont spécifiques à leur usage
+
+### Dependency Inversion Principle (DIP)
+- Les composants dépendent d'abstractions via les interfaces TypeScript
+- L'injection de dépendances est utilisée pour les services globaux
 
 ## Personnalisation
 
