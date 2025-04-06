@@ -1,11 +1,5 @@
-name = "portfolio-alexis-robin"
+name = "portfolio-alexis"
 compatibility_date = "2025-03-18"
-
-[build]
-command = "npm run cf:build"
-
-[site]
-bucket = ".output/public"
 pages_build_output_dir = ".output/public"
 
 [env.production]
