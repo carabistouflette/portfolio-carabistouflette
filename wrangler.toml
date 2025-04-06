@@ -2,7 +2,7 @@ name = "portfolio-alexis-robin"
 compatibility_date = "2025-03-18"
 
 [build]
-command = "npm run build"
+command = "npm run cf:build"
 
 [site]
 bucket = ".output/public"
