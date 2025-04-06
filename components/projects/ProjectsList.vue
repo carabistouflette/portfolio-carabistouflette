@@ -45,10 +45,17 @@
         class="animate-slide-up"
         :style="{ animationDelay: `${index * 0.1}s` }"
       >
-        <ProjectCard 
-          :project="project" 
-          @navigate="navigateToProject"
-        />
+        <Suspense>
+          <template #default>
+            <LazyProjectCard
+              :project="project"
+              @navigate="navigateToProject"
+            />
+          </template>
+          <template #fallback>
+            <LoadingState />
+          </template>
+        </Suspense>
       </div>
     </div>
     
@@ -65,6 +72,9 @@
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
+const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
+
 // State
 const searchQuery = ref('')
 const activeCategories = ref<string[]>([])

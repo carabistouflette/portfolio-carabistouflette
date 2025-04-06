@@ -18,7 +18,14 @@
     <!-- Projects List -->
     <section class="section-padding">
       <div class="container-custom">
-        <ProjectsList />
+        <Suspense>
+          <template #default>
+            <ProjectsList />
+          </template>
+          <template #fallback>
+            <LoadingState />
+          </template>
+        </Suspense>
       </div>
     </section>
     
@@ -45,6 +52,10 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
+
+const ProjectsList = defineAsyncComponent(() => import('@/components/projects/ProjectsList.vue'))
 // Page meta
 useHead({
   title: 'Projets | Alexis Robin',

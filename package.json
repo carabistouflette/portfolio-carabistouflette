@@ -18,27 +18,27 @@
     "cf:deploy": "npm run cf:build && wrangler pages deploy .output/public"
   },
   "dependencies": {
-    "@nuxt/icon": "^1.11.0",
-    "@nuxt/kit": "^3.16.0",
+    "@nuxt/icon": "1.11.0",
+    "@nuxt/kit": "3.16.2",
     "@nuxtjs/tailwindcss": "^6.8.0",
+    "@nuxtjs/web-vitals": "^0.2.7",
     "@vueuse/core": "^13.0.0",
-    "nuxt": "^3.16.0"
+    "nuxt": "3.16.2"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0",
+    "@cloudflare/workers-types": "4.20250406.0",
     "@iconify-json/heroicons": "^1.1.20",
     "@iconify-json/mdi": "^1.1.64",
-    "@nuxt/icon": "^1.11.0",
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.26.1",
-    "@typescript-eslint/parser": "^8.26.1",
+    "@typescript-eslint/eslint-plugin": "8.29.0",
+    "@typescript-eslint/parser": "8.29.0",
     "@vueuse/nuxt": "^13.0.0",
-    "eslint": "^9.22.0",
+    "eslint": "9.24.0",
     "eslint-plugin-vue": "^10.0.0",
     "terser": "^5.26.0",
-    "typescript": "^5.8.2",
+    "typescript": "5.8.3",
     "vue-tsc": "^2.2.8",
-    "wrangler": "^4.1.0"
+    "wrangler": "4.7.2"
   }
 }

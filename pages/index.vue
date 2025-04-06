@@ -2,7 +2,14 @@
   <div>
     <HeroBanner />
     <AboutSection />
-    <TimelineSection />
+    <Suspense>
+      <template #default>
+        <LazyTimelineSection />
+      </template>
+      <template #fallback>
+        <LoadingState />
+      </template>
+    </Suspense>
     <section class="section-padding bg-mantle">
       <div class="container-custom text-center">
         <h2 class="mb-6 animate-slide-up">Envie de voir mes projets ?</h2>
@@ -24,6 +31,10 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
+const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
+
+const LazyTimelineSection = defineAsyncComponent(() => import('@/components/home/TimelineSection.vue'))
 // Page meta
 useHead({
   title: 'Alexis Robin | Portfolio',

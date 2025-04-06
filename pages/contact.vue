@@ -21,7 +21,14 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <!-- Contact Form -->
           <div class="glass-card p-6 md:p-8 animate-slide-right">
-            <ContactForm />
+            <Suspense>
+              <template #default>
+                <LazyContactForm />
+              </template>
+              <template #fallback>
+                <LoadingState />
+              </template>
+            </Suspense>
           </div>
           
           <!-- Contact Info -->
@@ -55,6 +62,10 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
+const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
+
+const LazyContactForm = defineAsyncComponent(() => import('@/components/contact/ContactForm.vue'))
 // Page meta
 useHead({
   title: 'Contact | Alexis Robin',

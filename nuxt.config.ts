@@ -5,9 +5,34 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
-    '@nuxt/image',
-    '@nuxt/icon'
+    '@nuxt/image'
+    // '@nuxt/icon'
   ],
+
+  image: {
+    inject: true,
+    quality: 80,
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+      '2xl': 1536
+    },
+    presets: {
+      default: {
+        modifiers: {
+          loading: 'lazy',
+          fit: 'cover',
+          format: 'webp',
+          quality: 80
+        }
+      }
+    }
+  },
 
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -64,6 +89,13 @@ export default defineNuxtConfig({
   vite: {
     optimizeDeps: {
       include: ['vue', '@vueuse/core']
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {}
+        }
+      }
     }
   },
 
