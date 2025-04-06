@@ -66,6 +66,7 @@
 
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-mauve via-blue to-lavender;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .glass-card {

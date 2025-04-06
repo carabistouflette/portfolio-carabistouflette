@@ -6,6 +6,7 @@ command = "npm run build"
 
 [site]
 bucket = ".output/public"
+pages_build_output_dir = ".output/public"
 
 [env.production]
 vars = { ENVIRONMENT = "production" }

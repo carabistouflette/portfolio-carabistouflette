@@ -14,7 +14,7 @@
       <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
         <div class="md:w-7/12 space-y-6 animate-slide-up">
           <h1 class="font-bold leading-tight">
-            <span class="gradient-text">Alexis Robin</span>
+            <span class="gradient-text opacity-100">Alexis Robin</span>
           </h1>
           <h2 class="text-xl md:text-2xl font-medium text-subtext0 mb-6">
             Développeur Système Embarqué &amp; Passionné de Programmation Bas Niveau
