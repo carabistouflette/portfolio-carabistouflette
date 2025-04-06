@@ -66,6 +66,11 @@ export default defineNuxtConfig({
     // Optimisation pour Cloudflare Pages
     nitro: {
       preset: 'cloudflare-pages',
+      output: {
+        dir: '.output/public',
+        serverDir: '.output/public/_worker.js',
+        publicDir: '.output/public'
+      },
       prerender: {
         routes: ['/', '/projects', '/contact']
       }

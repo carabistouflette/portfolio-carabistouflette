@@ -169,7 +169,7 @@ Le projet est configuré pour un déploiement optimal sur Cloudflare Pages et Wo
 
 4. Déployez sur Cloudflare Pages :
    ```bash
-   npm run build
+   npm run cf:build
    wrangler pages deploy .output/public
    ```
 
