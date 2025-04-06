@@ -5,9 +5,13 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
-    '@nuxt/image'
-    // '@nuxt/icon'
+    '@nuxt/image',
+    '@nuxt/icon'
   ],
+
+  icon: {
+    collections: ['heroicons', 'mdi']
+  },
 
   image: {
     inject: true,
