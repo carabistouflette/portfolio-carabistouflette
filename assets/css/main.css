@@ -89,13 +89,17 @@
 /* Page transition effects */
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
+  transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother easing */
 }
 
-.page-enter-from,
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(-30px) rotate(-2deg); /* Slide in from left, slight rotation */
+}
+
 .page-leave-to {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(30px) rotate(2deg); /* Slide out to right, slight rotation */
 }
 
 /* Layout transition effects */
