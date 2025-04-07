@@ -9,7 +9,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <!-- About text -->
         <div class="space-y-6 animate-slide-right">
-          <p v-for="(paragraph, index) in aboutText" :key="index" :class="{ 'text-lg': index === 0 }">
+          <p
+            v-for="(paragraph, index) in aboutText"
+            :key="index"
+            :ref="el => { if (index === 0) firstParagraph = el as HTMLElement }"
+            :class="['transition-all duration-700 ease-out', { 'text-lg': index === 0, 'reveal-mask': index === 0 }]"
+          >
             <span v-html="paragraph"></span>
           </p>
           
@@ -43,6 +48,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useIntersectionObserver } from '@vueuse/core'
 interface Skill {
   title: string;
   description: string;
@@ -57,4 +64,18 @@ interface AboutSectionProps {
 }
 
 const props = defineProps<AboutSectionProps>();
+
+const firstParagraph = ref<HTMLElement | null>(null)
+
+useIntersectionObserver(
+  firstParagraph,
+  ([{ isIntersecting }]) => {
+    if (isIntersecting && firstParagraph.value) {
+      firstParagraph.value.classList.add('reveal-visible')
+      // Optional: Stop observing after first reveal
+      // stop()
+    }
+  },
+  { threshold: 0.3 } // Trigger when 30% is visible
+)
 </script>

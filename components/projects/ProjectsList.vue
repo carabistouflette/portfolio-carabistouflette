@@ -42,8 +42,7 @@
       <div 
         v-for="(project, index) in filteredProjects" 
         :key="project.id"
-        class="animate-slide-up"
-        :style="{ animationDelay: `${index * 0.1}s` }"
+        :ref="el => { if (el) projectCardWrappers[index] = el as HTMLElement }"
       >
         <Suspense>
           <template #default>
@@ -72,12 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, ref, onMounted, computed, watch } from 'vue'
+import { useAnimations } from '@/composables/useAnimations'
 const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
 
 // State
 const searchQuery = ref('')
 const activeCategories = ref<string[]>([])
+const projectCardWrappers = ref<HTMLElement[]>([])
 
 // Mock projects data
 const projects = ref([
@@ -182,4 +183,19 @@ const navigateToProject = (projectId: number) => {
   // For this example, we'll just log the ID
   console.log(`Navigating to project ${projectId}`)
 }
+
+// Animations
+const { animateListOnScroll } = useAnimations()
+
+onMounted(() => {
+  // Watch for changes in filteredProjects to re-apply refs if needed
+  watch(filteredProjects, async () => {
+    // Reset refs before next tick update
+    projectCardWrappers.value = []
+    // Wait for DOM update
+    await nextTick()
+    // Apply animation to the updated list
+    animateListOnScroll(projectCardWrappers, 'opacity-1 translate-y-0', 0.1, 100)
+  }, { immediate: true }) // immediate: true to run on initial mount
+})
 </script>

@@ -2,7 +2,7 @@
   <Card 
     :hover="true" 
     :glass="true"
-    class="h-full flex flex-col transition-all duration-300"
+    class="h-full flex flex-col transition-all duration-300 hover:scale-[1.02] opacity-0 translate-y-5"
     @click="navigateToProject"
   >
     <template #header>

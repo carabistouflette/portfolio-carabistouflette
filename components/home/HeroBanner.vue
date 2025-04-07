@@ -37,7 +37,16 @@
           <div class="relative">
             <!-- Profile circle with AR initials -->
             <div class="w-64 h-64 rounded-full bg-gradient-to-br from-mauve to-blue mx-auto flex items-center justify-center shadow-lg relative z-10">
-              <img :src="props.profileImage" alt="Profile Logo" class="w-32 h-32">
+              <!-- Inlined SVG for animation -->
+              <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 text-text"> <!-- Added text-text for stroke color -->
+                <path
+                  class="logo-path"
+                  d="M32 8 L48 56 L40 56 L32 32 L24 56 L16 56 L32 8 Z M28 24 L36 24 L32 12 L28 24 Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+              </svg>
             </div>
             
             <!-- Decorative elements -->
@@ -84,6 +93,21 @@ const props = withDefaults(defineProps<HeroBannerProps>(), {
     linear-gradient(to right, var(--ctp-mocha-surface0) 1px, transparent 1px),
     linear-gradient(to bottom, var(--ctp-mocha-surface0) 1px, transparent 1px);
   background-size: 30px 30px;
+}
+
+/* SVG Path Drawing Animation */
+.logo-path {
+  /* Estimate path length (adjust if needed) */
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  /* Animation: name duration timing-function delay iteration-count direction fill-mode */
+  animation: draw 2.5s ease-out 0.5s forwards; /* Added 0.5s delay */
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* Add hover effect to profile circle */

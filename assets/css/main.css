@@ -108,6 +108,16 @@
 .layout-leave-to {
   opacity: 0;
 }
+/* Content Reveal Animation */
+.reveal-mask {
+  clip-path: inset(0 100% 0 0); /* Masked from right */
+  transition: clip-path 0.8s cubic-bezier(0.645, 0.045, 0.355, 1); /* Smooth transition */
+}
+
+.reveal-visible {
+  clip-path: inset(0 0 0 0); /* Fully revealed */
+}
+
 
 /* Focus styles for a11y */
 *:focus-visible {
