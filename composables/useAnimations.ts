@@ -28,7 +28,7 @@ export const useAnimations = () => {
           setTimeout(() => {
             if (target.value) {
               target.value.classList.remove('opacity-0')
-              target.value.classList.add(animationClass)
+              target.value.classList.add(...animationClass.split(' '))
             }
           }, delay)
         }
@@ -47,7 +47,7 @@ export const useAnimations = () => {
         setTimeout(() => {
           if (target.value) {
             target.value.classList.remove('opacity-0')
-            target.value.classList.add(animationClass)
+            target.value.classList.add(...animationClass.split(' '))
           }
         }, delay)
       }

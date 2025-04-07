@@ -39,7 +39,7 @@
           </p>
           <Button 
             to="/contact" 
-            variant="primary" 
+            variant="solid"
             size="lg" 
             iconRight="heroicons:envelope"
           >
