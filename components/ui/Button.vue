@@ -1,8 +1,10 @@
 <template>
   <NuxtLink
+    ref="elementRef"
     v-if="to"
     :to="to"
     :class="buttonClasses"
+    :style="magneticStyle"
     @click="$emit('click', $event)"
   >
     <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
@@ -10,9 +12,11 @@
     <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
   </NuxtLink>
   <button
+    ref="elementRef"
     v-else
     :type="type"
     :class="buttonClasses"
+    :style="magneticStyle"
     :disabled="disabled"
     @click="$emit('click', $event)"
   >
@@ -23,7 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'; // Import PropType
+import { computed, ref, type PropType } from 'vue'; // Import PropType and ref
+import { useMagneticEffect } from '~/composables/useMagneticEffect'; // Import the composable
 
 // Define types directly
 type AccentColor = 'rosewater' | 'flamingo' | 'pink' | 'mauve' | 'red' | 'maroon' | 'peach' | 'yellow' | 'green' | 'teal' | 'sky' | 'sapphire' | 'blue' | 'lavender';
@@ -111,6 +116,27 @@ const buttonClasses = computed(() => {
   // Apply the ring color based on the button's color prop for better visibility
   const focusRing = `focus-visible:ring-${props.color}`;
 
-  return [base, size, variantStyle, state, focusRing, props.className];
+  // Add the magnetic effect class
+  return [base, size, variantStyle, state, focusRing, props.className]; // Remove 'magnetic-effect' class
+});
+
+// Magnetic Effect Setup
+const elementRef = ref<any>(null); // Can be NuxtLink instance or button element
+const htmlElementRef = ref<HTMLElement | null>(null); // Explicitly for the HTML element
+
+// Watch the primary ref and extract the actual HTML element once mounted
+watch(elementRef, (newVal) => {
+  if (newVal) {
+    // If newVal has $el (like a component instance), use $el, otherwise assume newVal is the element
+    htmlElementRef.value = newVal.$el instanceof HTMLElement ? newVal.$el : newVal instanceof HTMLElement ? newVal : null;
+  } else {
+    htmlElementRef.value = null;
+  }
+}, { flush: 'post', immediate: true }); // flush: 'post' ensures $el is available after render
+
+// Pass the ref holding the actual HTML element to the composable
+const { magneticStyle } = useMagneticEffect(htmlElementRef, {
+  maxDistance: 200, // Increase activation distance for buttons
+  disabled: computed(() => props.disabled) // Pass disabled state reactively
 });
 </script>

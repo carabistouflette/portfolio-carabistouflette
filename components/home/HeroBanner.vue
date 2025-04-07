@@ -11,8 +11,8 @@
     </div>
 
     <div class="container-custom relative z-10">
-      <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
-        <div class="md:w-7/12 space-y-gap-md animate-slide-up">
+      <div class="relative flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
+        <div class="md:w-7/12 space-y-gap-md animate-slide-up relative z-20"> <!-- Added relative z-20 -->
           <h1 class="font-bold leading-tight">
             <span class="gradient-text opacity-100">{{ props.title }}</span>
           </h1>
@@ -32,8 +32,8 @@
           </div>
         </div>
         
-        <!-- Avatar/Image area -->
-        <div class="hidden md:block md:w-5/12 p-component-padding-lg animate-fade-in">
+        <!-- Avatar/Image area - Adjusted for overlap -->
+        <div class="hidden md:block md:w-5/12 p-component-padding-lg animate-fade-in relative md:-ml-16 lg:-ml-24 z-10"> <!-- Added relative, negative margin, z-10 -->
           <div class="relative">
             <!-- Profile circle with AR initials -->
             <div class="w-64 h-64 rounded-full bg-gradient-to-br from-mauve to-blue mx-auto flex items-center justify-center shadow-lg relative z-10">

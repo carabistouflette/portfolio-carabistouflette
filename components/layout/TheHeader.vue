@@ -15,9 +15,27 @@
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex items-center space-x-6">
         <TheNavigation />
+        <!-- Terminal Toggle Button (Desktop) -->
+        <button
+          class="hidden md:inline-flex text-text p-2 rounded-lg hover:bg-surface0 transition-colors"
+          @click="toggleTerminalHandler"
+          aria-label="Toggle terminal"
+        >
+          <Icon name="heroicons:command-line" class="w-5 h-5" />
+        </button>
       </nav>
 
-      <!-- Mobile Menu Button -->
+      <!-- Right side icons (Mobile) -->
+      <div class="flex items-center space-x-2 md:hidden">
+        <!-- Terminal Toggle Button (Mobile) -->
+        <button
+          class="text-text p-2 rounded-lg hover:bg-surface0 transition-colors"
+          @click="toggleTerminalHandler"
+          aria-label="Toggle terminal"
+        >
+          <Icon name="heroicons:command-line" class="w-6 h-6" />
+        </button>
+        <!-- Mobile Menu Button -->
       <button
         class="md:hidden text-text p-2 rounded-lg hover:bg-surface0 transition-colors"
         @click="toggleMobileMenu"
@@ -28,6 +46,7 @@
           class="w-6 h-6"
         />
       </button>
+      </div>
     </div>
 
     <!-- Mobile Navigation -->
@@ -44,11 +63,17 @@
   </header>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, inject } from 'vue' // Added inject and lang="ts"
+import type { Ref } from 'vue' // Added type import
 import TheNavigation from './TheNavigation.vue'
+
+// Injected state/functions
+const toggleTerminal = inject<() => void>('toggleTerminal')
+
 // Header state
-const scrolled = ref(false)
-const isMobileMenuOpen = ref(false)
+const scrolled: Ref<boolean> = ref(false) // Added type
+const isMobileMenuOpen: Ref<boolean> = ref(false) // Added type
 
 // Scroll handler
 const handleScroll = () => {
@@ -63,6 +88,16 @@ const toggleMobileMenu = () => {
 // Close mobile menu
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false
+}
+
+// Terminal toggle handler
+const toggleTerminalHandler = () => {
+  if (toggleTerminal) {
+    toggleTerminal()
+    closeMobileMenu() // Close mobile menu if open when terminal is toggled
+  } else {
+    console.warn('toggleTerminal function not provided')
+  }
 }
 
 // Lifecycle hooks

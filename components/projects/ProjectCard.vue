@@ -6,15 +6,21 @@
     @click="navigateToProject"
   >
     <template #header>
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="text-xl font-bold">{{ project.title }}</h3>
-        <span class="text-sm font-medium px-3 py-1 rounded-full" :class="categoryClass">
+      <!-- Make header relative for absolute positioning of category -->
+      <div class="relative flex items-start justify-between mb-4">
+        <h3 class="text-xl font-bold pr-16">{{ project.title }}</h3> <!-- Add padding-right to avoid overlap with tag -->
+        <!-- Position category tag absolutely -->
+        <span
+          class="absolute -top-2 -right-2 text-xs font-semibold px-2 py-1 rounded-md shadow-sm z-10"
+          :class="[categoryClass, 'bg-opacity-100']"
+          style="transform: rotate(3deg);" <!-- Slight rotation for avant-garde feel -->
+        >
           {{ project.category }}
         </span>
       </div>
     </template>
     
-    <p class="mb-4 flex-grow">{{ project.description }}</p>
+    <p class="mb-4 flex-grow pt-2">{{ project.description }}</p> <!-- Add padding-top to give space below header -->
     
     <template #footer>
       <div class="flex justify-between items-center">
@@ -22,17 +28,18 @@
           <span 
             v-for="tech in project.technologies" 
             :key="tech"
-            class="text-xs font-medium px-2 py-1 bg-surface1 rounded-md"
-          >
+            class="text-xs font-medium px-2 py-1 bg-surface1 hover:bg-surface2 transition-colors duration-200 rounded-md"
+          > <!-- Added hover effect -->
             {{ tech }}
           </span>
         </div>
         
-        <Button 
-          variant="ghost" 
-          iconRight="heroicons:arrow-right" 
+        <Button
+          variant="ghost"
+          color="mauve"
+          iconRight="heroicons:arrow-right"
           size="sm"
-          class="ml-2"
+          class="ml-2 hover:bg-mauve/10"
         >
           Détails
         </Button>

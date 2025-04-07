@@ -1,7 +1,9 @@
 <template>
   <NuxtLink
+    ref="elementRef"
     :to="to"
     :class="navLinkClasses"
+    :style="magneticStyle"
     @click="$emit('click')"
   >
     <Icon v-if="icon" :name="icon" class="w-5 h-5" />
@@ -10,8 +12,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue'; // Import ref and watch
 import { useRoute } from 'vue-router';
+import { useMagneticEffect } from '~/composables/useMagneticEffect'; // Import the composable
 
 // Define type directly
 type AccentColor = 'rosewater' | 'flamingo' | 'pink' | 'mauve' | 'red' | 'maroon' | 'peach' | 'yellow' | 'green' | 'teal' | 'sky' | 'sapphire' | 'blue' | 'lavender';
@@ -35,7 +38,7 @@ const props = defineProps({
     default: false
   },
   color: {
-    type: String as PropType<AccentColor>,
+    type: String as import('vue').PropType<AccentColor>, // Use import('vue').PropType
     default: 'mauve', // Default accent color
     validator: (value: string) => ['rosewater', 'flamingo', 'pink', 'mauve', 'red', 'maroon', 'peach', 'yellow', 'green', 'teal', 'sky', 'sapphire', 'blue', 'lavender'].includes(value)
   }
@@ -75,6 +78,24 @@ const navLinkClasses = computed(() => {
     common,
     props.mobile ? baseMobile : baseDesktop,
     stateClasses
+    // 'magnetic-effect' class removed
   ];
 });
+
+// Magnetic Effect Setup
+const elementRef = ref<any>(null); // Can be NuxtLink instance
+const htmlElementRef = ref<HTMLElement | null>(null); // Explicitly for the HTML element
+
+// Watch the primary ref and extract the actual HTML element once mounted
+watch(elementRef, (newVal) => {
+  if (newVal) {
+    // If newVal has $el (like a component instance), use $el
+    htmlElementRef.value = newVal.$el instanceof HTMLElement ? newVal.$el : null;
+  } else {
+    htmlElementRef.value = null;
+  }
+}, { flush: 'post', immediate: true }); // flush: 'post' ensures $el is available after render
+
+// Pass the ref holding the actual HTML element to the composable
+const { magneticStyle } = useMagneticEffect(htmlElementRef);
 </script>

@@ -91,4 +91,26 @@ a, button, [role="button"], .clickable, .hover\:cursor-pointer:hover {
   .interactive-shadow:active {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transform: translateY(0);
-  }
+}
+
+/* Cursor Spotlight Effect */
+.cursor-spotlight {
+  position: fixed; /* Use fixed positioning relative to the viewport */
+  top: 0;
+  left: 0;
+  width: 600px; /* Increased size */
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(203, 166, 247, 0.7) 0%, /* Catppuccin Mauve, significantly increased opacity */
+    rgba(203, 166, 247, 0) 70% /* Extended fade out */
+  );
+  pointer-events: none; /* Allow clicks to pass through */
+  transform: translate(-50%, -50%); /* Center the spotlight on the cursor */
+  z-index: 9999; /* Ensure it's above most other content */
+  transition: transform 0.05s linear, left 0.05s linear, top 0.05s linear; /* Smooth movement */
+  mix-blend-mode: overlay; /* Blend mode for interesting visual effect */
+}
+
+/* CSS-only magnetic effect removed, replaced by useMagneticEffect composable */

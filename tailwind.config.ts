@@ -16,7 +16,8 @@ export default {
       colors,
       fontFamily: {
         'sans': ['Inter', 'sans-serif'],
-        'mono': ['JetBrains Mono', 'monospace']
+        'mono': ['JetBrains Mono', 'monospace'],
+        'display': ['Poppins', 'sans-serif'] // Added Poppins for headings
       },
       animation: {
         'fade-in': 'fadeIn 1s ease-in-out',

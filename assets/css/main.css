@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,7 +15,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-sans text-text font-bold;
+    @apply font-display text-text font-bold; /* Use Poppins for headings */
   }
 
   h1 {
@@ -70,12 +70,19 @@
   }
 
   .glass-card {
-    /* Enhanced glassmorphism effect using CSS variables for theme adaptability */
-    background-color: rgba(var(--ctp-surface0-rgb, 49, 50, 68), 0.5); /* Fallback to Mocha surface0 */
-    backdrop-filter: blur(12px); /* Increased blur */
-    -webkit-backdrop-filter: blur(12px); /* Safari support */
-    border: 1px solid rgba(var(--ctp-surface1-rgb, 69, 71, 90), 0.3); /* Fallback to Mocha surface1 */
-    @apply rounded-lg shadow-lg; /* Keep existing utilities for rounding and shadow */
+    /* Enhanced glassmorphism effect */
+    background-color: rgba(var(--ctp-surface0-rgb, 49, 50, 68), 0.6); /* Slightly less transparent */
+    backdrop-filter: blur(16px); /* More blur */
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(var(--ctp-surface1-rgb, 69, 71, 90), 0.2); /* More subtle default border */
+    @apply rounded-lg shadow-lg transition-all duration-300; /* Add transition for border/shadow */
+  }
+
+  /* Add accent border on hover/focus-within for glass cards */
+  .glass-card:hover,
+  .glass-card:focus-within {
+    border-color: var(--ctp-mauve); /* Use mauve accent for border */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Slightly enhance shadow */
   }
 }
 
