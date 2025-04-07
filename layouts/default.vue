@@ -4,7 +4,13 @@
     <main class="flex-grow">
       <slot />
     </main>
-    <TheFooter />
+    <TheFooter
+      :social-links="{
+        linkedin: 'https://linkedin.com/in/alexis-robin-41703a2ab',
+        email: 'mailto:alexis.robin@etu.umontpellier.fr',
+        phone: 'tel:+33761460496'
+      }"
+    />
   </div>
 </template>
 

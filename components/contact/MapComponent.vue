@@ -7,33 +7,44 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 
-const mapContainer = ref<HTMLElement | null>(null)
-let map: any = null
+interface MapComponentProps {
+  center: [number, number];
+  zoom: number;
+  marker: {
+    position: [number, number];
+    popup: string;
+  };
+}
+
+const props = defineProps<MapComponentProps>();
+
+const mapContainer = ref<HTMLElement | null>(null);
+let map: any = null;
 
 onMounted(async () => {
-  if (process.client) {
-    const L = await import('leaflet')
-    await import('leaflet/dist/leaflet.css')
-    
-    if (mapContainer.value) {
-      map = L.map(mapContainer.value).setView([43.6109, 3.8767], 13)
-      
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&amp;copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map)
+  if (typeof window !== 'undefined') {
+    const L = await import('leaflet');
+    await import('leaflet/dist/leaflet.css');
 
-      L.marker([43.6109, 3.8767])
+    if (mapContainer.value) {
+      map = L.map(mapContainer.value).setView(props.center, props.zoom);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      L.marker(props.marker.position)
         .addTo(map)
-        .bindPopup('<b>Montpellier</b><br>Ville étudiante dynamique')
+        .bindPopup(props.marker.popup);
     }
   }
-})
+});
 
 onUnmounted(() => {
   if (map) {
-    map.remove()
+    map.remove();
   }
-})
+});
 </script>
 
 <style scoped>

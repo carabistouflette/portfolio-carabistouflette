@@ -48,6 +48,17 @@ export default {
           '0%': { transform: 'translateX(-20px)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' }
         }
+      },
+      spacing: {
+        'section-padding-sm': '2rem', // 32px
+        'section-padding-md': '4rem', // 64px
+        'section-padding-lg': '6rem', // 96px
+        'component-padding-sm': '0.5rem', // 8px
+        'component-padding-md': '1rem', // 16px
+        'component-padding-lg': '1.5rem', // 24px
+        'gap-sm': '0.5rem', // 8px
+        'gap-md': '1rem', // 16px
+        'gap-lg': '2rem' // 32px
       }
     }
   },
