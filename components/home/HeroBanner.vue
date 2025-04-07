@@ -1,7 +1,7 @@
 <template>
-  <section class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden">
+  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden">
     <!-- Background decoration -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div ref="backgroundRef" class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- Animated gradient circles -->
       <div class="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-mauve/10 animate-pulse-slow"></div>
       <div class="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-blue/10 animate-pulse-slow" style="animation-delay: 1s;"></div>
@@ -60,6 +60,26 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { scroll, animate } from "motion" // Import from core 'motion' package
+
+const sectionRef = ref<HTMLElement | null>(null)
+const backgroundRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  if (sectionRef.value && backgroundRef.value) {
+    scroll(
+      animate(backgroundRef.value, {
+        transform: ["translateY(-20%)", "translateY(20%)"] // Apply parallax effect
+      }),
+      {
+        target: sectionRef.value, // Animate based on this element's visibility
+        offset: ["start end", "end start"] // Trigger animation from when section starts entering to when it fully leaves
+      }
+    )
+  }
+})
+
 interface HeroBannerProps {
   title: string;
   subtitle: string;

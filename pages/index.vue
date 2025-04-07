@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="pageWrapperRef">
     <HeroBanner
       :title="'Alexis Robin'"
       :subtitle="'Développeur Système Embarqué & Passionné de Programmation Bas Niveau'"
@@ -43,11 +43,30 @@
   </div>
 </template>
 
-<script setup>
-import { defineAsyncComponent, ref } from 'vue'
+<script setup lang="ts"> // Changed to lang="ts" for better type checking
+import { defineAsyncComponent, ref, onMounted } from 'vue'
+import { scroll, animate } from 'motion'
+import { colors } from '@/constants/colors' // Import colors
 
-const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
-// Data for components
+const pageWrapperRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+  if (pageWrapperRef.value) {
+    scroll(
+      animate(pageWrapperRef.value, {
+        // Transition background color based on scroll progress
+        backgroundColor: [colors.base, colors.mantle]
+      }),
+      // Options for scroll(): target window, offset defines start/end points
+      // Default offset is ["start start", "end end"], meaning animation plays
+      // from when the top of the window hits the top of the document
+      // to when the bottom of the window hits the bottom of the document.
+      // This effectively maps the animation to the full scrollable range.
+    )
+  }
+})
+
+// Explicitly type refs for better DX, though Vue can often infer
 const aboutSectionData = ref({
   title: 'À propos de moi',
   aboutText: [
@@ -109,6 +128,7 @@ const timelineSectionData = ref({
   ]
 })
 
+const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
 const LazyTimelineSection = defineAsyncComponent(() => import('@/components/home/TimelineSection.vue'))
 
 // Page meta

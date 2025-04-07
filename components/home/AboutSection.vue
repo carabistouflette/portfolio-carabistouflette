@@ -1,5 +1,5 @@
 <template>
-  <section class="section-padding bg-mantle">
+  <section class="section-padding" :style="{ backgroundColor: 'rgba(var(--ctp-mantle-rgb), 0.7)' }"> <!-- Use RGBA with 70% opacity -->
     <div class="container-custom">
       <div class="mb-12 text-center">
         <h2 class="mb-4 animate-slide-up">{{ title }}</h2>
@@ -26,8 +26,14 @@
         </div>
         
         <!-- Skills cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-slide-left">
-          <Card v-for="skill in skills" :key="skill.title" glass hover>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"> <!-- Removed animate-slide-left -->
+          <Card
+            v-for="(skill, index) in skills"
+            :key="skill.title"
+            :ref="el => setSkillCardRef(el, index)"
+            glass
+            hover
+          >
             <template #header>
               <div class="flex items-center space-x-4">
                 <div
@@ -48,8 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
+import { useAnimations } from '@/composables/useAnimations'
 interface Skill {
   title: string;
   description: string;
@@ -66,6 +73,29 @@ interface AboutSectionProps {
 const props = defineProps<AboutSectionProps>();
 
 const firstParagraph = ref<HTMLElement | null>(null)
+const skillCardRefs = ref<HTMLElement[]>([])
+
+// Function ref to collect skill card elements
+const setSkillCardRef = (el: any, index: number) => {
+  if (el) {
+    // Ensure the array is the correct size
+    if (skillCardRefs.value.length <= index) {
+      skillCardRefs.value.length = index + 1;
+    }
+    skillCardRefs.value[index] = el.$el || el // Access underlying element if it's a component instance
+  }
+}
+
+const { animateListOnScroll } = useAnimations()
+
+onMounted(() => {
+  nextTick(() => {
+    // Filter out any potential null/undefined entries if refs weren't set correctly
+    const validRefs = skillCardRefs.value.filter(el => el) as HTMLElement[]
+    const refsWrapper = ref(validRefs) // Wrap in a ref for the composable
+    animateListOnScroll(refsWrapper, 'animate-slide-up', 0.1, 150) // Apply staggered slide-up
+  })
+})
 
 useIntersectionObserver(
   firstParagraph,

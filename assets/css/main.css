@@ -10,6 +10,11 @@
 }
 
 @layer base {
+  :root {
+    /* ... other variables ... */
+    --ctp-mantle-rgb: 24, 24, 37; /* Added RGB for mantle */
+  }
+
   body {
     @apply bg-base text-text font-sans antialiased min-h-screen;
   }
