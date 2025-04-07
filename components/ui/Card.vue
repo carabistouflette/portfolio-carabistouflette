@@ -2,7 +2,7 @@
   <div 
     :class="[
       'overflow-hidden transition-all duration-300', 
-      hover ? 'transform hover:-translate-y-2 hover:shadow-xl cursor-pointer active:translate-y-0 active:shadow-md' : '',
+      hover ? 'transform hover:-translate-y-2 hover:shadow-xl cursor-pointer' : '',
       glass ? 'glass-card' : 'bg-surface0 rounded-lg shadow-md border border-surface1',
       className
     ]"
@@ -15,7 +15,7 @@
       <div v-if="$slots.header" class="mb-4">
         <slot name="header" />
       </div>
-      <div v-if="$slots.default" class="prose prose-invert">
+      <div v-if="$slots.default">
         <slot />
       </div>
       <div v-if="$slots.footer" class="mt-4 pt-4 border-t border-surface1">

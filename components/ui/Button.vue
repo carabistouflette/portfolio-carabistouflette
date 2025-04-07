@@ -22,24 +22,39 @@
   </button>
 </template>
 
-<script setup>
-// Définition des propriétés
+<script setup lang="ts">
+import { computed, type PropType } from 'vue'; // Import PropType
+
+// Define types directly
+type AccentColor = 'rosewater' | 'flamingo' | 'pink' | 'mauve' | 'red' | 'maroon' | 'peach' | 'yellow' | 'green' | 'teal' | 'sky' | 'sapphire' | 'blue' | 'lavender';
+type ButtonVariant = 'solid' | 'outline' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+// Props definition with validation
 const props = defineProps({
   to: {
-    type: String,
+    type: [String, Object], // Simplify type, NuxtLink handles it
     default: undefined
   },
   type: {
-    type: String,
-    default: 'button'
+    type: String as PropType<'button' | 'submit' | 'reset'>,
+    default: 'button',
+    validator: (value: string) => ['button', 'submit', 'reset'].includes(value)
   },
   variant: {
-    type: String,
-    default: 'primary'
+    type: String as PropType<ButtonVariant>,
+    default: 'solid',
+    validator: (value: string) => ['solid', 'outline', 'ghost'].includes(value)
+  },
+  color: {
+    type: String as PropType<AccentColor>,
+    default: 'mauve', // Default accent color
+    validator: (value: string) => ['rosewater', 'flamingo', 'pink', 'mauve', 'red', 'maroon', 'peach', 'yellow', 'green', 'teal', 'sky', 'sapphire', 'blue', 'lavender'].includes(value)
   },
   size: {
-    type: String,
-    default: 'md'
+    type: String as PropType<ButtonSize>,
+    default: 'md',
+    validator: (value: string) => ['sm', 'md', 'lg'].includes(value)
   },
   iconLeft: {
     type: String,
@@ -62,29 +77,40 @@ const props = defineProps({
 // Gestion des événements
 defineEmits(['click']);
 
-// Classes de taille
-const sizeClasses = {
+// Size classes mapping
+const sizeClasses: Record<ButtonSize, string> = {
   sm: 'px-3 py-1 text-sm',
-  md: 'px-4 py-2',
+  md: 'px-4 py-2 text-base', // Ensure base text size for md
   lg: 'px-6 py-3 text-lg'
 };
 
-// Classes de variante
-const variantClasses = {
-  primary: 'bg-mauve hover:bg-lavender text-base shadow-md hover:shadow-lg active:shadow-sm hover:-translate-y-1 active:translate-y-0',
-  secondary: 'bg-blue hover:bg-sapphire text-base shadow-md hover:shadow-lg active:shadow-sm hover:-translate-y-1 active:translate-y-0',
-  outline: 'bg-transparent border-2 border-mauve text-mauve hover:bg-mauve/10 hover:-translate-y-1 active:translate-y-0',
-  ghost: 'bg-transparent hover:bg-surface0 text-subtext0 hover:text-text hover:-translate-y-1 active:translate-y-0'
-};
-
 // Génération des classes combinées
+// Dynamically compute button classes
 const buttonClasses = computed(() => {
-  return [
-    'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none transform',
-    sizeClasses[props.size] || sizeClasses.md,
-    variantClasses[props.variant] || variantClasses.primary,
-    props.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105 active:scale-95',
-    props.className
-  ];
+  const base = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-base';
+  const size = sizeClasses[props.size];
+  
+  let variantStyle = '';
+  switch (props.variant) {
+    case 'solid':
+      // Use text-base (dark) for better contrast on light accent backgrounds
+      variantStyle = `bg-${props.color} text-base hover:brightness-110 active:brightness-95 shadow-md`;
+      break;
+    case 'outline':
+      variantStyle = `border-2 border-${props.color} text-${props.color} bg-transparent hover:bg-${props.color}/10 active:bg-${props.color}/20`;
+      break;
+    case 'ghost':
+      variantStyle = `text-${props.color} bg-transparent hover:bg-${props.color}/10 active:bg-${props.color}/20`;
+      break;
+  }
+
+  const state = props.disabled
+    ? 'opacity-50 cursor-not-allowed'
+    : 'cursor-pointer active:scale-95'; // Simplified active state
+
+  // Apply the ring color based on the button's color prop for better visibility
+  const focusRing = `focus-visible:ring-${props.color}`;
+
+  return [base, size, variantStyle, state, focusRing, props.className];
 });
 </script>

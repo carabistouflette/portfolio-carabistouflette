@@ -70,7 +70,12 @@
   }
 
   .glass-card {
-    @apply bg-surface0 bg-opacity-40 backdrop-blur-sm border border-surface1 rounded-lg shadow-lg;
+    /* Enhanced glassmorphism effect using CSS variables for theme adaptability */
+    background-color: rgba(var(--ctp-surface0-rgb, 49, 50, 68), 0.5); /* Fallback to Mocha surface0 */
+    backdrop-filter: blur(12px); /* Increased blur */
+    -webkit-backdrop-filter: blur(12px); /* Safari support */
+    border: 1px solid rgba(var(--ctp-surface1-rgb, 69, 71, 90), 0.3); /* Fallback to Mocha surface1 */
+    @apply rounded-lg shadow-lg; /* Keep existing utilities for rounding and shadow */
   }
 }
 

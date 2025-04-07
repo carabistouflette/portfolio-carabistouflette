@@ -31,7 +31,7 @@
         </p>
         <Button 
           to="/projects" 
-          variant="primary" 
+          variant="solid"
           size="lg" 
           iconRight="heroicons:arrow-right"
           class="animate-slide-up"

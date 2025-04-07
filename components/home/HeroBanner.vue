@@ -23,7 +23,7 @@
             {{ props.description }}
           </p>
           <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-gap-md">
-            <Button :to="props.primaryButton.to" variant="primary" :iconRight="props.primaryButton.iconRight">
+            <Button :to="props.primaryButton.to" variant="solid" color="mauve" :iconRight="props.primaryButton.iconRight">
               {{ props.primaryButton.text }}
             </Button>
             <Button v-if="props.secondaryButton" :to="props.secondaryButton.to" variant="outline">

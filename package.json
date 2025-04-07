@@ -24,6 +24,7 @@
     "@nuxtjs/web-vitals": "^0.2.7",
     "@types/leaflet": "^1.9.17",
     "@vueuse/core": "^13.0.0",
+    "@vueuse/motion": "^3.0.3",
     "leaflet": "^1.9.4",
     "nuxt": "3.16.2"
   },
