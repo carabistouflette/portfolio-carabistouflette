@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@vueuse/nuxt',
     '@nuxt/image',
-    '@nuxt/icon'
+    '@nuxt/icon',
+    '@nuxtjs/sitemap' // Added sitemap module
   ],
 
   icon: {
@@ -54,9 +55,7 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '~/assets/css/main.css',
-    '~/assets/css/catppuccin.css',
-    '~/assets/css/interaction-styles.css'
+    '~/assets/css/main.css'
   ],
 
   tailwindcss: {
@@ -89,6 +88,12 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
     typeCheck: false
+  },
+
+  runtimeConfig: { // Added runtime configuration
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com', // Read from env or use placeholder
+    }
   },
 
   vite: {

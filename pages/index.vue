@@ -45,6 +45,7 @@
 
 <script setup>
 import { defineAsyncComponent, ref } from 'vue'
+import { useSeoMeta, useHead } from '#imports'
 
 const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
 // Data for components
@@ -112,10 +113,33 @@ const timelineSectionData = ref({
 const LazyTimelineSection = defineAsyncComponent(() => import('@/components/home/TimelineSection.vue'))
 
 // Page meta
+useSeoMeta({
+  title: 'Accueil - Alexis Robin Portfolio',
+  description: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation bas niveau, les systèmes embarqués et l\'administration système.',
+  ogTitle: 'Accueil - Alexis Robin Portfolio',
+  ogDescription: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation bas niveau, les systèmes embarqués et l\'administration système.',
+})
+
+// Schema.org Person
 useHead({
-  title: 'Alexis Robin | Portfolio',
-  meta: [
-    { name: 'description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en programmation bas niveau et systèmes embarqués' }
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Alexis Robin',
+        url: 'https://portfolio-carabistouflette.pages.dev/', // Replace with actual deployed URL if different
+        sameAs: [
+          // Add links to social profiles like GitHub, LinkedIn, etc.
+          // e.g., 'https://github.com/yourusername',
+          // 'https://linkedin.com/in/yourprofile'
+        ],
+        jobTitle: 'Développeur Système Embarqué', // Extracted from subtitle
+        description: 'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, passionné de programmation bas niveau, de philosophie et de photographie.', // Extracted from HeroBanner description
+        image: '/profile-logo.svg' // Extracted from HeroBanner profileImage
+      })
+    }
   ]
 })
 </script>

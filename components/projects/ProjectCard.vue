@@ -40,7 +40,6 @@
     </template>
   </Card>
 </template>
-
 <script setup lang="ts">
 // Props
 const props = defineProps({
@@ -70,4 +69,27 @@ const categoryClass = computed(() => {
 const navigateToProject = () => {
   emit('navigate', props.project.id)
 }
+
+// Schema.org Project
+const projectSchema = computed(() => ({
+  '@context': 'https://schema.org',
+  '@type': 'Project',
+  name: props.project.title,
+  description: props.project.description,
+  // Assuming project detail pages exist at /projects/{id}
+  // Adjust if the URL structure is different
+  url: `https://portfolio-carabistouflette.pages.dev/projects/${props.project.id}`,
+  // Potential properties to add if available in props:
+  // applicationCategory: props.project.category,
+  // keywords: props.project.technologies.join(', ')
+}))
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: () => JSON.stringify(projectSchema.value) // Use innerHTML for script content
+    }
+  ]
+})
 </script>
