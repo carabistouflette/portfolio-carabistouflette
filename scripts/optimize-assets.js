@@ -19,49 +19,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.resolve(__dirname, '../.output/public');
 
 /**
- * Minimise les fichiers CSS
- */
-async function optimizeCss() {
-  try {
-    console.log('🔍 Recherche des fichiers CSS...');
-    const cssFiles = await findFiles(outputDir, '.css');
-    console.log(`🧪 Optimisation de ${cssFiles.length} fichiers CSS...`);
-    
-    for (const file of cssFiles) {
-// Use CSSO (CSS Optimizer) for minification.
-      await execAsync(`npx csso ${file} --output ${file}`);
-    }
-    
-    console.log('✅ Optimisation CSS terminée!');
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'optimisation CSS:', error);
-  }
-}
-
-/**
- * Minimise les fichiers JavaScript
- */
-async function optimizeJs() {
-  try {
-    console.log('🔍 Recherche des fichiers JS...');
-    const jsFiles = await findFiles(outputDir, '.js');
-    console.log(`🧪 Optimisation de ${jsFiles.length} fichiers JS...`);
-    
-    for (const file of jsFiles) {
-      // Ignorer certains fichiers
-      if (file.includes('sw.js')) continue;
-      
-// Use Terser for JavaScript minification and mangling.
-      await execAsync(`npx terser ${file} --compress --mangle --output ${file}`);
-    }
-    
-    console.log('✅ Optimisation JS terminée!');
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'optimisation JS:', error);
-  }
-}
-
-/**
  * Optimisation des images
  */
 async function optimizeImages() {
@@ -129,8 +86,6 @@ async function main() {
     process.exit(1);
   }
   
-  await optimizeCss();
-  await optimizeJs();
   // Décommentez la ligne suivante si vous avez installé les dépendances nécessaires
   // pour l'optimisation des images (optipng-bin et mozjpeg)
   await optimizeImages();
