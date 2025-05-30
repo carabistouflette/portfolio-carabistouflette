@@ -30,6 +30,21 @@
         }"
       />
       
+      <!-- Terminal Toggle Button -->
+      <button
+        @click="toggleTerminal"
+        class="fixed bottom-4 right-4 z-30 bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
+        :class="{ 'bottom-[calc(33.333333%+1rem)]': isTerminalVisible }"
+        title="Toggle Terminal (Ctrl+`)"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span class="absolute -top-8 right-0 bg-surface2 text-text text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          Terminal (Ctrl+`)
+        </span>
+      </button>
+      
       <!-- Terminal Panel -->
       <TerminalPanel :is-visible="isTerminalVisible" />
     </div>
@@ -37,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { ref, provide, onMounted, onUnmounted } from 'vue'
 import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
 import PageLoader from '~/components/layout/PageLoader.vue'
 
@@ -47,7 +62,31 @@ const isTerminalVisible = ref(false)
 // Toggle terminal function
 const toggleTerminal = () => {
   isTerminalVisible.value = !isTerminalVisible.value
+  console.log('Terminal visibility toggled:', isTerminalVisible.value)
 }
+
+// Keyboard shortcut handler
+const handleKeydown = (event: KeyboardEvent) => {
+  // Ctrl+` or Cmd+` to toggle terminal
+  if ((event.ctrlKey || event.metaKey) && event.key === '`') {
+    event.preventDefault()
+    toggleTerminal()
+  }
+  // Escape to close terminal
+  else if (event.key === 'Escape' && isTerminalVisible.value) {
+    event.preventDefault()
+    isTerminalVisible.value = false
+  }
+}
+
+// Set up keyboard listeners
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 
 // Provide toggleTerminal function to descendants
 provide('toggleTerminal', toggleTerminal)

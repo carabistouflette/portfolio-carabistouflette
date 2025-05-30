@@ -1,113 +1,159 @@
 <template>
-  <div class="terminal-panel font-mono fixed bottom-0 left-0 right-0 h-1/3 bg-base p-4 border-t border-surface0 shadow-lg overflow-hidden transition-transform duration-300 ease-in-out"
-       :class="{ 'translate-y-full': !isVisible }">
-    <div ref="outputArea" class="terminal-output h-[calc(100%-2rem)] overflow-y-auto mb-2 text-text pr-2"> <!-- Adjusted height calculation -->
-      <div v-for="(line, index) in outputLines" :key="index" v-html="line"></div>
+  <div class="terminal-panel font-mono fixed bottom-0 left-0 right-0 bg-base border-t-2 border-surface0 shadow-2xl overflow-hidden z-50 transition-transform duration-300 ease-in-out"
+       :style="{ 
+         backgroundColor: '#1e1e2e', 
+         height: `${terminalHeight}px`,
+         minHeight: '150px',
+         maxHeight: '80vh',
+         transform: isVisible ? 'translateY(0)' : 'translateY(100%)'
+       }">
+    <!-- Resize handle -->
+    <div 
+      class="resize-handle absolute top-0 left-0 right-0 h-2 bg-surface1 cursor-ns-resize hover:bg-surface2 transition-colors group"
+      @mousedown="startResize"
+    >
+      <div class="resize-indicator absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex gap-1">
+        <div class="w-8 h-0.5 bg-overlay0 rounded-full transition-colors group-hover:bg-text"></div>
+      </div>
     </div>
-    <div class="terminal-input flex items-center h-8"> <!-- Added fixed height for input area -->
-      <span class="prompt text-subtext0 mr-2">&gt;</span>
-      <!-- Input field with command history navigation -->
-      <input
-        ref="inputFieldRef"
-        v-model="commandInput"
-        type="text"
-        class="input-field flex-grow bg-transparent border-none outline-none text-text placeholder-overlay0 focus:ring-0"
-        placeholder="Enter command..."
-        aria-label="Terminal command input"
-        @keydown.enter="handleCommand"
-        @keydown.up.prevent="navigateHistoryUp"
-        @keydown.down.prevent="navigateHistoryDown"
-      >
+    
+    <div class="terminal-content h-full pt-3 px-4 pb-4 flex flex-col">
+      <div ref="outputArea" class="terminal-output flex-grow overflow-y-auto mb-2 text-text pr-2">
+        <div v-for="(line, index) in outputLines" :key="index" v-html="line"></div>
+      </div>
+      <div class="terminal-input flex items-center h-8">
+        <span class="prompt text-subtext0 mr-2" v-html="prompt"></span>
+        <input
+          ref="inputFieldRef"
+          v-model="commandInput"
+          type="text"
+          class="input-field flex-grow bg-transparent border-none outline-none text-text placeholder-overlay0 focus:ring-0"
+          placeholder="Enter command..."
+          aria-label="Terminal command input"
+          @keydown.enter="handleCommand"
+          @keydown.up.prevent="navigateHistoryUp"
+          @keydown.down.prevent="navigateHistoryDown"
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, watch, onMounted } from 'vue'; // Added onMounted
-import { useRouter } from 'vue-router'; // Use vue-router directly for better type inference in editor
-import { useTheme } from '~/composables/useTheme'; // Assuming path
+import { ref, nextTick, watch, computed, onMounted } from 'vue'
+import { useTerminal } from '~/composables/useTerminal'
+import { useTheme } from '~/composables/useTheme'
 
 const props = defineProps({
   isVisible: {
     type: Boolean,
     default: false,
   },
-});
+})
 
-const router = useRouter();
-const { theme: currentTheme, setTheme } = useTheme(); // Assuming useTheme returns theme and setTheme
+const { currentDirectory, executeCommand } = useTerminal()
+const { theme: currentTheme, setTheme } = useTheme()
 
-const commandInput = ref('');
+const commandInput = ref('')
 const outputLines = ref<string[]>([
-  'Welcome to the interactive terminal!',
-  "Type 'help' for available commands. (Not implemented yet)",
-]);
-const outputArea = ref<HTMLElement | null>(null);
-const inputFieldRef = ref<HTMLInputElement | null>(null); // Ref for the input field
-const commandHistory = ref<string[]>([]);
-const historyIndex = ref<number>(-1); // -1 indicates not currently navigating history
+  '<span class="text-green-400">Welcome to the Portfolio Terminal!</span>',
+  '',
+  'This is an interactive terminal for navigating the portfolio.',
+  'Type <span class="text-yellow-400">help</span> to see available commands.',
+  '',
+])
+
+// Terminal height management
+const terminalHeight = ref(300) // Default height
+const isResizing = ref(false)
+const startY = ref(0)
+const startHeight = ref(0)
+
+// Log when component mounts
+onMounted(() => {
+  console.log('TerminalPanel component mounted')
+  console.log('Initial visibility:', props.isVisible)
+  
+  // Debug: Force visibility after mount to test
+  setTimeout(() => {
+    console.log('Debug check - Is terminal in DOM?', document.querySelector('.terminal-panel'))
+    const panel = document.querySelector('.terminal-panel') as HTMLElement
+    if (panel) {
+      console.log('Terminal panel found, computed styles:', {
+        transform: window.getComputedStyle(panel).transform,
+        bottom: window.getComputedStyle(panel).bottom,
+        height: window.getComputedStyle(panel).height,
+        zIndex: window.getComputedStyle(panel).zIndex,
+        display: window.getComputedStyle(panel).display,
+        visibility: window.getComputedStyle(panel).visibility
+      })
+    }
+  }, 1000)
+})
+const outputArea = ref<HTMLElement | null>(null)
+const inputFieldRef = ref<HTMLInputElement | null>(null)
+const commandHistory = ref<string[]>([])
+const historyIndex = ref<number>(-1)
+
+// Computed prompt with current directory
+const prompt = computed(() => {
+  return `<span class="text-green-400">visitor@portfolio</span>:<span class="text-blue-400">${currentDirectory.value}</span>$`
+})
 
 // Scroll to bottom when output changes
 watch(outputLines, async () => {
-  await nextTick();
+  await nextTick()
   if (outputArea.value) {
-    outputArea.value.scrollTop = outputArea.value.scrollHeight;
+    outputArea.value.scrollTop = outputArea.value.scrollHeight
   }
-}, { deep: true });
+}, { deep: true })
 
 // Temporary storage for input when navigating history
-let currentInputBeforeHistory = '';
+let currentInputBeforeHistory = ''
 
 const handleCommand = async () => {
-  const input = commandInput.value.trim();
-  if (!input) return;
+  const input = commandInput.value.trim()
+  if (!input) return
 
   // Add to history if it's not the same as the last command
   if (commandHistory.value.length === 0 || commandHistory.value[commandHistory.value.length - 1] !== input) {
-    commandHistory.value.push(input);
+    commandHistory.value.push(input)
   }
-  historyIndex.value = commandHistory.value.length; // Reset history index to the end (ready for new up arrow press)
-  currentInputBeforeHistory = ''; // Clear temporary storage
+  historyIndex.value = commandHistory.value.length
+  currentInputBeforeHistory = ''
 
-  // Add user input to output
-  outputLines.value.push(`<span class="text-subtext0">&gt;</span> ${input}`);
-  commandInput.value = ''; // Clear input field
+  // Add user input to output with prompt
+  outputLines.value.push(`${prompt.value} ${input}`)
+  commandInput.value = ''
 
-  // Parse command and arguments
-  const [command, ...args] = input.split(/\s+/);
-  const argument = args.join(' '); // Re-join args in case they contain spaces
-
-  // --- Command Execution Logic ---
-  switch (command.toLowerCase()) {
-    case 'nav':
-      await handleNavCommand(argument);
-      break;
-    case 'theme':
-      handleThemeCommand(argument);
-      break;
-    case 'filter':
-      handleFilterCommand(argument);
-      break;
-    case 'show':
-      handleShowCommand(argument);
-      break;
-    case 'clear': // Added case for clear command
-      outputLines.value = []; // Clear the output history
-      break;
-    // case 'help': // Future implementation
-    //   outputLines.value.push("Available commands: nav, theme, filter, show, help, clear");
-    //   break;
-    // case 'clear': // Future implementation - REMOVED as implemented above
-    //   outputLines.value = ["Terminal cleared."];
-    //   break;
-    default:
-      outputLines.value.push(`Error: Unknown command "${command}"`);
+  // Execute command using the terminal composable
+  const result = await executeCommand(input)
+  
+  // Handle special commands
+  if (result.length === 1 && result[0] === 'CLEAR_TERMINAL') {
+    outputLines.value = []
+  } else if (input.toLowerCase().startsWith('theme')) {
+    // Handle theme command specifically
+    const [, themeName] = input.split(/\s+/)
+    if (themeName && ['latte', 'frappe', 'macchiato', 'mocha'].includes(themeName.toLowerCase())) {
+      setTheme(themeName.toLowerCase() as any)
+      outputLines.value.push(`<span class="text-green-400">Theme changed to ${themeName}</span>`)
+    } else if (!themeName) {
+      outputLines.value.push('Usage: theme <variant>')
+      outputLines.value.push('Available themes: latte, frappe, macchiato, mocha')
+    } else {
+      outputLines.value.push(`<span class="text-red-400">Invalid theme: ${themeName}</span>`)
+      outputLines.value.push('Available themes: latte, frappe, macchiato, mocha')
+    }
+  } else {
+    // Add command result to output
+    outputLines.value.push(...result)
   }
 
-  // Ensure scroll to bottom after command execution potentially adds more lines
-  await nextTick();
-   if (outputArea.value) {
-    outputArea.value.scrollTop = outputArea.value.scrollHeight;
+  // Ensure scroll to bottom after command execution
+  await nextTick()
+  if (outputArea.value) {
+    outputArea.value.scrollTop = outputArea.value.scrollHeight
   }
 };
 
@@ -152,114 +198,74 @@ const moveCursorToEnd = () => {
   });
 };
 
-// Ensure input field gets focus when terminal becomes visible (optional but good UX)
+// Resize functions
+const startResize = (event: MouseEvent) => {
+  isResizing.value = true
+  startY.value = event.clientY
+  startHeight.value = terminalHeight.value
+  
+  document.addEventListener('mousemove', doResize)
+  document.addEventListener('mouseup', stopResize)
+  
+  // Prevent text selection during resize
+  document.body.style.userSelect = 'none'
+  document.body.style.cursor = 'ns-resize'
+}
+
+const doResize = (event: MouseEvent) => {
+  if (!isResizing.value) return
+  
+  const deltaY = startY.value - event.clientY
+  const newHeight = startHeight.value + deltaY
+  
+  // Clamp height between min and max
+  const minHeight = 150
+  const maxHeight = window.innerHeight * 0.8
+  
+  terminalHeight.value = Math.max(minHeight, Math.min(newHeight, maxHeight))
+  
+  // Save to localStorage
+  localStorage.setItem('terminal-height', terminalHeight.value.toString())
+}
+
+const stopResize = () => {
+  isResizing.value = false
+  document.removeEventListener('mousemove', doResize)
+  document.removeEventListener('mouseup', stopResize)
+  
+  // Restore cursor
+  document.body.style.userSelect = ''
+  document.body.style.cursor = ''
+}
+
+// Load saved height on mount
+onMounted(() => {
+  console.log('TerminalPanel component mounted')
+  console.log('Initial visibility:', props.isVisible)
+  
+  // Load saved terminal height
+  const savedHeight = localStorage.getItem('terminal-height')
+  if (savedHeight) {
+    terminalHeight.value = parseInt(savedHeight, 10)
+  }
+})
+
+// Ensure input field gets focus when terminal becomes visible
 watch(() => props.isVisible, (newValue) => {
+  console.log('Terminal visibility changed in component:', newValue)
   if (newValue) {
     nextTick(() => {
-      inputFieldRef.value?.focus();
-    });
+      inputFieldRef.value?.focus()
+    })
   }
-});
-
-// Focus input on component mount if initially visible (optional)
-// onMounted(() => {
-//   if (props.isVisible) {
-//      nextTick(() => {
-//       inputFieldRef.value?.focus();
-//     });
-//   }
-// });
-
-const handleNavCommand = async (page: string) => {
-  const validPages = ['index', 'projects', 'contact']; // Assuming these are the route names or paths
-  const targetPage = page.toLowerCase();
-
-  if (!targetPage) {
-     outputLines.value.push('Usage: nav &lt;page&gt; (e.g., nav projects)');
-     return;
-  }
-
-  // Map common names to route paths/names if necessary
-  let routeTarget = targetPage;
-  if (targetPage === 'home') routeTarget = 'index';
-
-  if (validPages.includes(routeTarget)) {
-    outputLines.value.push(`Navigating to ${page}...`);
-    try {
-      // Use route name if defined in pages/, otherwise use path
-      await router.push({ name: routeTarget }); // Prefer named routes if they exist
-      // Or use path: await router.push(routeTarget === 'index' ? '/' : `/${routeTarget}`);
-    } catch (error) {
-       console.error("Navigation error:", error);
-       // Check if error is due to route not found - Safely access message
-       if (error instanceof Error && error.message.includes('No match found for location with name')) {
-           outputLines.value.push(`Error: Route named "${routeTarget}" not found. Trying path...`);
-           try {
-               await router.push(routeTarget === 'index' ? '/' : `/${routeTarget}`); // Use path directly
-           } catch (pathError) {
-               console.error("Path navigation error:", pathError);
-               outputLines.value.push(`Error: Page "${page}" not found.`);
-           }
-       } else {
-            outputLines.value.push(`Error navigating to "${page}".`);
-       }
-    }
-  } else {
-    outputLines.value.push(`Error: Page "${page}" not found. Valid pages: home, projects, contact.`);
-  }
-};
-
-const handleThemeCommand = (variant: string) => {
-   const validThemes = ['latte', 'frappe', 'macchiato', 'mocha']; // From useTheme or constants
-   const targetTheme = variant.toLowerCase();
-
-   if (!targetTheme) {
-     outputLines.value.push('Usage: theme &lt;variant&gt; (e.g., theme mocha)');
-     return;
-   }
-
-   if (validThemes.includes(targetTheme)) {
-     setTheme(targetTheme as any); // Cast needed if setTheme expects specific literal types
-     outputLines.value.push(`Theme set to ${variant}.`);
-   } else {
-     outputLines.value.push(`Error: Theme variant "${variant}" not recognized. Valid themes: ${validThemes.join(', ')}.`);
-   }
-};
-
-const handleFilterCommand = (tag: string) => {
-  if (!tag) {
-    outputLines.value.push('Usage: filter &lt;tag&gt; (e.g., filter vue)');
-    return;
-  }
-  // Placeholder for actual filtering logic
-  outputLines.value.push(`Filtering projects by tag: "${tag}" (Implementation pending)`);
-};
-
-const handleShowCommand = (info: string) => {
-  const validInfo = ['contact', 'skills', 'about']; // Example info types
-  const targetInfo = info.toLowerCase();
-
-   if (!targetInfo) {
-    outputLines.value.push('Usage: show &lt;info&gt; (e.g., show skills)');
-    return;
-  }
-
-  if (validInfo.includes(targetInfo)) {
-    // Placeholder for actual info display logic
-    outputLines.value.push(`Showing info: "${info}" (Implementation pending)`);
-  } else {
-     outputLines.value.push(`Error: Cannot show info for "${info}". Valid options: ${validInfo.join(', ')}.`);
-  }
-};
+})
 
 </script>
 
 <style scoped>
 /* Scoped styles for the terminal panel - primarily for scrollbars */
 .terminal-panel {
-  /* font-family is now handled by Tailwind's font-mono class */
   font-size: 0.9rem;
-  /* Ensure smooth scrolling */
   scrollbar-width: thin;
   scrollbar-color: var(--ctp-mauve) var(--ctp-surface0);
 }
@@ -281,9 +287,21 @@ const handleShowCommand = (info: string) => {
 }
 
 .input-field:focus {
-  outline: none; /* Remove default focus outline - handled by focus:ring-0 */
+  outline: none;
 }
 
-/* Removed redundant :root and utility class definitions as they are handled globally and by Tailwind */
+/* Resize handle styling */
+.resize-handle {
+  touch-action: none;
+}
 
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: ns-resize;
+}
 </style>
