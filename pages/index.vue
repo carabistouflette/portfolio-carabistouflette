@@ -12,17 +12,10 @@
       :about-text="aboutSectionData.aboutText"
       :skills="aboutSectionData.skills"
     />
-    <Suspense>
-      <template #default>
-        <LazyTimelineSection
-          :title="timelineSectionData.title"
-          :timelineItems="timelineSectionData.timelineItems"
-        />
-      </template>
-      <template #fallback>
-        <LoadingState />
-      </template>
-    </Suspense>
+    <TimelineSection
+      :title="timelineSectionData.title"
+      :timelineItems="timelineSectionData.timelineItems"
+    />
     <section class="section-padding bg-mantle">
       <div class="container-custom text-center">
         <h2 class="mb-6 animate-slide-up">Envie de voir mes projets ?</h2>
@@ -129,8 +122,8 @@ const timelineSectionData = ref({
   ]
 })
 
-const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
-const LazyTimelineSection = defineAsyncComponent(() => import('@/components/home/TimelineSection.vue'))
+// Import TimelineSection directly to test
+import TimelineSection from '@/components/home/TimelineSection.vue'
 
 // Page meta
 useSeoMeta({
