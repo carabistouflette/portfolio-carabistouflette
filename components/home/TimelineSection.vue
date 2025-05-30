@@ -26,8 +26,8 @@
             :key="item.year"
             class="relative mb-16 last:mb-0"
           >
-            <!-- Timeline item container -->
-            <div class="md:flex md:items-center">
+            <!-- Desktop layout -->
+            <div class="hidden md:flex md:items-center">
               <!-- Content card - alternates sides on desktop -->
               <div 
                 class="md:w-5/12"
@@ -50,21 +50,45 @@
                 </div>
               </div>
               
-              <!-- Timeline dot and year - always in center -->
-              <div class="md:w-2/12 relative flex justify-center my-8 md:my-0">
-                <!-- Timeline dot -->
+              <!-- Timeline center column -->
+              <div class="md:w-2/12 relative flex justify-center">
+                <!-- Connector dot - positioned on the line -->
+                <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-mauve rounded-full border-4 border-base z-20"></div>
+                
+                <!-- Year badge - offset from line -->
+                <div
+                  :ref="(el) => {
+                    if (el) {
+                      yearMarkers.set(index, el as HTMLElement);
+                    }
+                  }"
+                  class="relative bg-surface1 text-text px-6 py-2 rounded-full font-bold text-lg shadow-xl border border-surface2"
+                  :class="index % 2 === 0 ? '-translate-x-32' : 'translate-x-32'"
+                  style="opacity: 0;"
+                >
+                  {{ item.year }}
+                </div>
+              </div>
+              
+              <!-- Empty space for alternating layout -->
+              <div 
+                class="md:w-5/12"
+                :class="index % 2 === 0 ? 'order-3' : 'order-1'"
+              ></div>
+            </div>
+            
+            <!-- Mobile layout -->
+            <div class="md:hidden">
+              <!-- Year with dot -->
+              <div class="flex justify-center mb-4">
                 <div class="relative">
-                  <!-- Connector dot -->
-                  <div class="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-mauve rounded-full border-4 border-base z-20"></div>
-                  
-                  <!-- Year badge -->
                   <div
                     :ref="(el) => {
                       if (el) {
-                        yearMarkers.set(index, el as HTMLElement);
+                        yearMarkers.set(index + 100, el as HTMLElement);
                       }
                     }"
-                    class="relative bg-surface1 text-text px-6 py-2 rounded-full font-bold text-lg shadow-xl border border-surface2 z-10"
+                    class="bg-surface1 text-text px-6 py-2 rounded-full font-bold text-lg shadow-xl border border-surface2"
                     style="opacity: 0;"
                   >
                     {{ item.year }}
@@ -72,11 +96,22 @@
                 </div>
               </div>
               
-              <!-- Empty space for alternating layout -->
-              <div 
-                class="hidden md:block md:w-5/12"
-                :class="index % 2 === 0 ? 'md:order-3' : 'md:order-1'"
-              ></div>
+              <!-- Content -->
+              <div
+                :ref="(el) => {
+                  if (el) {
+                    contentCards.set(index + 100, el as HTMLElement);
+                  }
+                }"
+                style="opacity: 0;"
+              >
+                <Card :glass="true">
+                  <template #header>
+                    <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
+                  </template>
+                  <p class="text-subtext0">{{ item.description }}</p>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
@@ -131,19 +166,26 @@ onMounted(async () => {
     // Animate timeline items with stagger
     yearMarkers.forEach((marker, index) => {
       if (marker) {
+        const actualIndex = index >= 100 ? index - 100 : index;
         setTimeout(() => {
           marker.style.opacity = '1';
           marker.classList.add('animate-fade-in');
-        }, 400 + (index * 200));
+        }, 400 + (actualIndex * 200));
       }
     });
     
     contentCards.forEach((card, index) => {
       if (card) {
+        const actualIndex = index >= 100 ? index - 100 : index;
+        const isMobile = index >= 100;
         setTimeout(() => {
           card.style.opacity = '1';
-          card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-        }, 500 + (index * 200));
+          if (isMobile) {
+            card.classList.add('animate-fade-in');
+          } else {
+            card.classList.add(actualIndex % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
+          }
+        }, 500 + (actualIndex * 200));
       }
     });
   }, 100); // Small delay to ensure DOM is ready
