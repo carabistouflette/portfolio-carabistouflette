@@ -3,17 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "pages:build": "NITRO_PRESET=cloudflare-pages nuxt build",
+    "build": "nuxt build && node scripts/optimize-assets.js",
+    "pages:build": "NITRO_PRESET=cloudflare-pages nuxt build && node scripts/optimize-assets.js",
     "dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate && node scripts/optimize-assets.js",
     "preview": "nuxt preview",
     "postinstall": "echo 'Skipping nuxt prepare'",
     "prepare": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "cf:dev": "NITRO_PRESET=cloudflare-pages nuxt dev",
-    "cf:build": "NITRO_PRESET=cloudflare-pages nuxt build",
+    "cf:build": "NITRO_PRESET=cloudflare-pages nuxt build && node scripts/optimize-assets.js",
     "cf:preview": "wrangler pages dev .output/public --compatibility-date=2025-03-18",
     "cf:deploy": "npm run cf:build && wrangler pages deploy .output/public"
   },
@@ -36,14 +36,17 @@
     "@iconify-json/mdi": "^1.1.64",
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@nuxtjs/sitemap": "^7.2.10",
+    "@types/node": "^22.15.3",
     "@typescript-eslint/eslint-plugin": "8.29.0",
     "@typescript-eslint/parser": "8.29.0",
     "@vueuse/nuxt": "^13.0.0",
     "eslint": "9.24.0",
     "eslint-plugin-vue": "^10.0.0",
-    "terser": "^5.26.0",
+    "mozjpeg": "^8.0.0",
+    "optipng-bin": "^9.0.0",
     "typescript": "5.8.3",
     "vue-tsc": "^2.2.8",
-    "wrangler": "4.7.2"
+    "wrangler": "4.13.2"
   }
 }

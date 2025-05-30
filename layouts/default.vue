@@ -1,26 +1,37 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-base text-text">
-    <TheHeader @toggle-terminal="toggleTerminal" /> <!-- Pass toggle function or use provide/inject -->
-    <main class="flex-grow">
+  <div class="min-h-screen flex flex-col bg-base text-text relative">
+    <!-- Animated background pattern -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-full h-full">
+        <!-- Floating particles -->
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        
+        <!-- Gradient mesh -->
+        <div class="absolute inset-0 opacity-20">
+          <div class="noise-pattern"></div>
+        </div>
+      </div>
+    </div>
+    
+    <TheHeader class="relative z-20" />
+    <main class="flex-grow relative z-10">
       <slot />
     </main>
     <TheFooter
+      class="relative z-10"
       :social-links="{
         linkedin: 'https://linkedin.com/in/alexis-robin-41703a2ab',
         email: 'mailto:alexis.robin@etu.umontpellier.fr',
         phone: 'tel:+33761460496'
       }"
     />
-    <!-- Cursor Spotlight Element -->
-    <div ref="spotlight" class="cursor-spotlight"></div>
-    <!-- Terminal Panel -->
-    <TerminalPanel :is-visible="isTerminalVisible" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, provide } from 'vue'
-import TerminalPanel from '~/components/terminal/TerminalPanel.vue' // Import the terminal component
 // Layout setup
 useHead({
   htmlAttrs: {
@@ -30,37 +41,113 @@ useHead({
     class: 'bg-base text-text overflow-x-hidden' // Keep existing classes
   }
 })
+</script>
 
-// Terminal State
-const isTerminalVisible = ref(false)
-const toggleTerminal = () => {
-  isTerminalVisible.value = !isTerminalVisible.value
+<style scoped>
+/* Floating particles */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(to bottom, rgba(203, 166, 247, 0.6), rgba(137, 180, 250, 0.4));
+  border-radius: 50%;
+  filter: blur(1px);
+  box-shadow: 0 0 10px rgba(203, 166, 247, 0.3);
 }
 
-// Provide state and toggle function to children
-provide('isTerminalVisible', isTerminalVisible) // Provide the ref directly
-provide('toggleTerminal', toggleTerminal)
+.particle-1 {
+  top: 20%;
+  left: 10%;
+  animation: float-1 20s infinite ease-in-out;
+}
 
-// Cursor Spotlight Logic
-const spotlight = ref<HTMLElement | null>(null)
+.particle-2 {
+  top: 60%;
+  left: 80%;
+  animation: float-2 25s infinite ease-in-out;
+}
 
-const updateSpotlight = (e: MouseEvent) => {
-  if (spotlight.value) {
-    // Use clientX/clientY for viewport-relative coordinates
-    spotlight.value.style.left = `${e.clientX}px`
-    spotlight.value.style.top = `${e.clientY}px`
+.particle-3 {
+  top: 80%;
+  left: 20%;
+  animation: float-3 30s infinite ease-in-out;
+}
+
+.particle-4 {
+  top: 30%;
+  left: 70%;
+  animation: float-4 22s infinite ease-in-out;
+}
+
+@keyframes float-1 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.5;
+  }
+  33% {
+    transform: translate(100px, -100px) rotate(120deg);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translate(-100px, 100px) rotate(240deg);
+    opacity: 0.3;
   }
 }
 
-onMounted(() => {
-  window.addEventListener('mousemove', updateSpotlight)
-  // Optional: Hide default cursor if the spotlight is prominent enough
-  // document.body.style.cursor = 'none';
-})
+@keyframes float-2 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translate(-150px, 100px) rotate(-120deg);
+    opacity: 0.4;
+  }
+  66% {
+    transform: translate(150px, -100px) rotate(120deg);
+    opacity: 0.8;
+  }
+}
 
-onUnmounted(() => {
-  window.removeEventListener('mousemove', updateSpotlight)
-  // Optional: Restore default cursor on unmount
-  // document.body.style.cursor = 'auto';
-})
-</script>
+@keyframes float-3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(200px, -200px) scale(1.5);
+    opacity: 0.7;
+  }
+}
+
+@keyframes float-4 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-200px, 150px) scale(0.8);
+    opacity: 0.4;
+  }
+}
+
+/* Noise pattern for texture */
+.noise-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.01) 35px, rgba(255, 255, 255, 0.01) 70px),
+    repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255, 255, 255, 0.01) 35px, rgba(255, 255, 255, 0.01) 70px);
+  animation: noise-shift 60s linear infinite;
+}
+
+@keyframes noise-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+</style>

@@ -13,6 +13,8 @@
           :class="{ 'border-red': errors[field.name] }"
           :placeholder="field.label"
           required
+          :aria-invalid="!!errors[field.name]"
+          :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
         />
         <textarea
           v-else
@@ -23,21 +25,29 @@
           :class="{ 'border-red': errors[field.name] }"
           :placeholder="field.label"
           required
+          :aria-invalid="!!errors[field.name]"
+          :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
         ></textarea>
-        <p v-if="errors[field.name]" class="text-red text-sm">{{ errors[field.name] }}</p>
+        <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
       </div>
+    </div>
+
+    <!-- Honeypot field (visually hidden) -->
+    <div class="absolute left-[-9999px]" aria-hidden="true">
+      <label for="website_url">Website</label>
+      <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off">
     </div>
     
     <!-- Submit button -->
     <div class="flex justify-end">
-      <Button 
-        type="submit" 
-        variant="primary" 
+      <Button
+        type="submit"
+        variant="solid"
         size="lg"
-        :disabled="isSubmitting"
+        :disabled="isLoading"
         class="w-full md:w-auto"
       >
-        <template v-if="isSubmitting">
+        <template v-if="isLoading">
           <Icon name="heroicons:arrow-path" class="w-5 h-5 animate-spin mr-2" />
           Envoi en cours...
         </template>
@@ -49,18 +59,18 @@
     </div>
     
     <!-- Success message -->
-    <div v-if="formStatus === 'success'" class="p-4 bg-green/20 text-green rounded-lg animate-slide-up">
+    <div v-if="isSuccess" role="status" aria-live="polite" class="p-4 bg-green/20 text-green rounded-lg animate-slide-up">
       <div class="flex items-center">
-        <Icon name="heroicons:check-circle" class="w-5 h-5 mr-2" />
-        <p>Votre message a été envoyé avec succès. Je vous répondrai dans les plus brefs délais.</p>
+        <Icon name="heroicons:check-circle" class="w-5 h-5 mr-2" aria-hidden="true" />
+        <p>Message sent successfully!</p> <!-- Updated message -->
       </div>
     </div>
     
     <!-- Error message -->
-    <div v-if="formStatus === 'error'" class="p-4 bg-red/20 text-red rounded-lg animate-slide-up">
+    <div v-if="error" role="alert" aria-live="assertive" class="p-4 bg-red/20 text-red rounded-lg animate-slide-up">
       <div class="flex items-center">
-        <Icon name="heroicons:exclamation-circle" class="w-5 h-5 mr-2" />
-        <p>Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer plus tard.</p>
+        <Icon name="heroicons:exclamation-circle" class="w-5 h-5 mr-2" aria-hidden="true" />
+        <p>{{ error }}</p> <!-- Display dynamic error -->
       </div>
     </div>
   </form>
@@ -92,76 +102,114 @@ interface FormErrors {
   [key: string]: string;
 }
 
+// Define expected API response types
+interface ApiResponseSuccess {
+  success: true;
+  message: string;
+}
+
+interface ApiResponseError {
+  success?: false; // Optional for validation errors from createError
+  message?: string; // Optional for validation errors
+  data?: FormErrors; // For validation errors
+  statusMessage?: string; // From createError
+}
+
+type ApiResponse = ApiResponseSuccess | ApiResponseError;
+
+
 const props = defineProps<ContactFormProps>();
 
 // Form state
-const isSubmitting = ref(false);
-const formStatus = ref<'idle' | 'success' | 'error'>('idle');
+const isLoading = ref(false);
+const error = ref<string | null>(null);
+const isSuccess = ref(false);
 
 // Form data
 const form = reactive<FormData>(
   props.formFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {})
 );
 
-// Validation errors
+// Validation errors (will be populated by server response)
 const errors = reactive<FormErrors>(
   props.formFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {})
 );
 
-// Validate form
-const validateForm = (): boolean => {
-  let isValid = true;
-
-  // Reset errors
+// Submit form
+// Handles the entire form submission process, including state updates, API call, and error/success handling.
+const submitForm = async (event: Event) => {
+  isLoading.value = true;
+  error.value = null;
+  isSuccess.value = false;
+  // Reset server-side validation errors before a new submission attempt
   Object.keys(errors).forEach(key => {
     errors[key as keyof typeof errors] = '';
   });
 
-  props.formFields.forEach(field => {
-    if (field.validation.required && !form[field.name]) {
-      errors[field.name] = `${field.label} est requis`;
-      isValid = false;
-    } else if (field.validation.minLength && form[field.name].length < field.validation.minLength) {
-      errors[field.name] = `${field.label} doit comporter au moins ${field.validation.minLength} caractères`;
-      isValid = false;
-    } else if (field.validation.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form[field.name])) {
-      errors[field.name] = 'Veuillez entrer un email valide';
-      isValid = false;
-    }
-  });
+  // Get honeypot value directly from the form element
+  const formElement = event.target as HTMLFormElement;
+  const honeypotInput = formElement.elements.namedItem('website_url') as HTMLInputElement | null;
+  // Use nullish coalescing for safety, though the input should exist
+  const honeypotValue = honeypotInput?.value ?? '';
 
-  return isValid;
-};
-
-// Submit form
-const submitForm = async () => {
-  if (!validateForm()) return;
+  const formData = {
+    ...form,
+    honeypot: honeypotValue, // Add honeypot field to the payload
+  };
 
   try {
-    isSubmitting.value = true;
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real application, you would send this data to your backend
-    console.log('Form submitted:', form);
-
-    // Reset form
-    props.formFields.forEach(field => {
-      form[field.name] = '';
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(formData),
     });
 
-    formStatus.value = 'success';
+    // Always parse the JSON body, regardless of the status code,
+    const responseData = await response.json(); // Get raw JSON first
+// Always parse the JSON body, regardless of the status code,
+    // as the server might send error details in the body even for non-2xx responses.
+// Always parse the JSON body, regardless of the status code,
+    // as the server might send error details in the body even for non-2xx responses.
 
-    // Reset status after 5 seconds
-    setTimeout(() => {
-      formStatus.value = 'idle';
-    }, 5000);
-  } catch (error) {
-    console.error('Form submission error:', error);
-    formStatus.value = 'error';
+    if (!response.ok) { // Handle HTTP errors (e.g., 4xx, 5xx)
+      // Treat non-OK responses as potential error structures
+      const errorResponse = responseData as ApiResponseError;
+      
+      // Check specifically for validation errors (status 422 with data)
+      if (response.status === 422 && errorResponse.data) {
+        // Handle validation errors
+        Object.assign(errors, errorResponse.data);
+// Set a general error message for the user
+        error.value = errorResponse.message || errorResponse.statusMessage || 'Please correct the errors in the form.';
+      } else {
+        // Handle other server errors (e.g., 500) or unexpected formats
+        throw new Error(errorResponse.message || errorResponse.statusMessage || `Server error: ${response.status}`);
+// Throw an error to be caught by the catch block below
+      }
+      isSuccess.value = false;
+    } else {
+      // Handle successful submission (HTTP 2xx status)
+      const successResponse = responseData as ApiResponseSuccess;
+      isSuccess.value = true;
+      // Reset form fields on success
+      props.formFields.forEach(field => {
+        form[field.name] = '';
+      });
+      // Optionally reset honeypot field if needed, though it shouldn't hold value
+      if (honeypotInput) honeypotInput.value = '';
+    }
+// Ensures the hidden field is cleared for any subsequent (though unlikely) interactions.
+
+  } catch (err: any) { // Catch network errors or errors thrown from the !response.ok block
+    console.error('Form submission error:', err);
+    error.value = err.message || 'An error occurred while sending your message. Please check your connection and try again.';
+    isSuccess.value = false;
   } finally {
-    isSubmitting.value = false;
+    // Ensure loading state is always reset, whether the submission succeeded or failed.
+    isLoading.value = false;
   }
 };
 </script>

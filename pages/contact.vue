@@ -20,7 +20,7 @@
       <div class="container-custom">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <!-- Contact Form -->
-          <div class="glass-card p-6 md:p-8 animate-slide-right">
+          <Card glass className="p-6 md:p-8 animate-slide-right">
             <Suspense>
               <template #default>
                 <LazyContactForm
@@ -32,7 +32,7 @@
                 <LoadingState />
               </template>
             </Suspense>
-          </div>
+          </Card>
           
           <!-- Contact Info -->
           <div class="animate-slide-left">
@@ -77,6 +77,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref } from 'vue'
+import { useSeoMeta } from '#imports'
 
 interface MapCoordinates {
   center: [number, number];
@@ -190,10 +191,10 @@ const LazyContactInfo = defineAsyncComponent(() => import('@/components/contact/
 const LazyMapComponent = defineAsyncComponent(() => import('@/components/contact/MapComponent.vue'))
 
 // Page meta
-useHead({
-  title: 'Contact | Alexis Robin',
-  meta: [
-    { name: 'description', content: 'Contactez Alexis Robin - Étudiant en informatique spécialisé en programmation bas niveau et systèmes embarqués' }
-  ]
+useSeoMeta({
+  title: 'Contact - Alexis Robin Portfolio',
+  description: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, systèmes embarqués et programmation bas niveau.',
+  ogTitle: 'Contact - Alexis Robin Portfolio',
+  ogDescription: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, systèmes embarqués et programmation bas niveau.',
 })
 </script>

@@ -98,8 +98,8 @@ const buttonClasses = computed(() => {
   let variantStyle = '';
   switch (props.variant) {
     case 'solid':
-      // Use text-base (dark) for better contrast on light accent backgrounds
-      variantStyle = `bg-${props.color} text-base hover:brightness-110 hover:text-crust active:brightness-95 shadow-md`;
+      // Use text-crust for better contrast on accent backgrounds
+      variantStyle = `bg-${props.color} text-crust hover:brightness-110 active:brightness-95 shadow-md`;
       break;
     case 'outline':
       variantStyle = `border-2 border-${props.color} text-${props.color} bg-transparent hover:bg-${props.color}/10 active:bg-${props.color}/20`;

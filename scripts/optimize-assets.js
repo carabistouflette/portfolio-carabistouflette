@@ -19,47 +19,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.resolve(__dirname, '../.output/public');
 
 /**
- * Minimise les fichiers CSS
- */
-async function optimizeCss() {
-  try {
-    console.log('🔍 Recherche des fichiers CSS...');
-    const cssFiles = await findFiles(outputDir, '.css');
-    console.log(`🧪 Optimisation de ${cssFiles.length} fichiers CSS...`);
-    
-    for (const file of cssFiles) {
-      await execAsync(`npx csso ${file} --output ${file}`);
-    }
-    
-    console.log('✅ Optimisation CSS terminée!');
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'optimisation CSS:', error);
-  }
-}
-
-/**
- * Minimise les fichiers JavaScript
- */
-async function optimizeJs() {
-  try {
-    console.log('🔍 Recherche des fichiers JS...');
-    const jsFiles = await findFiles(outputDir, '.js');
-    console.log(`🧪 Optimisation de ${jsFiles.length} fichiers JS...`);
-    
-    for (const file of jsFiles) {
-      // Ignorer certains fichiers
-      if (file.includes('sw.js')) continue;
-      
-      await execAsync(`npx terser ${file} --compress --mangle --output ${file}`);
-    }
-    
-    console.log('✅ Optimisation JS terminée!');
-  } catch (error) {
-    console.error('❌ Erreur lors de l\'optimisation JS:', error);
-  }
-}
-
-/**
  * Optimisation des images
  */
 async function optimizeImages() {
@@ -75,8 +34,10 @@ async function optimizeImages() {
     
     for (const file of imageFiles) {
       if (file.endsWith('.png')) {
+// Use OptiPNG for lossless PNG optimization. '-o5' sets the optimization level.
         await execAsync(`npx optipng -o5 ${file}`);
       } else {
+// Use MozJPEG for lossy JPEG optimization (overwrites the original file).
         await execAsync(`npx mozjpeg -optimize -outfile ${file} ${file}`);
       }
     }
@@ -93,6 +54,7 @@ async function optimizeImages() {
 async function findFiles(directory, extension) {
   const files = [];
   
+// Inner recursive function to traverse directories.
   async function search(dir) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     
@@ -116,6 +78,7 @@ async function main() {
   
   try {
     // Vérifier que le dossier de sortie existe
+// Ensure the build output directory exists before attempting optimizations.
     await fs.access(outputDir);
   } catch (error) {
     console.error(`❌ Le répertoire de sortie n'existe pas: ${outputDir}`);
@@ -123,11 +86,9 @@ async function main() {
     process.exit(1);
   }
   
-  await optimizeCss();
-  await optimizeJs();
   // Décommentez la ligne suivante si vous avez installé les dépendances nécessaires
   // pour l'optimisation des images (optipng-bin et mozjpeg)
-  // await optimizeImages();
+  await optimizeImages();
   
   console.log('🎉 Toutes les optimisations sont terminées!');
 }

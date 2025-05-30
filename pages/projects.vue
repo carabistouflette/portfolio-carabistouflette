@@ -32,7 +32,7 @@
     <!-- CTA Section -->
     <section class="bg-mantle py-16">
       <div class="container-custom text-center">
-        <div class="glass-card max-w-3xl mx-auto p-8 md:p-12">
+        <Card glass className="max-w-3xl mx-auto p-8 md:p-12">
           <h2 class="mb-4">Intéressé par mon travail ?</h2>
           <p class="text-lg mb-6">
             N'hésitez pas à me contacter pour discuter de projets ou pour en savoir plus sur mon parcours.
@@ -45,7 +45,7 @@
           >
             Me contacter
           </Button>
-        </div>
+        </Card>
       </div>
     </section>
   </div>
@@ -53,14 +53,15 @@
 
 <script setup>
 import { defineAsyncComponent } from 'vue'
+import { useSeoMeta } from '#imports'
 import LoadingState from '@/components/ui/LoadingState.vue'
 
 const ProjectsList = defineAsyncComponent(() => import('@/components/projects/ProjectsList.vue'))
 // Page meta
-useHead({
-  title: 'Projets | Alexis Robin',
-  meta: [
-    { name: 'description', content: 'Découvrez les projets d\'Alexis Robin - Systèmes embarqués, programmation bas niveau et administration réseau' }
-  ]
+useSeoMeta({
+  title: 'Projets - Alexis Robin Portfolio',
+  description: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation bas niveau, systèmes embarqués, et administration réseau.',
+  ogTitle: 'Projets - Alexis Robin Portfolio',
+  ogDescription: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation bas niveau, systèmes embarqués, et administration réseau.',
 })
 </script>

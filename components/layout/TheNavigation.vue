@@ -1,5 +1,5 @@
 <template>
-  <div :class="mobile ? 'flex flex-col space-y-4' : 'flex items-center space-x-6'">
+  <nav aria-label="Main navigation" :class="mobile ? 'flex flex-col space-y-4' : 'flex items-center space-x-6'">
     <NavLink
       v-for="item in navigationItems"
       :key="item.path"
@@ -9,7 +9,7 @@
       :mobile="mobile"
       @click="mobile && $emit('navigate')"
     />
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
