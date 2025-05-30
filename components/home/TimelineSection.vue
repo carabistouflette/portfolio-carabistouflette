@@ -15,37 +15,32 @@
         <div class="w-24 h-1 bg-mauve mx-auto rounded-full"></div>
       </div>
       
-      <div class="relative max-w-4xl mx-auto">
+      <div class="relative max-w-6xl mx-auto">
         <!-- Timeline line - only visible on medium screens and up -->
-        <div ref="timelineLineRef" class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-surface2" style="opacity: 0;"></div>
+        <div ref="timelineLineRef" class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-surface2" style="opacity: 0;"></div>
         
         <!-- Timeline items -->
-        <div class="space-y-16 relative">
+        <div class="relative">
           <div
             v-for="(item, index) in timelineItems"
             :key="item.year"
-            class="relative"
+            class="relative flex items-center justify-center mb-16 last:mb-0"
           >
-            <!-- Timeline item -->
-            <div
-              class="flex flex-col md:grid md:grid-cols-2 md:gap-8 items-center"
-            >
-              <!-- Content - alternating sides -->
-              <div 
-                class="w-full"
-                :class="index % 2 === 0 ? 'md:order-1' : 'md:order-2'"
-              >
+            <!-- Desktop layout -->
+            <div class="hidden md:flex w-full items-center">
+              <!-- Left content -->
+              <div class="w-5/12" :class="{ 'order-2 text-left': index % 2 !== 0 }">
                 <div
+                  v-if="index % 2 === 0"
                   :ref="(el) => {
                     if (el) {
                       contentCards.set(index, el as HTMLElement);
                     }
                   }"
                   style="opacity: 0;"
+                  class="ml-auto"
                 >
-                  <Card
-                    :glass="true"
-                  >
+                  <Card :glass="true" class="max-w-md ml-auto">
                     <template #header>
                       <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
                     </template>
@@ -54,14 +49,10 @@
                 </div>
               </div>
               
-              <!-- Year marker - center column -->
-              <div 
-                class="w-full flex items-center justify-center relative mt-4 md:mt-0"
-                :class="index % 2 === 0 ? 'md:order-2' : 'md:order-1'"
-              >
-                <!-- Connector dot - only visible on medium screens and up -->
-                <div class="hidden md:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-mauve rounded-full border-4 border-base z-10"></div>
-                
+              <!-- Center timeline -->
+              <div class="w-2/12 flex justify-center relative">
+                <!-- Connector dot -->
+                <div class="absolute w-6 h-6 bg-mauve rounded-full border-4 border-base z-10"></div>
                 <!-- Year badge -->
                 <div
                   :ref="(el) => {
@@ -69,11 +60,64 @@
                       yearMarkers.set(index, el as HTMLElement);
                     }
                   }"
-                  class="bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2"
+                  class="bg-surface1 text-text px-4 py-2 rounded-full font-bold text-base shadow-xl border border-surface2 z-20"
+                  style="opacity: 0; position: relative;"
+                >
+                  {{ item.year }}
+                </div>
+              </div>
+              
+              <!-- Right content -->
+              <div class="w-5/12" :class="{ 'order-1 text-right': index % 2 !== 0 }">
+                <div
+                  v-if="index % 2 !== 0"
+                  :ref="(el) => {
+                    if (el) {
+                      contentCards.set(index, el as HTMLElement);
+                    }
+                  }"
+                  style="opacity: 0;"
+                  class="mr-auto"
+                >
+                  <Card :glass="true" class="max-w-md">
+                    <template #header>
+                      <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
+                    </template>
+                    <p class="text-subtext0">{{ item.description }}</p>
+                  </Card>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mobile layout -->
+            <div class="md:hidden w-full">
+              <div class="text-center mb-4">
+                <div
+                  :ref="(el) => {
+                    if (el && window.innerWidth < 768) {
+                      yearMarkers.set(index, el as HTMLElement);
+                    }
+                  }"
+                  class="inline-block bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2"
                   style="opacity: 0;"
                 >
                   {{ item.year }}
                 </div>
+              </div>
+              <div
+                :ref="(el) => {
+                  if (el && window.innerWidth < 768) {
+                    contentCards.set(index, el as HTMLElement);
+                  }
+                }"
+                style="opacity: 0;"
+              >
+                <Card :glass="true">
+                  <template #header>
+                    <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
+                  </template>
+                  <p class="text-subtext0">{{ item.description }}</p>
+                </Card>
               </div>
             </div>
           </div>
