@@ -1,14 +1,23 @@
 <template>
   <section class="section-padding">
     <div class="container-custom">
-      <div ref="headerRef" class="mb-12 text-center opacity-0">
+      <!-- Debug info -->
+      <div class="mb-4 p-4 bg-red-500 text-white rounded" v-if="true">
+        <p>Timeline Debug:</p>
+        <p>Component mounted: {{ isMounted }}</p>
+        <p>Title: {{ title }}</p>
+        <p>Items count: {{ timelineItems?.length || 0 }}</p>
+        <p>Props: {{ JSON.stringify($props) }}</p>
+      </div>
+      
+      <div ref="headerRef" class="mb-12 text-center" style="opacity: 0;">
         <h2 class="mb-4">{{ title }}</h2>
         <div class="w-24 h-1 bg-mauve mx-auto rounded-full"></div>
       </div>
       
       <div class="relative max-w-4xl mx-auto">
         <!-- Timeline line - only visible on medium screens and up -->
-        <div ref="timelineLineRef" class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-surface2 opacity-0"></div>
+        <div ref="timelineLineRef" class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-0.5 bg-surface2" style="opacity: 0;"></div>
         
         <!-- Timeline items -->
         <div class="space-y-16 relative">
@@ -26,20 +35,23 @@
                 class="w-full"
                 :class="index % 2 === 0 ? 'md:order-1' : 'md:order-2'"
               >
-                <Card
+                <div
                   :ref="(el) => {
-                    if (el && contentCards.value) {
-                      contentCards.value[index] = (el as any).$el || el;
+                    if (el) {
+                      contentCards.value[index] = el as HTMLElement;
                     }
                   }"
-                  class="opacity-0"
-                  :glass="true"
+                  style="opacity: 0;"
                 >
-                  <template #header>
-                    <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
-                  </template>
-                  <p class="text-subtext0">{{ item.description }}</p>
-                </Card>
+                  <Card
+                    :glass="true"
+                  >
+                    <template #header>
+                      <h3 class="text-xl font-semibold mb-2">{{ item.title }}</h3>
+                    </template>
+                    <p class="text-subtext0">{{ item.description }}</p>
+                  </Card>
+                </div>
               </div>
               
               <!-- Year marker - center column -->
@@ -57,7 +69,8 @@
                       yearMarkers.value[index] = el as HTMLElement;
                     }
                   }"
-                  class="bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2 opacity-0"
+                  class="bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2"
+                  style="opacity: 0;"
                 >
                   {{ item.year }}
                 </div>
@@ -71,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 
 interface TimelineItem {
   year: number;
@@ -93,17 +106,24 @@ const timelineLineRef = ref<HTMLElement>();
 const yearMarkers = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
 const contentCards = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
 
-onMounted(() => {
-  // Simple animation approach without the preloadAnimations composable
-  // Apply animations directly after a short delay
+// Debug: Track if component is mounted
+const isMounted = ref(false);
+
+onMounted(async () => {
+  isMounted.value = true;
+  
+  // Wait for next tick to ensure DOM is ready
+  await nextTick();
+  
+  // Apply animations after a short delay
   setTimeout(() => {
     if (headerRef.value) {
+      headerRef.value.style.opacity = '1';
       headerRef.value.classList.add('animate-slide-up');
-      headerRef.value.classList.remove('opacity-0');
     }
     if (timelineLineRef.value) {
+      timelineLineRef.value.style.opacity = '1';
       timelineLineRef.value.classList.add('animate-fade-in');
-      timelineLineRef.value.classList.remove('opacity-0');
     }
     
     // Animate timeline items with stagger
@@ -111,8 +131,8 @@ onMounted(() => {
       yearMarkers.value.forEach((marker, index) => {
         if (marker) {
           setTimeout(() => {
+            marker.style.opacity = '1';
             marker.classList.add('animate-fade-in');
-            marker.classList.remove('opacity-0');
           }, 400 + (index * 200));
         }
       });
@@ -122,8 +142,8 @@ onMounted(() => {
       contentCards.value.forEach((card, index) => {
         if (card) {
           setTimeout(() => {
+            card.style.opacity = '1';
             card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-            card.classList.remove('opacity-0');
           }, 500 + (index * 200));
         }
       });

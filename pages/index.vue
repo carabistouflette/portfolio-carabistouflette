@@ -14,7 +14,7 @@
     />
     <TimelineSection
       :title="timelineSectionData.title"
-      :timelineItems="timelineSectionData.timelineItems"
+      :timeline-items="timelineSectionData.timelineItems"
     />
     <section class="section-padding bg-mantle">
       <div class="container-custom text-center">
