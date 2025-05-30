@@ -28,11 +28,7 @@
               >
                 <Card
                   :ref="(el) => {
-                    if (el) {
-                      // Ensure array has space
-                      if (!contentCards.value[index]) {
-                        contentCards.value[index] = null;
-                      }
+                    if (el && contentCards.value) {
                       contentCards.value[index] = (el as any).$el || el;
                     }
                   }"
@@ -57,11 +53,7 @@
                 <!-- Year badge -->
                 <div
                   :ref="(el) => {
-                    if (el) {
-                      // Ensure array has space
-                      if (!yearMarkers.value[index]) {
-                        yearMarkers.value[index] = null;
-                      }
+                    if (el && yearMarkers.value) {
                       yearMarkers.value[index] = el as HTMLElement;
                     }
                   }"
@@ -97,8 +89,9 @@ const props = defineProps<TimelineSectionProps>();
 // References
 const headerRef = ref<HTMLElement>();
 const timelineLineRef = ref<HTMLElement>();
-const yearMarkers = ref<(HTMLElement | null)[]>([]);
-const contentCards = ref<(HTMLElement | null)[]>([]);
+// Initialize arrays with the correct length based on timeline items
+const yearMarkers = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
+const contentCards = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
 
 onMounted(() => {
   // Simple animation approach without the preloadAnimations composable
@@ -106,27 +99,35 @@ onMounted(() => {
   setTimeout(() => {
     if (headerRef.value) {
       headerRef.value.classList.add('animate-slide-up');
+      headerRef.value.classList.remove('opacity-0');
     }
     if (timelineLineRef.value) {
       timelineLineRef.value.classList.add('animate-fade-in');
+      timelineLineRef.value.classList.remove('opacity-0');
     }
     
     // Animate timeline items with stagger
-    yearMarkers.value.forEach((marker, index) => {
-      if (marker) {
-        setTimeout(() => {
-          marker.classList.add('animate-fade-in');
-        }, 400 + (index * 200));
-      }
-    });
+    if (yearMarkers.value && yearMarkers.value.length > 0) {
+      yearMarkers.value.forEach((marker, index) => {
+        if (marker) {
+          setTimeout(() => {
+            marker.classList.add('animate-fade-in');
+            marker.classList.remove('opacity-0');
+          }, 400 + (index * 200));
+        }
+      });
+    }
     
-    contentCards.value.forEach((card, index) => {
-      if (card) {
-        setTimeout(() => {
-          card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-        }, 500 + (index * 200));
-      }
-    });
+    if (contentCards.value && contentCards.value.length > 0) {
+      contentCards.value.forEach((card, index) => {
+        if (card) {
+          setTimeout(() => {
+            card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
+            card.classList.remove('opacity-0');
+          }, 500 + (index * 200));
+        }
+      });
+    }
   }, 100); // Small delay to ensure DOM is ready
 });
 </script>
