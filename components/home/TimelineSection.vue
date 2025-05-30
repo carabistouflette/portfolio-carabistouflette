@@ -2,7 +2,7 @@
   <section class="section-padding">
     <div class="container-custom">
       <!-- Debug info -->
-      <div class="mb-4 p-4 bg-red-500 text-white rounded" v-if="true">
+      <div class="mb-4 p-4 bg-red-500 text-white rounded" v-if="false">
         <p>Timeline Debug:</p>
         <p>Component mounted: {{ isMounted }}</p>
         <p>Title: {{ title }}</p>
@@ -38,7 +38,7 @@
                 <div
                   :ref="(el) => {
                     if (el) {
-                      contentCards.value[index] = el as HTMLElement;
+                      contentCards.set(index, el as HTMLElement);
                     }
                   }"
                   style="opacity: 0;"
@@ -65,8 +65,8 @@
                 <!-- Year badge -->
                 <div
                   :ref="(el) => {
-                    if (el && yearMarkers.value) {
-                      yearMarkers.value[index] = el as HTMLElement;
+                    if (el) {
+                      yearMarkers.set(index, el as HTMLElement);
                     }
                   }"
                   class="bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2"
@@ -102,9 +102,9 @@ const props = defineProps<TimelineSectionProps>();
 // References
 const headerRef = ref<HTMLElement>();
 const timelineLineRef = ref<HTMLElement>();
-// Initialize arrays with the correct length based on timeline items
-const yearMarkers = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
-const contentCards = ref<(HTMLElement | null)[]>(new Array(props.timelineItems.length).fill(null));
+// Use Maps instead of arrays to avoid initialization issues
+const yearMarkers = new Map<number, HTMLElement>();
+const contentCards = new Map<number, HTMLElement>();
 
 // Debug: Track if component is mounted
 const isMounted = ref(false);
@@ -127,27 +127,23 @@ onMounted(async () => {
     }
     
     // Animate timeline items with stagger
-    if (yearMarkers.value && yearMarkers.value.length > 0) {
-      yearMarkers.value.forEach((marker, index) => {
-        if (marker) {
-          setTimeout(() => {
-            marker.style.opacity = '1';
-            marker.classList.add('animate-fade-in');
-          }, 400 + (index * 200));
-        }
-      });
-    }
+    yearMarkers.forEach((marker, index) => {
+      if (marker) {
+        setTimeout(() => {
+          marker.style.opacity = '1';
+          marker.classList.add('animate-fade-in');
+        }, 400 + (index * 200));
+      }
+    });
     
-    if (contentCards.value && contentCards.value.length > 0) {
-      contentCards.value.forEach((card, index) => {
-        if (card) {
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-          }, 500 + (index * 200));
-        }
-      });
-    }
+    contentCards.forEach((card, index) => {
+      if (card) {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
+        }, 500 + (index * 200));
+      }
+    });
   }, 100); // Small delay to ensure DOM is ready
 });
 </script>
