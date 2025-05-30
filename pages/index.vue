@@ -16,7 +16,7 @@
       <template #default>
         <LazyTimelineSection
           :title="timelineSectionData.title"
-          :timeline-items="timelineSectionData.timelineItems"
+          :timelineItems="timelineSectionData.timelineItems"
         />
       </template>
       <template #fallback>
