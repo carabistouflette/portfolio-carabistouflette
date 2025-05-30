@@ -28,10 +28,27 @@
         phone: 'tel:+33761460496'
       }"
     />
+    
+    <!-- Terminal Panel -->
+    <TerminalPanel :is-visible="isTerminalVisible" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, provide } from 'vue'
+import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
+
+// Terminal state
+const isTerminalVisible = ref(false)
+
+// Toggle terminal function
+const toggleTerminal = () => {
+  isTerminalVisible.value = !isTerminalVisible.value
+}
+
+// Provide toggleTerminal function to descendants
+provide('toggleTerminal', toggleTerminal)
+
 // Layout setup
 useHead({
   htmlAttrs: {

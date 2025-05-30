@@ -107,12 +107,12 @@ export const useAnimations = () => {
     staggerDelay = 100
   ) => {
     // Watch the targets ref for changes (e.g., when elements are rendered by v-for)
-+     // This ensures that dynamically added elements are also animated.
+    // This ensures that dynamically added elements are also animated.
     watch(targets, (elements) => {
       elements.forEach((el, index) => {
         const delay = index * staggerDelay
         // Create a new ref for each individual element because useIntersectionObserver requires a Ref
-+         // We cannot directly pass the loop variable 'el'
+        // We cannot directly pass the loop variable 'el'
         const targetRef = ref(el) // Create a ref for each individual element
         animateOnScroll(targetRef, animationClass, threshold, delay)
       })

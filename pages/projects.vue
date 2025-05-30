@@ -18,14 +18,7 @@
     <!-- Projects List -->
     <section class="section-padding">
       <div class="container-custom">
-        <Suspense>
-          <template #default>
-            <ProjectsList />
-          </template>
-          <template #fallback>
-            <LoadingState />
-          </template>
-        </Suspense>
+        <ProjectsList />
       </div>
     </section>
     
@@ -52,11 +45,8 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue'
 import { useSeoMeta } from '#imports'
-import LoadingState from '@/components/ui/LoadingState.vue'
-
-const ProjectsList = defineAsyncComponent(() => import('@/components/projects/ProjectsList.vue'))
+import ProjectsList from '@/components/projects/ProjectsList.vue'
 // Page meta
 useSeoMeta({
   title: 'Projets - Alexis Robin Portfolio',

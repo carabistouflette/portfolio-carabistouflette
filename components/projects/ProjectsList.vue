@@ -44,17 +44,10 @@
         :key="project.id"
         :ref="el => { if (el) projectCardWrappers[index] = el as HTMLElement }"
       >
-        <Suspense>
-          <template #default>
-            <LazyProjectCard
-              :project="project"
-              @navigate="navigateToProject"
-            />
-          </template>
-          <template #fallback>
-            <LoadingState />
-          </template>
-        </Suspense>
+        <ProjectCard
+          :project="project"
+          @navigate="navigateToProject"
+        />
       </div>
     </div>
     
@@ -71,9 +64,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, nextTick } from 'vue'
 import { useAnimations } from '@/composables/useAnimations'
-const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
+import ProjectCard from '@/components/projects/ProjectCard.vue'
 
 // State
 const searchQuery = ref('')
@@ -87,48 +80,42 @@ const projects = ref([
     title: 'Système de monitoring embarqué',
     description: 'Développement d\'un système de monitoring pour applications embarquées avec interface de visualisation en temps réel.',
     category: 'Système Embarqué',
-    technologies: ['C', 'ARM', 'RTOS'],
-    image: '/images/projects/embedded-monitoring.jpg'
+    technologies: ['C', 'ARM', 'RTOS']
   },
   {
     id: 2,
     title: 'Gestionnaire de base de données SQL optimisé',
     description: 'Implémentation d\'un gestionnaire de base de données SQL avec optimisation des requêtes et indexation avancée.',
     category: 'Base de Données',
-    technologies: ['SQL', 'C++', 'Algorithmes'],
-    image: '/images/projects/db-manager.jpg'
+    technologies: ['SQL', 'C++', 'Algorithmes']
   },
   {
     id: 3,
     title: 'Configuration réseau automatisée',
     description: 'Outil d\'automatisation de configuration réseau pour environnements multi-serveurs avec monitoring intégré.',
     category: 'Administration Réseau',
-    technologies: ['Shell', 'Python', 'Networking'],
-    image: '/images/projects/network-config.jpg'
+    technologies: ['Shell', 'Python', 'Networking']
   },
   {
     id: 4,
     title: 'Compilateur minimaliste',
     description: 'Implémentation d\'un compilateur minimaliste pour un langage de programmation expérimental orienté systèmes embarqués.',
     category: 'Programmation Bas Niveau',
-    technologies: ['C', 'Assembly', 'Compiler Design'],
-    image: '/images/projects/compiler.jpg'
+    technologies: ['C', 'Assembly', 'Compiler Design']
   },
   {
     id: 5,
     title: 'Interface de contrôle pour microcontrôleurs',
     description: 'Conception d\'une interface web permettant de programmer et contrôler des microcontrôleurs à distance.',
     category: 'Web',
-    technologies: ['JavaScript', 'Vue', 'WebSockets', 'C'],
-    image: '/images/projects/microcontroller-ui.jpg'
+    technologies: ['JavaScript', 'Vue', 'WebSockets', 'C']
   },
   {
     id: 6,
     title: 'Système de fichiers personnalisé',
     description: 'Implémentation d\'un système de fichiers léger optimisé pour les systèmes embarqués avec ressources limitées.',
     category: 'Programmation Bas Niveau',
-    technologies: ['C', 'Kernel', 'File Systems'],
-    image: '/images/projects/filesystem.jpg'
+    technologies: ['C', 'Kernel', 'File Systems']
   }
 ])
 

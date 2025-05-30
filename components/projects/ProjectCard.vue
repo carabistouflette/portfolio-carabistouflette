@@ -2,7 +2,7 @@
   <Card 
     :hover="true" 
     :glass="true"
-    class="h-full flex flex-col transition-all duration-300 hover:scale-[1.02] opacity-0 translate-y-5"
+    class="h-full flex flex-col transition-all duration-300 hover:scale-[1.02]"
     @click="navigateToProject"
   >
     <template #header>
@@ -13,14 +13,14 @@
         <span
           class="absolute -top-2 -right-2 text-xs font-semibold px-2 py-1 rounded-md shadow-sm z-10"
           :class="[categoryClass, 'bg-opacity-100']"
-          style="transform: rotate(3deg);" <!-- Slight rotation for avant-garde feel -->
+          style="transform: rotate(3deg);"
         >
           {{ project.category }}
         </span>
       </div>
     </template>
     
-    <p class="mb-4 flex-grow pt-2">{{ project.description }}</p> <!-- Add padding-top to give space below header -->
+    <p class="mb-4 flex-grow pt-2">{{ project.description }}</p>
     
     <template #footer>
       <div class="flex justify-between items-center">
@@ -29,7 +29,7 @@
             v-for="tech in project.technologies" 
             :key="tech"
             class="text-xs font-medium px-2 py-1 bg-surface1 hover:bg-surface2 transition-colors duration-200 rounded-md"
-          > <!-- Added hover effect -->
+          >
             {{ tech }}
           </span>
         </div>
@@ -48,6 +48,9 @@
   </Card>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useHead } from '#imports'
+
 // Props
 const props = defineProps({
   project: {
