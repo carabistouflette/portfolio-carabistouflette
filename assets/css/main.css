@@ -66,16 +66,36 @@
 
   .gradient-text {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-mauve via-blue to-lavender;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    /* Remove text-shadow as it conflicts with text-transparent */
   }
 
   .glass-card {
-    /* Enhanced glassmorphism effect using CSS variables for theme adaptability */
-    background-color: rgba(var(--ctp-surface0-rgb, 49, 50, 68), 0.5); /* Fallback to Mocha surface0 */
-    backdrop-filter: blur(12px); /* Increased blur */
-    -webkit-backdrop-filter: blur(12px); /* Safari support */
-    border: 1px solid rgba(var(--ctp-surface1-rgb, 69, 71, 90), 0.3); /* Fallback to Mocha surface1 */
-    @apply rounded-lg shadow-lg; /* Keep existing utilities for rounding and shadow */
+    /* Enhanced glassmorphism effect */
+    background: linear-gradient(
+      to bottom right,
+      rgba(49, 50, 68, 0.6),
+      rgba(69, 71, 90, 0.3)
+    );
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(88, 91, 112, 0.2);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.15),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    @apply rounded-lg transition-all duration-300;
+  }
+  
+  .glass-card:hover {
+    background: linear-gradient(
+      to bottom right,
+      rgba(49, 50, 68, 0.7),
+      rgba(69, 71, 90, 0.4)
+    );
+    border-color: rgba(203, 166, 247, 0.3);
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.2),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
   }
 }
 
@@ -145,6 +165,25 @@
   @apply cursor-pointer interactive hover-lift hover-shadow;
 }
 
+/* Magnetic hover effect */
+.magnetic {
+  @apply relative transition-transform duration-300 ease-out;
+}
+
+/* Glow effect on hover */
+.glow-hover {
+  @apply relative;
+}
+
+.glow-hover::before {
+  content: '';
+  @apply absolute -inset-1 bg-gradient-to-r from-mauve via-blue to-lavender rounded-lg opacity-0 blur transition-opacity duration-300;
+}
+
+.glow-hover:hover::before {
+  @apply opacity-30;
+}
+
 /* Rendre les éléments avec la classe .btn plus interactifs */
 .btn, 
 button:not([disabled]), 
@@ -152,6 +191,15 @@ button:not([disabled]),
 [type="reset"]:not([disabled]), 
 [type="submit"]:not([disabled]) {
   @apply relative overflow-hidden transition-all duration-300;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Enhanced button hover with tilt effect */
+.btn:hover,
+button:not([disabled]):hover {
+  transform: translateY(-2px) rotateX(-5deg);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
 }
 
 /* Appliquer l'effet de ripple sur tous les boutons */
@@ -164,6 +212,7 @@ button:not([disabled])::after,
   @apply absolute top-1/2 left-1/2 w-1 h-1 rounded-full opacity-0 bg-white/30;
   transform: translate(-50%, -50%) scale(1);
   transform-origin: center;
+  pointer-events: none;
 }
 
 .btn:active::after, 
@@ -171,7 +220,7 @@ button:not([disabled]):active::after,
 [type="button"]:not([disabled]):active::after, 
 [type="reset"]:not([disabled]):active::after, 
 [type="submit"]:not([disabled]):active::after {
-  animation: ripple 0.5s ease-out;
+  animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes ripple {
@@ -186,4 +235,32 @@ button:not([disabled]):active::after,
     transform: translate(-50%, -50%) scale(100);
     opacity: 0;
   }
+}
+
+/* Card float animation on hover */
+.card-float {
+  @apply transition-all duration-500 ease-out;
+}
+
+.card-float:hover {
+  transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.3),
+    0 0 25px -5px rgba(203, 166, 247, 0.2);
+}
+
+/* Pulse animation for important elements */
+@keyframes subtle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+.pulse-on-hover:hover {
+  animation: subtle-pulse 2s ease-in-out infinite;
 }

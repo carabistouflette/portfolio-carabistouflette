@@ -2,7 +2,7 @@
   <div 
     :class="[
       'overflow-hidden transition-all duration-300', 
-      hover ? 'transform hover:-translate-y-2 hover:shadow-xl cursor-pointer' : '',
+      hover ? 'card-float cursor-pointer' : '',
       glass ? 'glass-card' : 'bg-surface0 rounded-lg shadow-md border border-surface1',
       className
     ]"

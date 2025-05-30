@@ -6,7 +6,7 @@
     <div class="container-custom py-4 flex items-center justify-between">
       <!-- Logo -->
       <NuxtLink to="/" class="flex items-center space-x-2 group">
-        <div class="w-10 h-10 rounded-full bg-mauve text-base flex items-center justify-center font-bold group-hover:scale-110 transition-transform duration-300">
+        <div class="w-10 h-10 rounded-full bg-mauve text-crust flex items-center justify-center font-bold group-hover:scale-110 transition-transform duration-300">
           AR
         </div>
         <span class="font-bold text-xl hidden sm:block">Alexis Robin</span>
