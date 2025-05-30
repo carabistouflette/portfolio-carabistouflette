@@ -94,8 +94,8 @@
               <div class="text-center mb-4">
                 <div
                   :ref="(el) => {
-                    if (el && window.innerWidth < 768) {
-                      yearMarkers.set(index, el as HTMLElement);
+                    if (el) {
+                      yearMarkers.set(index + 100, el as HTMLElement); // Use different index for mobile
                     }
                   }"
                   class="inline-block bg-surface1 text-text px-6 py-3 rounded-full font-bold text-lg shadow-xl border border-surface2"
@@ -106,8 +106,8 @@
               </div>
               <div
                 :ref="(el) => {
-                  if (el && window.innerWidth < 768) {
-                    contentCards.set(index, el as HTMLElement);
+                  if (el) {
+                    contentCards.set(index + 100, el as HTMLElement); // Use different index for mobile
                   }
                 }"
                 style="opacity: 0;"
@@ -173,19 +173,23 @@ onMounted(async () => {
     // Animate timeline items with stagger
     yearMarkers.forEach((marker, index) => {
       if (marker) {
+        const delay = index >= 100 ? 400 + ((index - 100) * 200) : 400 + (index * 200);
         setTimeout(() => {
           marker.style.opacity = '1';
           marker.classList.add('animate-fade-in');
-        }, 400 + (index * 200));
+        }, delay);
       }
     });
     
     contentCards.forEach((card, index) => {
       if (card) {
+        const actualIndex = index >= 100 ? index - 100 : index;
+        const delay = index >= 100 ? 500 + ((index - 100) * 200) : 500 + (index * 200);
+        const animationClass = index >= 100 ? 'animate-fade-in' : (actualIndex % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
         setTimeout(() => {
           card.style.opacity = '1';
-          card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-        }, 500 + (index * 200));
+          card.classList.add(animationClass);
+        }, delay);
       }
     });
   }, 100); // Small delay to ensure DOM is ready
