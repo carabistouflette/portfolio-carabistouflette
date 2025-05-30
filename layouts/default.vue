@@ -1,42 +1,45 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-base text-text relative">
-    <!-- Animated background pattern -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute w-full h-full">
-        <!-- Floating particles -->
-        <div class="particle particle-1"></div>
-        <div class="particle particle-2"></div>
-        <div class="particle particle-3"></div>
-        <div class="particle particle-4"></div>
-        
-        <!-- Gradient mesh -->
-        <div class="absolute inset-0 opacity-20">
-          <div class="noise-pattern"></div>
+  <PageLoader>
+    <div class="min-h-screen flex flex-col bg-base text-text relative">
+      <!-- Animated background pattern -->
+      <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute w-full h-full">
+          <!-- Floating particles -->
+          <div class="particle particle-1"></div>
+          <div class="particle particle-2"></div>
+          <div class="particle particle-3"></div>
+          <div class="particle particle-4"></div>
+          
+          <!-- Gradient mesh -->
+          <div class="absolute inset-0 opacity-20">
+            <div class="noise-pattern"></div>
+          </div>
         </div>
       </div>
+      
+      <TheHeader class="relative z-20" />
+      <main class="flex-grow relative z-10">
+        <slot />
+      </main>
+      <TheFooter
+        class="relative z-10"
+        :social-links="{
+          linkedin: 'https://linkedin.com/in/alexis-robin-41703a2ab',
+          email: 'mailto:alexis.robin@etu.umontpellier.fr',
+          phone: 'tel:+33761460496'
+        }"
+      />
+      
+      <!-- Terminal Panel -->
+      <TerminalPanel :is-visible="isTerminalVisible" />
     </div>
-    
-    <TheHeader class="relative z-20" />
-    <main class="flex-grow relative z-10">
-      <slot />
-    </main>
-    <TheFooter
-      class="relative z-10"
-      :social-links="{
-        linkedin: 'https://linkedin.com/in/alexis-robin-41703a2ab',
-        email: 'mailto:alexis.robin@etu.umontpellier.fr',
-        phone: 'tel:+33761460496'
-      }"
-    />
-    
-    <!-- Terminal Panel -->
-    <TerminalPanel :is-visible="isTerminalVisible" />
-  </div>
+  </PageLoader>
 </template>
 
 <script setup lang="ts">
 import { ref, provide } from 'vue'
 import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
+import PageLoader from '~/components/layout/PageLoader.vue'
 
 // Terminal state
 const isTerminalVisible = ref(false)

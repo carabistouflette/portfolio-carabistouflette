@@ -1,11 +1,11 @@
 <template>
-  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden">
+  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section">
     <!-- Background decoration -->
     <div ref="backgroundRef" class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- Animated gradient circles -->
-      <div class="parallax-bg absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-br from-mauve/30 to-lavender/20 animate-pulse-slow blur-3xl"></div>
-      <div class="parallax-bg absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-tl from-blue/30 to-sapphire/20 animate-pulse-slow blur-2xl" style="animation-delay: 1s;"></div>
-      <div class="parallax-bg absolute top-3/4 right-1/3 w-80 h-80 rounded-full bg-gradient-to-bl from-peach/25 to-yellow/20 animate-pulse-slow blur-2xl" style="animation-delay: 2s;"></div>
+      <div class="parallax-bg absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-br from-mauve/30 to-lavender/20 blur-3xl animate-pulse-slow"></div>
+      <div class="parallax-bg absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full bg-gradient-to-tl from-blue/30 to-sapphire/20 blur-2xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+      <div class="parallax-bg absolute top-3/4 right-1/3 w-80 h-80 rounded-full bg-gradient-to-bl from-peach/25 to-yellow/20 blur-2xl animate-pulse-slow" style="animation-delay: 2s;"></div>
       
       <!-- Animated mesh gradient -->
       <div class="absolute inset-0 opacity-40">
@@ -18,17 +18,17 @@
 
     <div class="container-custom relative z-10">
       <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
-        <div class="md:w-7/12 space-y-gap-md animate-fade-in-up">
-          <h1 class="font-bold leading-tight">
-            <span class="gradient-text opacity-100">{{ props.title }}</span>
+        <div class="md:w-7/12 space-y-gap-md">
+          <h1 class="font-bold leading-tight hero-animate-item">
+            <span class="gradient-text">{{ props.title }}</span>
           </h1>
-          <h2 class="text-xl md:text-2xl font-medium text-subtext0 mb-gap-lg animate-fade-in-up" style="animation-delay: 0.2s;">
+          <h2 class="text-xl md:text-2xl font-medium text-subtext0 mb-gap-lg hero-animate-item hero-delay-1">
             {{ props.subtitle }}
           </h2>
-          <p class="text-lg mb-gap-lg max-w-2xl animate-fade-in-up" style="animation-delay: 0.4s;">
+          <p class="text-lg mb-gap-lg max-w-2xl hero-animate-item hero-delay-2">
             {{ props.description }}
           </p>
-          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-gap-md animate-stagger">
+          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-gap-md hero-animate-item hero-delay-3">
             <Button 
               :to="props.primaryButton.to" 
               variant="solid" 
@@ -50,7 +50,7 @@
         </div>
         
         <!-- Avatar/Image area - Adjusted for overlap -->
-        <div class="hidden md:block md:w-5/12 p-component-padding-lg animate-fade-in relative md:-ml-16 lg:-ml-24 z-10"> <!-- Added relative, negative margin, z-10 -->
+        <div class="hidden md:block md:w-5/12 p-component-padding-lg relative md:-ml-16 lg:-ml-24 z-10 hero-animate-item hero-delay-4"> <!-- Added relative, negative margin, z-10 -->
           <div class="relative">
             <!-- Profile circle with AR initials -->
             <div class="profile-circle w-64 h-64 rounded-full bg-gradient-to-br from-mauve to-blue mx-auto flex items-center justify-center shadow-lg relative z-10">
@@ -97,10 +97,9 @@ const props = withDefaults(defineProps<HeroBannerProps>(), {
 
 // Cleanup animations on component unmount
 onBeforeUnmount(() => {
-  const animatedElements = document.querySelectorAll('.animate-fade-in-up, .animate-stagger, .parallax-bg');
+  const animatedElements = document.querySelectorAll('.animate-fade-in-up, .animate-fade-in, .animate-stagger, .animate-pulse-slow, .animate-bounce-slow');
   animatedElements.forEach(el => {
-    el.classList.remove('animate-fade-in-up', 'animate-stagger', 'parallax-bg');
-    el.removeAttribute('style');
+    el.classList.remove('animate-fade-in-up', 'animate-fade-in', 'animate-stagger', 'animate-pulse-slow', 'animate-bounce-slow');
   });
 });
 </script>
@@ -194,6 +193,54 @@ onBeforeUnmount(() => {
   will-change: opacity, transform;
 }
 
+/* Fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+  animation-iteration-count: 1;
+  will-change: opacity;
+}
+
+/* Pulse slow animation */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+/* Bounce slow animation */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+  will-change: transform;
+}
+
 /* Staggered animation */
 .animate-stagger {
   animation: stagger 0.5s ease-out forwards;
@@ -215,4 +262,24 @@ onBeforeUnmount(() => {
 html {
   scroll-behavior: smooth;
 }
+
+/* Hero animations - triggered when page is ready */
+.hero-animate-item {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroFadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes heroFadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger delays for sequential animation */
+.hero-delay-1 { animation-delay: 0.1s; }
+.hero-delay-2 { animation-delay: 0.2s; }
+.hero-delay-3 { animation-delay: 0.3s; }
+.hero-delay-4 { animation-delay: 0.4s; }
 </style>
