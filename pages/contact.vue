@@ -18,30 +18,35 @@
     <!-- Contact Section -->
     <section class="section-padding">
       <div class="container-custom">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <!-- Contact Form -->
-          <Card glass className="p-6 md:p-8 animate-slide-right">
-            <Suspense>
-              <template #default>
-                <LazyContactForm
-                  :form-fields="contactFormData.formFields"
-                  :submit-button-text="contactFormData.submitButtonText"
-                />
-              </template>
-              <template #fallback>
-                <LoadingState />
-              </template>
-            </Suspense>
-          </Card>
+          <div class="w-full">
+            <Card glass className="p-6 md:p-8 h-full animate-slide-right">
+              <h3 class="text-2xl font-bold mb-6">Envoyez-moi un message</h3>
+              <Suspense>
+                <template #default>
+                  <LazyContactForm
+                    :form-fields="contactFormData.formFields"
+                    :submit-button-text="contactFormData.submitButtonText"
+                  />
+                </template>
+                <template #fallback>
+                  <LoadingState />
+                </template>
+              </Suspense>
+            </Card>
+          </div>
           
           <!-- Contact Info -->
-          <div class="animate-slide-left">
-            <LazyContactInfo
-              :title="contactInfoData.title"
-              :subtitle="contactInfoData.subtitle"
-              :contact-items="contactInfoData.contactItems"
-              :availability="contactInfoData.availability"
-            />
+          <div class="w-full">
+            <div class="animate-slide-left h-full">
+              <LazyContactInfo
+                :title="contactInfoData.title"
+                :subtitle="contactInfoData.subtitle"
+                :contact-items="contactInfoData.contactItems"
+                :availability="contactInfoData.availability"
+              />
+            </div>
           </div>
         </div>
       </div>

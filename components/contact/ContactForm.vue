@@ -1,36 +1,76 @@
 <template>
   <form @submit.prevent="submitForm" class="space-y-6">
     <!-- Form fields -->
-    <div v-for="(field, index) in formFields" :key="field.name" :class="{ 'grid grid-cols-1 md:grid-cols-2 gap-6': index === 0 }">
-      <div class="space-y-2">
-        <label :for="field.name" class="block text-subtext0 font-medium">{{ field.label }}</label>
-        <input
-          v-if="field.type !== 'textarea'"
-          :id="field.name"
-          v-model="form[field.name]"
-          :type="field.type"
-          class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
-          :class="{ 'border-red': errors[field.name] }"
-          :placeholder="field.label"
-          required
-          :aria-invalid="!!errors[field.name]"
-          :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
-        />
-        <textarea
-          v-else
-          :id="field.name"
-          v-model="form[field.name]"
-          rows="6"
-          class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all resize-none"
-          :class="{ 'border-red': errors[field.name] }"
-          :placeholder="field.label"
-          required
-          :aria-invalid="!!errors[field.name]"
-          :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
-        ></textarea>
-        <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
+    <template v-for="(field, index) in formFields" :key="field.name">
+      <!-- Group name and email in a grid on desktop -->
+      <div v-if="index === 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Name field -->
+        <div class="space-y-2">
+          <label :for="field.name" class="block text-subtext0 font-medium">{{ field.label }}</label>
+          <input
+            :id="field.name"
+            v-model="form[field.name]"
+            :type="field.type"
+            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
+            :class="{ 'border-red': errors[field.name] }"
+            :placeholder="field.label"
+            required
+            :aria-invalid="!!errors[field.name]"
+            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+          />
+          <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
+        </div>
+        
+        <!-- Email field (second field) -->
+        <div v-if="formFields[1]" class="space-y-2">
+          <label :for="formFields[1].name" class="block text-subtext0 font-medium">{{ formFields[1].label }}</label>
+          <input
+            :id="formFields[1].name"
+            v-model="form[formFields[1].name]"
+            :type="formFields[1].type"
+            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
+            :class="{ 'border-red': errors[formFields[1].name] }"
+            :placeholder="formFields[1].label"
+            required
+            :aria-invalid="!!errors[formFields[1].name]"
+            :aria-describedby="errors[formFields[1].name] ? `${formFields[1].name}-error` : undefined"
+          />
+          <p v-if="errors[formFields[1].name]" :id="`${formFields[1].name}-error`" class="text-red text-sm">{{ errors[formFields[1].name] }}</p>
+        </div>
       </div>
-    </div>
+      
+      <!-- Skip email field as it's already rendered -->
+      <template v-else-if="index !== 1">
+        <div class="space-y-2">
+          <label :for="field.name" class="block text-subtext0 font-medium">{{ field.label }}</label>
+          <input
+            v-if="field.type !== 'textarea'"
+            :id="field.name"
+            v-model="form[field.name]"
+            :type="field.type"
+            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
+            :class="{ 'border-red': errors[field.name] }"
+            :placeholder="field.label"
+            required
+            :aria-invalid="!!errors[field.name]"
+            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+          />
+          <textarea
+            v-else
+            :id="field.name"
+            v-model="form[field.name]"
+            rows="6"
+            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all resize-none"
+            :class="{ 'border-red': errors[field.name] }"
+            :placeholder="field.label"
+            required
+            :aria-invalid="!!errors[field.name]"
+            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+          ></textarea>
+          <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
+        </div>
+      </template>
+    </template>
 
     <!-- Honeypot field (visually hidden) -->
     <div class="absolute left-[-9999px]" aria-hidden="true">
