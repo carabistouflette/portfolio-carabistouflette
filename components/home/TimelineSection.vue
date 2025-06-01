@@ -286,7 +286,7 @@ onUnmounted(() => {
 /* Timeline line */
 .timeline-line-container {
   width: 3px;
-  z-index: 1;
+  z-index: -1;
 }
 
 .timeline-line {
@@ -355,7 +355,7 @@ onUnmounted(() => {
 
 /* Timeline center elements */
 .timeline-center {
-  z-index: 20;
+  z-index: 40;
 }
 
 /* Timeline dot wrapper */
@@ -365,7 +365,7 @@ onUnmounted(() => {
 
 .timeline-dot-container {
   @apply relative;
-  z-index: 25;
+  z-index: 45;
 }
 
 .timeline-dot {
@@ -457,7 +457,7 @@ onUnmounted(() => {
 /* Year badge */
 .timeline-year-badge {
   @apply relative inline-flex items-center justify-center;
-  z-index: 30;
+  z-index: 50;
   background: linear-gradient(135deg, 
     rgba(var(--surface1-rgb), 0.9),
     rgba(var(--surface2-rgb), 0.7)
