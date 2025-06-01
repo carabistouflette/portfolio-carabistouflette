@@ -1,5 +1,5 @@
 <template>
-  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section">
+  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section" @scroll="handleScroll">
     <!-- Enhanced background decoration -->
     <div ref="backgroundRef" class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- Animated gradient orbs with parallax -->
@@ -21,9 +21,19 @@
       <!-- Enhanced grid pattern with perspective -->
       <div class="absolute inset-0 bg-grid-pattern opacity-10 perspective-grid"></div>
       
-      <!-- Floating particles -->
-      <div class="particles-container absolute inset-0">
-        <div class="particle" v-for="i in 20" :key="i"></div>
+      <!-- Interactive floating particles -->
+      <div ref="particlesRef" class="particles-container absolute inset-0">
+        <div 
+          class="particle interactive-particle" 
+          v-for="i in 20" 
+          :key="i"
+          :style="{
+            '--particle-x': particlePositions[i-1]?.x + '%',
+            '--particle-y': particlePositions[i-1]?.y + '%',
+            left: particlePositions[i-1]?.x + '%',
+            top: particlePositions[i-1]?.y + '%'
+          }"
+        ></div>
       </div>
     </div>
 
@@ -31,7 +41,8 @@
       <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
         <div class="md:w-7/12 space-y-gap-md">
           <h1 class="font-bold leading-tight hero-animate-item !text-4xl md:!text-5xl lg:!text-6xl">
-            <span class="gradient-text gradient-animate">{{ props.title }}</span>
+            <span class="gradient-text gradient-animate typing-text" ref="titleRef">{{ displayedTitle }}</span>
+            <span class="typing-cursor" v-if="isTyping">|</span>
           </h1>
           <h2 class="!text-xl md:!text-2xl font-medium text-subtext0 mb-gap-lg hero-animate-item hero-delay-1">
             {{ props.subtitle }}
@@ -45,7 +56,8 @@
               variant="solid" 
               color="mauve" 
               :iconRight="props.primaryButton.iconRight"
-              class="hover-scale"
+              class="ripple-button"
+              @click="createRipple"
             >
               {{ props.primaryButton.text }}
             </Button>
@@ -53,7 +65,8 @@
               v-if="props.secondaryButton" 
               :to="props.secondaryButton.to" 
               variant="outline"
-              class="hover-scale"
+              class="ripple-button"
+              @click="createRipple"
             >
               {{ props.secondaryButton.text }}
             </Button>
@@ -62,14 +75,17 @@
         
         <!-- Enhanced avatar area with 3D effect -->
         <div class="hidden md:block md:w-5/12 p-component-padding-lg relative md:-ml-16 lg:-ml-24 z-10 hero-animate-item hero-delay-4">
-          <div class="relative profile-container">
+          <div class="relative profile-container magnetic-container">
             <!-- Profile circle with enhanced effects -->
             <div class="profile-wrapper">
-              <div class="profile-circle w-64 h-64 rounded-full mx-auto flex items-center justify-center relative z-10">
+              <div class="profile-circle w-64 h-64 rounded-full mx-auto flex items-center justify-center relative z-10 magnetic-element">
                 <div class="profile-inner absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
-                <img :src="props.profileImage" alt="Profile Logo" class="w-32 h-32 relative z-20">
-                <!-- Glow effect -->
+                <img :src="props.profileImage" alt="Profile Logo" class="w-32 h-32 relative z-20 profile-image">
+                <!-- Enhanced glow effect -->
                 <div class="profile-glow absolute inset-0 rounded-full"></div>
+                <!-- Additional depth layers -->
+                <div class="profile-depth-1 absolute inset-2 rounded-full bg-gradient-to-br from-mauve/20 via-blue/20 to-lavender/20"></div>
+                <div class="profile-depth-2 absolute inset-4 rounded-full bg-gradient-to-br from-mauve/10 via-blue/10 to-lavender/10"></div>
               </div>
             </div>
             
@@ -91,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, computed, nextTick } from 'vue';
 
 interface HeroBannerProps {
   title: string;
@@ -120,8 +136,38 @@ const props = withDefaults(defineProps<HeroBannerProps>(), {
 
 const sectionRef = ref<HTMLElement>();
 const backgroundRef = ref<HTMLElement>();
+const particlesRef = ref<HTMLElement>();
+const titleRef = ref<HTMLElement>();
 
-// Parallax effect on mouse move
+// Typing animation state
+const displayedTitle = ref('');
+const isTyping = ref(true);
+const typingSpeed = 150; // Ralenti de 80ms à 150ms
+
+// Scroll progress state
+const scrollProgress = ref(0);
+
+// Interactive particles state
+const particlePositions = ref(Array.from({ length: 20 }, (_, i) => {
+  // Position initiale aléatoire dans la section hero
+  const x = Math.random() * 100; // Pourcentage de la largeur
+  const y = Math.random() * 100; // Pourcentage de la hauteur
+  return {
+    x,
+    y,
+    targetX: x,
+    targetY: y,
+    velocityX: 0,
+    velocityY: 0,
+    baseX: x, // Position de base pour le retour
+    baseY: y
+  };
+}));
+
+// Mouse position
+const mousePos = ref({ x: 0, y: 0 });
+
+// Enhanced parallax effect on mouse move with particle interaction
 const handleMouseMove = (e: MouseEvent) => {
   if (!sectionRef.value || !backgroundRef.value) return;
   
@@ -129,33 +175,223 @@ const handleMouseMove = (e: MouseEvent) => {
   const x = (e.clientX - rect.left) / rect.width;
   const y = (e.clientY - rect.top) / rect.height;
   
+  // Update mouse position for particle interaction
+  mousePos.value = { x: e.clientX, y: e.clientY };
+  
+  // Enhanced parallax for orbs with multiple layers
   const orbs = backgroundRef.value.querySelectorAll('.parallax-orb');
-  orbs.forEach((orb: Element) => {
+  orbs.forEach((orb: Element, index) => {
     const speed = parseFloat((orb as HTMLElement).dataset.speed || '0.5');
-    const translateX = (x - 0.5) * 50 * speed;
-    const translateY = (y - 0.5) * 50 * speed;
-    (orb as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px)`;
+    const layer = (index + 1) * 0.2; // Multiple parallax layers
+    const translateX = (x - 0.5) * 80 * speed * layer;
+    const translateY = (y - 0.5) * 80 * speed * layer;
+    const rotateZ = (x - 0.5) * 20 * speed;
+    (orb as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px) rotate(${rotateZ}deg) scale(${1 + layer * 0.1})`;
   });
   
-  // Profile 3D tilt effect
-  const profileContainer = sectionRef.value.querySelector('.profile-container');
-  if (profileContainer) {
-    const tiltX = (y - 0.5) * 10;
-    const tiltY = (x - 0.5) * -10;
-    (profileContainer as HTMLElement).style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  // Simplified profile 3D tilt effect
+  const magneticContainer = sectionRef.value.querySelector('.magnetic-container');
+  if (magneticContainer) {
+    const rect = magneticContainer.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Calculer la distance de la souris par rapport au centre
+    const deltaX = e.clientX - centerX;
+    const deltaY = e.clientY - centerY;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    
+    // Seulement appliquer l'effet si la souris est proche
+    if (distance < 250) {
+      const normalizedX = deltaX / 250; // Normaliser entre -1 et 1
+      const normalizedY = deltaY / 250;
+      
+      // Effet magnétique plus prononcé mais contrôlé
+      const tiltX = normalizedY * 15; // Augmenté de 8 à 15
+      const tiltY = normalizedX * -15;
+      const translateZ = Math.abs(normalizedX) * 20 + Math.abs(normalizedY) * 20;
+      const scale = 1 + (Math.abs(normalizedX) + Math.abs(normalizedY)) * 0.03;
+      
+      (magneticContainer as HTMLElement).style.transform = `
+        perspective(1200px) 
+        rotateX(${tiltX}deg) 
+        rotateY(${tiltY}deg) 
+        translateZ(${translateZ}px)
+        scale(${scale})
+      `;
+      
+      // Effet plus visible sur les couches de profondeur
+      const depth1 = magneticContainer.querySelector('.profile-depth-1');
+      const depth2 = magneticContainer.querySelector('.profile-depth-2');
+      
+      if (depth1) {
+        (depth1 as HTMLElement).style.transform = `translate(${normalizedX * 6}px, ${normalizedY * 6}px) rotate(${normalizedX * 5}deg)`;
+      }
+      if (depth2) {
+        (depth2 as HTMLElement).style.transform = `translate(${normalizedX * -4}px, ${normalizedY * -4}px) rotate(${normalizedX * -8}deg)`;
+      }
+    } else {
+      // Reset quand la souris est loin
+      (magneticContainer as HTMLElement).style.transform = '';
+      const depth1 = magneticContainer.querySelector('.profile-depth-1');
+      const depth2 = magneticContainer.querySelector('.profile-depth-2');
+      if (depth1) (depth1 as HTMLElement).style.transform = '';
+      if (depth2) (depth2 as HTMLElement).style.transform = '';
+    }
+  }
+  
+  // Interactive particles - attract to mouse
+  updateParticleTargets(e.clientX, e.clientY);
+};
+
+// Scroll handler for reveal animations
+const handleScroll = () => {
+  if (!sectionRef.value) return;
+  
+  const rect = sectionRef.value.getBoundingClientRect();
+  const windowHeight = window.innerHeight;
+  const elementTop = rect.top;
+  const elementHeight = rect.height;
+  
+  // Calculate scroll progress (0 to 1)
+  const progress = Math.max(0, Math.min(1, (windowHeight - elementTop) / (windowHeight + elementHeight)));
+  scrollProgress.value = progress;
+  
+  // Apply scroll-based transformations
+  if (backgroundRef.value) {
+    const orbs = backgroundRef.value.querySelectorAll('.parallax-orb');
+    orbs.forEach((orb: Element, index) => {
+      const speed = 0.5 + index * 0.2;
+      const translateY = (1 - progress) * 100 * speed;
+      const currentTransform = (orb as HTMLElement).style.transform;
+      const baseTransform = currentTransform.split('translateY')[0] || '';
+      (orb as HTMLElement).style.transform = `${baseTransform} translateY(${translateY}px)`;
+    });
   }
 };
 
-onMounted(() => {
+// Typing animation
+const startTypingAnimation = async () => {
+  if (!props.title) return;
+  
+  displayedTitle.value = '';
+  isTyping.value = true;
+  
+  for (let i = 0; i <= props.title.length; i++) {
+    displayedTitle.value = props.title.slice(0, i);
+    await new Promise(resolve => setTimeout(resolve, typingSpeed));
+  }
+  
+  // Blink cursor a few times then hide
+  setTimeout(() => {
+    isTyping.value = false;
+  }, 1000);
+};
+
+// Ripple effect for buttons
+const createRipple = (event: MouseEvent) => {
+  const button = event.currentTarget as HTMLElement;
+  const rect = button.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.classList.add('ripple');
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+  
+  button.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+};
+
+// Update particle targets based on mouse position
+const updateParticleTargets = (mouseX: number, mouseY: number) => {
+  if (!sectionRef.value) return;
+  
+  const rect = sectionRef.value.getBoundingClientRect();
+  const mouseXPercent = ((mouseX - rect.left) / rect.width) * 100;
+  const mouseYPercent = ((mouseY - rect.top) / rect.height) * 100;
+  
+  particlePositions.value.forEach((particle, index) => {
+    const distance = Math.sqrt(
+      Math.pow(mouseXPercent - particle.x, 2) + Math.pow(mouseYPercent - particle.y, 2)
+    );
+    
+    const attractionRadius = 25; // En pourcentage
+    const repulsionRadius = 10; // En pourcentage
+    
+    if (distance < repulsionRadius) {
+      // Repulsion effect
+      const angle = Math.atan2(particle.y - mouseYPercent, particle.x - mouseXPercent);
+      const force = (repulsionRadius - distance) / repulsionRadius;
+      particle.targetX = particle.x + Math.cos(angle) * force * 5;
+      particle.targetY = particle.y + Math.sin(angle) * force * 5;
+    } else if (distance < attractionRadius) {
+      // Attraction effect
+      const angle = Math.atan2(mouseYPercent - particle.y, mouseXPercent - particle.x);
+      const force = (attractionRadius - distance) / attractionRadius;
+      particle.targetX = particle.x + Math.cos(angle) * force * 3;
+      particle.targetY = particle.y + Math.sin(angle) * force * 3;
+    } else {
+      // Return to base position
+      particle.targetX = particle.baseX;
+      particle.targetY = particle.baseY;
+    }
+    
+    // Limiter les particules dans les limites de la section
+    particle.targetX = Math.max(0, Math.min(100, particle.targetX));
+    particle.targetY = Math.max(0, Math.min(100, particle.targetY));
+  });
+};
+
+// Animate particles
+const animateParticles = () => {
+  particlePositions.value.forEach(particle => {
+    // Smooth interpolation
+    particle.velocityX += (particle.targetX - particle.x) * 0.02;
+    particle.velocityY += (particle.targetY - particle.y) * 0.02;
+    
+    // Apply friction
+    particle.velocityX *= 0.95;
+    particle.velocityY *= 0.95;
+    
+    // Update position
+    particle.x += particle.velocityX;
+    particle.y += particle.velocityY;
+  });
+  
+  requestAnimationFrame(animateParticles);
+};
+
+onMounted(async () => {
   if (sectionRef.value) {
     sectionRef.value.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('scroll', handleScroll);
   }
+  
+  // Start typing animation after a short delay
+  await nextTick();
+  setTimeout(() => {
+    startTypingAnimation();
+  }, 500);
+  
+  // Start particle animation
+  animateParticles();
+  
+  // Initialize scroll position
+  handleScroll();
 });
 
 onBeforeUnmount(() => {
   if (sectionRef.value) {
     sectionRef.value.removeEventListener('mousemove', handleMouseMove);
   }
+  window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -214,31 +450,51 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Enhanced floating particles */
+/* Enhanced interactive floating particles - plus visibles */
 .particle {
   position: absolute;
-  width: 3px;
-  height: 3px;
-  background: radial-gradient(circle, var(--text), transparent 70%);
-  opacity: 0.15;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, var(--mauve) 0%, var(--blue) 30%, transparent 70%);
+  opacity: 0.6;
   border-radius: 50%;
   animation: particleFloat linear infinite;
-  filter: blur(0.5px);
+  filter: blur(0px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(203, 166, 247, 0.5);
+}
+
+.interactive-particle {
+  position: absolute;
+  transition: all 0.2s ease-out;
+}
+
+.interactive-particle:hover {
+  width: 12px;
+  height: 12px;
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(203, 166, 247, 0.8);
+  filter: blur(0px);
 }
 
 .particle:nth-child(odd) {
-  width: 2px;
-  height: 2px;
+  width: 8px;
+  height: 8px;
   animation-duration: 35s;
   left: calc(var(--random) * 100%);
-  background: radial-gradient(circle, var(--mauve), transparent 60%);
+  background: radial-gradient(circle, var(--mauve) 0%, var(--peach) 40%, transparent 70%);
+  opacity: 0.7;
+  box-shadow: 0 0 15px rgba(250, 179, 135, 0.6);
 }
 
 .particle:nth-child(even) {
+  width: 5px;
+  height: 5px;
   animation-duration: 45s;
   left: calc(var(--random) * 100%);
-  opacity: 0.1;
-  background: radial-gradient(circle, var(--blue), transparent 60%);
+  opacity: 0.5;
+  background: radial-gradient(circle, var(--blue) 0%, var(--teal) 40%, transparent 70%);
+  box-shadow: 0 0 12px rgba(137, 180, 250, 0.5);
 }
 
 @keyframes particleFloat {
@@ -250,27 +506,10 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Generate random positions for particles */
-.particle:nth-child(1) { --random: 0.1; animation-delay: 0s; }
-.particle:nth-child(2) { --random: 0.2; animation-delay: 2s; }
-.particle:nth-child(3) { --random: 0.3; animation-delay: 4s; }
-.particle:nth-child(4) { --random: 0.4; animation-delay: 6s; }
-.particle:nth-child(5) { --random: 0.5; animation-delay: 8s; }
-.particle:nth-child(6) { --random: 0.6; animation-delay: 10s; }
-.particle:nth-child(7) { --random: 0.7; animation-delay: 12s; }
-.particle:nth-child(8) { --random: 0.8; animation-delay: 14s; }
-.particle:nth-child(9) { --random: 0.9; animation-delay: 16s; }
-.particle:nth-child(10) { --random: 0.15; animation-delay: 18s; }
-.particle:nth-child(11) { --random: 0.25; animation-delay: 20s; }
-.particle:nth-child(12) { --random: 0.35; animation-delay: 22s; }
-.particle:nth-child(13) { --random: 0.45; animation-delay: 24s; }
-.particle:nth-child(14) { --random: 0.55; animation-delay: 26s; }
-.particle:nth-child(15) { --random: 0.65; animation-delay: 28s; }
-.particle:nth-child(16) { --random: 0.75; animation-delay: 30s; }
-.particle:nth-child(17) { --random: 0.85; animation-delay: 32s; }
-.particle:nth-child(18) { --random: 0.95; animation-delay: 34s; }
-.particle:nth-child(19) { --random: 0.05; animation-delay: 36s; }
-.particle:nth-child(20) { --random: 0.12; animation-delay: 38s; }
+/* Désactiver l'animation float pour les particules interactives */
+.interactive-particle {
+  animation: none !important;
+}
 
 /* Animated mesh gradient */
 .mesh-gradient {
@@ -301,11 +540,12 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Enhanced profile with smooth 3D effect */
-.profile-container {
+/* Simplified profile with smooth 3D effect */
+.magnetic-container {
   transform-style: preserve-3d;
-  transition: transform var(--animation-fast) var(--ease-out);
+  transition: transform 0.2s ease-out;
   will-change: transform;
+  cursor: pointer;
 }
 
 .profile-wrapper {
@@ -316,15 +556,25 @@ onBeforeUnmount(() => {
 .profile-circle {
   position: relative;
   transform-style: preserve-3d;
-  transition: var(--transition-base);
+  transition: all 0.3s ease-out;
   will-change: transform;
   cursor: pointer;
+}
+
+.magnetic-element {
+  transition: all 0.3s ease-out;
+}
+
+.magnetic-element:hover {
+  transform: scale(1.08);
+  filter: brightness(1.08);
 }
 
 .profile-inner {
   animation: profileRotate 30s linear infinite;
   opacity: 0.85;
   transform-origin: center;
+  transition: animation-duration 0.3s ease;
 }
 
 @keyframes profileRotate {
@@ -337,28 +587,55 @@ onBeforeUnmount(() => {
 }
 
 .profile-glow {
-  background: radial-gradient(circle at center, rgba(203, 166, 247, 0.4), rgba(137, 180, 250, 0.2) 50%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(203, 166, 247, 0.6), rgba(137, 180, 250, 0.4) 50%, transparent 70%);
   filter: blur(25px);
   animation: pulseGlow 4s var(--ease-in-out) infinite;
+  transition: all 0.3s ease;
 }
 
 @keyframes pulseGlow {
   0%, 100% {
     transform: scale(1) rotate(0deg);
-    opacity: 0.4;
+    opacity: 0.6;
   }
   50% {
-    transform: scale(1.3) rotate(180deg);
-    opacity: 0.7;
+    transform: scale(1.4) rotate(180deg);
+    opacity: 0.9;
   }
 }
 
-.profile-circle:hover {
-  transform: translateZ(20px) scale(1.03);
+/* Couches de profondeur pour l'effet 3D */
+.profile-depth-1, .profile-depth-2 {
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+  pointer-events: none;
+  opacity: 0.3;
 }
 
-.profile-circle:hover .profile-inner {
-  animation-duration: 10s;
+.profile-depth-1 {
+  animation: profileRotate 45s linear infinite reverse;
+}
+
+.profile-depth-2 {
+  animation: profileRotate 60s linear infinite;
+}
+
+.magnetic-container:hover .profile-inner {
+  animation-duration: 15s;
+}
+
+.magnetic-container:hover .profile-glow {
+  opacity: 1;
+  transform: scale(1.4);
+  filter: blur(30px);
+}
+
+.magnetic-container:hover .profile-depth-1 {
+  opacity: 0.7;
+}
+
+.magnetic-container:hover .profile-depth-2 {
+  opacity: 0.6;
 }
 
 /* Floating decorative elements */
@@ -529,6 +806,148 @@ html {
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+/* Typing animation styles */
+.typing-text {
+  display: inline-block;
+}
+
+.typing-cursor {
+  display: inline-block;
+  background-color: var(--text);
+  width: 2px;
+  margin-left: 2px;
+  animation: typingBlink 1s infinite;
+}
+
+@keyframes typingBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Button ripple effect */
+.ripple-button {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ripple-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.ripple-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  transform: scale(0);
+  animation: rippleAnimation 1.2s ease-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes rippleAnimation {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Enhanced scroll reveal animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced particle interactions */
+.particle:hover {
+  transform: scale(3) !important;
+  opacity: 1;
+  filter: blur(0px) brightness(1.5);
+  z-index: 100;
+  transition: all 0.3s ease-out;
+}
+
+/* Advanced hover states with magnetic effect */
+.hero-section:hover .orb-gradient {
+  filter: blur(35px) saturate(180%) brightness(1.1);
+}
+
+.hero-section:hover .mesh-gradient {
+  opacity: 0.4;
+  filter: blur(50px) saturate(150%) hue-rotate(15deg);
+}
+
+.hero-section:hover .particles-container .particle {
+  animation-duration: 25s;
+  opacity: 0.25;
+}
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+  .particle {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .particle:nth-child(odd) {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .particle:nth-child(even) {
+    width: 3px;
+    height: 3px;
+  }
+  
+  .ripple-button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .profile-container:hover {
+    transform: none;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .particle,
+  .orb-gradient,
+  .mesh-gradient,
+  .profile-inner,
+  .profile-glow,
+  .float-element,
+  .gradient-animate {
+    animation: none;
+  }
+  
+  .ripple-button,
+  .profile-container,
+  .interactive-particle {
+    transition: none;
+    transform: none;
   }
 }
 </style>
