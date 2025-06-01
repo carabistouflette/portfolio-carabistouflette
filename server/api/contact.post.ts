@@ -3,6 +3,7 @@ import { defineEventHandler, readBody, createError } from 'h3';
 interface ContactRequestBody {
   name: string;
   email: string;
+  subject: string;
   message: string;
   // Honeypot field - its name might differ in the actual form
   honeypot?: string; 
@@ -37,6 +38,9 @@ export default defineEventHandler(async (event) => {
     } else if (!emailRegex.test(body.email)) {
       errors.email = 'Please enter a valid email address.';
     }
+    if (!body.subject || body.subject.trim().length === 0) {
+      errors.subject = 'Subject is required.';
+    }
     if (!body.message || body.message.trim().length === 0) {
       errors.message = 'Message is required.';
     } else if (body.message.trim().length < 10) { // Basic length check
@@ -52,16 +56,62 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // 4. Process Valid Submission (Simulated)
-    console.log('Received valid contact form submission:');
-    console.log('Name:', body.name);
-    console.log('Email:', body.email);
-    console.log('Message:', body.message);
+    // 4. Process Valid Submission
+    const recipientEmail = 'arobin9999@gmail.com';
+    
+    // Get the API key from environment
+    const resendApiKey = process.env.RESEND_API_KEY || event.context.cloudflare?.env?.RESEND_API_KEY;
+    
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY not configured');
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Email service not configured',
+      });
+    }
 
-    // TODO: Implement actual email sending or database saving logic here
+    try {
+      // Send email using Resend API
+      const emailResponse = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'Portfolio Contact <onboarding@resend.dev>',
+          to: recipientEmail,
+          subject: body.subject || `Contact from ${body.name}`,
+          html: `
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${body.name}</p>
+            <p><strong>Email:</strong> ${body.email}</p>
+            <p><strong>Subject:</strong> ${body.subject || 'Not specified'}</p>
+            <p><strong>Message:</strong></p>
+            <p>${body.message.replace(/\n/g, '<br>')}</p>
+          `,
+          reply_to: body.email,
+        }),
+      });
 
-    // 5. Return Success Response
-    return { success: true, message: 'Message sent successfully!' };
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        console.error('Resend API error:', errorData);
+        throw new Error('Email service error');
+      }
+
+      const result = await emailResponse.json();
+      console.log('Email sent successfully:', result);
+
+      // 5. Return Success Response
+      return { success: true, message: 'Message sent successfully!' };
+    } catch (emailError) {
+      console.error('Failed to send email:', emailError);
+      throw createError({
+        statusCode: 500,
+        statusMessage: 'Failed to send email',
+      });
+    }
 
   } catch (error: any) {
     // Handle potential readBody errors or other unexpected issues

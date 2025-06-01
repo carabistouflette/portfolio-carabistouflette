@@ -143,7 +143,7 @@ const contactInfoData = ref({
   availability: {
     icon: 'heroicons:clock',
     title: 'Disponibilité',
-    description: 'Je suis actuellement en alternance en systèmes embarqués et disponible pour des projets ponctuels.'
+    description: 'Je suis actuellement en recherche de stage pour 2026 dans le domaine du réseau ou de la cybersécurité.'
   }
 })
 

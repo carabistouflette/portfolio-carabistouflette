@@ -119,7 +119,7 @@
     <div v-if="isSuccess" role="status" aria-live="polite" class="p-4 bg-green/20 text-green rounded-lg animate-slide-up">
       <div class="flex items-center">
         <Icon name="heroicons:check-circle" class="w-5 h-5 mr-2" aria-hidden="true" />
-        <p>Message sent successfully!</p> <!-- Updated message -->
+        <p>Message envoyé avec succès !</p> <!-- Updated message -->
       </div>
     </div>
     

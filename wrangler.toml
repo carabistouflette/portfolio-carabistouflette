@@ -4,6 +4,8 @@ pages_build_output_dir = "dist"
 
 [env.production]
 vars = { ENVIRONMENT = "production" }
+# Add RESEND_API_KEY as a secret using: wrangler pages secret put RESEND_API_KEY
 
 [env.preview]
 vars = { ENVIRONMENT = "preview" }
+# Add RESEND_API_KEY as a secret using: wrangler pages secret put RESEND_API_KEY
