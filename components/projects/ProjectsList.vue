@@ -89,7 +89,7 @@ const projects = ref([
     title: 'Gestionnaire de Bulk CSV SMAG',
     description: 'Application full-stack innovante pour simplifier la gestion des fichiers CSV chez SMAG. Automatisation des jointures et interface intuitive.',
     category: 'Développement Web',
-    technologies: ['Vue.js', 'FastAPI', 'Python', 'PostgreSQL']
+    technologies: ['Vue.js', 'FastAPI', 'Python', 'Pandas']
   },
   {
     id: 3,
