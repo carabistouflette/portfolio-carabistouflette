@@ -53,7 +53,12 @@
               </div>
               
               <!-- Center: Year and dot -->
-              <div class="relative flex items-center justify-center timeline-center">
+              <div class="relative flex flex-col items-center justify-center timeline-center">
+                <!-- Year badge with enhanced glass effect -->
+                <div class="timeline-year-badge mb-4">
+                  <span class="timeline-year-text">{{ item.year }}</span>
+                  <div class="timeline-year-glow"></div>
+                </div>
                 <!-- Enhanced dot with connections -->
                 <div class="timeline-dot-wrapper">
                   <div class="timeline-dot-container">
@@ -64,11 +69,6 @@
                   <!-- Connection lines to cards -->
                   <div v-if="index % 2 === 0" class="timeline-connector timeline-connector-left"></div>
                   <div v-else class="timeline-connector timeline-connector-right"></div>
-                </div>
-                <!-- Year badge with enhanced glass effect -->
-                <div class="timeline-year-badge">
-                  <span class="timeline-year-text">{{ item.year }}</span>
-                  <div class="timeline-year-glow"></div>
                 </div>
               </div>
               
