@@ -82,42 +82,48 @@ const projects = ref([
     title: 'Application de gestion de tâches',
     description: 'Développement d\'une application web moderne pour la gestion de tâches et projets. Interface intuitive et responsive.',
     category: 'Développement Web',
-    technologies: ['Vue.js', 'TypeScript', 'Tailwind CSS']
+    technologies: ['Vue.js', 'TypeScript', 'Tailwind CSS'],
+    hasDetailsPage: false
   },
   {
     id: 2,
     title: 'Gestionnaire de Bulk CSV SMAG',
     description: 'Application full-stack innovante pour simplifier la gestion des fichiers CSV chez SMAG. Automatisation des jointures et interface intuitive.',
     category: 'Développement Web',
-    technologies: ['Vue.js', 'FastAPI', 'Python', 'Pandas']
+    technologies: ['Vue.js', 'FastAPI', 'Python', 'Pandas'],
+    hasDetailsPage: true
   },
   {
     id: 3,
     title: 'Configuration réseau automatisée',
     description: 'Outil d\'automatisation pour la configuration réseau. Gestion multi-serveurs avec monitoring intégré.',
     category: 'Administration Réseau',
-    technologies: ['Shell', 'Python', 'Networking']
+    technologies: ['Shell', 'Python', 'Networking'],
+    hasDetailsPage: false
   },
   {
     id: 4,
     title: 'API REST pour e-commerce',
     description: 'Conception et implémentation d\'une API REST complète pour une plateforme e-commerce. Documentation avec Swagger.',
     category: 'Développement Web',
-    technologies: ['Java', 'Spring Boot', 'PostgreSQL']
+    technologies: ['Java', 'Spring Boot', 'PostgreSQL'],
+    hasDetailsPage: false
   },
   {
     id: 5,
     title: 'Interface de contrôle pour microcontrôleurs',
     description: 'Interface web pour programmer et contrôler des microcontrôleurs. Communication à distance en temps réel.',
     category: 'Web',
-    technologies: ['JavaScript', 'Vue', 'WebSockets', 'C']
+    technologies: ['JavaScript', 'Vue', 'WebSockets', 'C'],
+    hasDetailsPage: false
   },
   {
     id: 6,
     title: 'Dashboard analytique',
     description: 'Tableau de bord interactif pour la visualisation de données. Graphiques temps réel et export de rapports.',
     category: 'Développement Web',
-    technologies: ['React', 'D3.js', 'Node.js']
+    technologies: ['React', 'D3.js', 'Node.js'],
+    hasDetailsPage: false
   }
 ])
 
@@ -168,6 +174,11 @@ const clearFilters = () => {
 }
 
 const navigateToProject = async (projectId: number) => {
+  const project = projects.value.find(p => p.id === projectId)
+  if (!project || !project.hasDetailsPage) {
+    return
+  }
+  
   // Navigate to project detail page
   if (projectId === 2) {
     await navigateTo('/projects/bulk-csv-smag')

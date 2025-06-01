@@ -4,7 +4,6 @@
     :glass="true"
     :loading="loading"
     class="h-full flex flex-col project-card"
-    @click="navigateToProject"
   >
     <template #header>
       <!-- Make header relative for absolute positioning of category -->
@@ -34,15 +33,16 @@
           </span>
         </div>
         
-        <div class="flex justify-end">
+        <div v-if="project.hasDetailsPage" class="flex justify-center mt-4">
           <Button
-            variant="ghost"
+            variant="primary"
             color="mauve"
             iconRight="heroicons:arrow-right"
-            size="sm"
-            class="hover:bg-mauve/10"
+            size="md"
+            class="details-button w-full justify-center font-semibold shadow-lg hover:shadow-xl"
+            @click="navigateToProject"
           >
-            Détails
+            Voir les détails
           </Button>
         </div>
       </div>
@@ -236,6 +236,36 @@ useHead({
 
 .project-card:hover :deep(.button-base) {
   transform: translateX(4px);
+}
+
+/* Details button specific styling */
+.details-button {
+  @apply relative overflow-hidden;
+  background: linear-gradient(135deg, var(--mauve), rgba(203, 166, 247, 0.8));
+  border: 1px solid rgba(203, 166, 247, 0.3);
+  transition: all var(--animation-base) var(--ease-spring);
+}
+
+.details-button::before {
+  content: '';
+  @apply absolute inset-0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2));
+  transform: translateX(-100%);
+  transition: transform var(--animation-base) var(--ease-out);
+}
+
+.details-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 25px -5px rgba(203, 166, 247, 0.4);
+  background: linear-gradient(135deg, rgba(203, 166, 247, 0.9), var(--mauve));
+}
+
+.details-button:hover::before {
+  transform: translateX(100%);
+}
+
+.details-button:active {
+  transform: translateY(0) scale(0.98);
 }
 
 /* Reduced motion support */

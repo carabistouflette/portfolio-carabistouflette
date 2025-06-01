@@ -43,13 +43,37 @@ export default defineNuxtConfig({
     pageTransition: false,
     layoutTransition: false,
     head: {
-      title: 'Alexis Robin - Portfolio',
+      title: 'Alexis Robin - Portfolio | Développeur Système Embarqué',
       meta: [
-        { name: 'description', content: 'Portfolio d\'Alexis Robin - Développeur Full Stack et passionné de programmation' }
+        { name: 'description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau. Découvrez mes projets et compétences.' },
+        { name: 'keywords', content: 'Alexis Robin, développeur, système embarqué, programmation bas niveau, informatique, IUT Montpellier, DACS, portfolio' },
+        { name: 'author', content: 'Alexis Robin' },
+        { name: 'robots', content: 'index, follow' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        
+        // Open Graph meta tags
+        { property: 'og:type', content: 'website' },
+        { property: 'og:site_name', content: 'Alexis Robin - Portfolio' },
+        { property: 'og:title', content: 'Alexis Robin - Portfolio | Développeur Système Embarqué' },
+        { property: 'og:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau.' },
+        { property: 'og:image', content: '/profile-logo.svg' },
+        { property: 'og:image:alt', content: 'Logo d\'Alexis Robin' },
+        { property: 'og:locale', content: 'fr_FR' },
+        
+        // Twitter Card meta tags
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'Alexis Robin - Portfolio | Développeur Système Embarqué' },
+        { name: 'twitter:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau.' },
+        { name: 'twitter:image', content: '/profile-logo.svg' },
+        
+        // Additional meta tags
+        { name: 'theme-color', content: '#cba6f7' },
+        { name: 'msapplication-TileColor', content: '#cba6f7' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com' }
       ]
     }
   },
@@ -90,6 +114,12 @@ export default defineNuxtConfig({
     typeCheck: false
   },
 
+  sitemap: {
+    hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com',
+    gzip: true,
+    routes: ['/', '/projects', '/contact']
+  },
+
   runtimeConfig: { // Added runtime configuration
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com', // Read from env or use placeholder
@@ -103,10 +133,19 @@ export default defineNuxtConfig({
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {}
+          manualChunks: {
+            // Separate vendor chunks for better caching
+            'vue-vendor': ['vue', '@vue/runtime-dom'],
+            'vueuse-vendor': ['@vueuse/core', '@vueuse/motion']
+          }
         }
       }
     }
+  },
+
+  // Performance optimizations
+  experimental: {
+    payloadExtraction: false // Reduce bundle size
   },
 
   compatibilityDate: '2025-03-18'

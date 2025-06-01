@@ -115,7 +115,7 @@ export default defineEventHandler(async (event) => {
 
   } catch (error) {
     // Handle potential readBody errors or other unexpected issues
-    if ((error as any).statusCode === 422) {
+    if (error && typeof error === 'object' && 'statusCode' in error && (error as { statusCode: number }).statusCode === 422) {
       // Re-throw validation errors to be handled by Nuxt/Nitro error handling
 // If it's a validation error we created, re-throw it so the client-side
       // fetch handler can correctly parse the 'data' field containing specific errors.

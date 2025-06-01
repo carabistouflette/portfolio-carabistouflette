@@ -1,5 +1,10 @@
 <template>
-  <section ref="sectionRef" class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section" @scroll="handleScroll">
+  <section 
+    ref="sectionRef" 
+    class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section" 
+    @scroll="handleScroll"
+    aria-label="Section d'introduction avec profil et présentation"
+  >
     <!-- Enhanced background decoration -->
     <div ref="backgroundRef" class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- Animated gradient orbs with parallax -->
@@ -22,10 +27,15 @@
       <div class="absolute inset-0 bg-grid-pattern opacity-10 perspective-grid"></div>
       
       <!-- Interactive floating particles -->
-      <div ref="particlesRef" class="particles-container absolute inset-0">
+      <div 
+        ref="particlesRef" 
+        class="particles-container absolute inset-0"
+        aria-hidden="true"
+        role="presentation"
+      >
         <div 
           class="particle interactive-particle" 
-          v-for="i in 20" 
+          v-for="i in getOptimalParticleCount()" 
           :key="i"
           :style="{
             '--particle-x': particlePositions[i-1]?.x + '%',
@@ -33,6 +43,7 @@
             left: particlePositions[i-1]?.x + '%',
             top: particlePositions[i-1]?.y + '%'
           }"
+          aria-hidden="true"
         ></div>
       </div>
     </div>
@@ -58,6 +69,7 @@
               :iconRight="props.primaryButton.iconRight"
               class="ripple-button"
               @click="createRipple"
+              :aria-label="`${props.primaryButton.text} - Accéder à la page des projets`"
             >
               {{ props.primaryButton.text }}
             </Button>
@@ -67,6 +79,7 @@
               variant="outline"
               class="ripple-button"
               @click="createRipple"
+              :aria-label="`${props.secondaryButton.text} - Navigation secondaire`"
             >
               {{ props.secondaryButton.text }}
             </Button>
@@ -80,7 +93,13 @@
             <div class="profile-wrapper">
               <div class="profile-circle w-64 h-64 rounded-full mx-auto flex items-center justify-center relative z-10 magnetic-element">
                 <div class="profile-inner absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
-                <img :src="props.profileImage" alt="Profile Logo" class="w-32 h-32 relative z-20 profile-image">
+                <img 
+                  :src="props.profileImage" 
+                  alt="Photo de profil d'Alexis Robin, développeur système embarqué" 
+                  class="w-32 h-32 relative z-20 profile-image"
+                  loading="eager"
+                  importance="high"
+                >
                 <!-- Enhanced glow effect -->
                 <div class="profile-glow absolute inset-0 rounded-full"></div>
                 <!-- Additional depth layers -->
@@ -108,6 +127,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, computed, nextTick } from 'vue';
+import { usePerformance } from '~/composables/usePerformance';
 
 interface HeroBannerProps {
   title: string;
@@ -167,9 +187,23 @@ const particlePositions = ref(Array.from({ length: 20 }, (_, i) => {
 // Mouse position
 const mousePos = ref({ x: 0, y: 0 });
 
+// Animation frame ID for cleanup
+let animationFrameId: number | null = null;
+
+// Use performance composable
+const {
+  prefersReducedMotion,
+  isMobile,
+  shouldAnimate,
+  detectDeviceCapabilities,
+  setupMotionListener,
+  getOptimalParticleCount,
+  getAnimationSmoothness
+} = usePerformance();
+
 // Enhanced parallax effect on mouse move with particle interaction
 const handleMouseMove = (e: MouseEvent) => {
-  if (!sectionRef.value || !backgroundRef.value) return;
+  if (!sectionRef.value || !backgroundRef.value || prefersReducedMotion.value) return;
   
   const rect = sectionRef.value.getBoundingClientRect();
   const x = (e.clientX - rect.left) / rect.width;
@@ -349,12 +383,18 @@ const updateParticleTargets = (mouseX: number, mouseY: number) => {
   });
 };
 
-// Animate particles
+// Animate particles with performance optimizations
 const animateParticles = () => {
+  // Skip animation if not allowed
+  if (!shouldAnimate.value) {
+    return;
+  }
+  
   particlePositions.value.forEach(particle => {
-    // Smooth interpolation
-    particle.velocityX += (particle.targetX - particle.x) * 0.02;
-    particle.velocityY += (particle.targetY - particle.y) * 0.02;
+    // Smooth interpolation with adaptive frequency
+    const smoothing = getAnimationSmoothness();
+    particle.velocityX += (particle.targetX - particle.x) * smoothing;
+    particle.velocityY += (particle.targetY - particle.y) * smoothing;
     
     // Apply friction
     particle.velocityX *= 0.95;
@@ -365,10 +405,14 @@ const animateParticles = () => {
     particle.y += particle.velocityY;
   });
   
-  requestAnimationFrame(animateParticles);
+  animationFrameId = requestAnimationFrame(animateParticles);
 };
 
 onMounted(async () => {
+  // Detect device capabilities and setup listeners
+  detectDeviceCapabilities();
+  setupMotionListener();
+  
   if (sectionRef.value) {
     sectionRef.value.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('scroll', handleScroll);
@@ -380,8 +424,10 @@ onMounted(async () => {
     startTypingAnimation();
   }, 500);
   
-  // Start particle animation
-  animateParticles();
+  // Start particle animation only if motion is allowed
+  if (shouldAnimate.value) {
+    animateParticles();
+  }
   
   // Initialize scroll position
   handleScroll();
@@ -392,6 +438,12 @@ onBeforeUnmount(() => {
     sectionRef.value.removeEventListener('mousemove', handleMouseMove);
   }
   window.removeEventListener('scroll', handleScroll);
+  
+  // Cancel animation frame to prevent memory leaks
+  if (animationFrameId !== null) {
+    window.cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 });
 </script>
 

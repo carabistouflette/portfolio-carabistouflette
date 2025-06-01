@@ -57,7 +57,7 @@ export const useAnimations = () => {
 
           if (target.value) {
             // Apply initial styling (hidden) before the animation starts
-+             // This prevents a flash of unstyled content if the element is already in view on load
+            // This prevents a flash of unstyled content if the element is already in view on load
             target.value.classList.add(...initialClasses.split(' '))
           }
 
