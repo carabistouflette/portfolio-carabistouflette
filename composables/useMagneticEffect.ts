@@ -1,4 +1,4 @@
-import { ref, watch, onMounted, onUnmounted, computed, type Ref } from 'vue' // Import computed
+import { ref, watch, onUnmounted, computed, type Ref } from 'vue' // Import computed
 import { useMouseInElement } from '@vueuse/core'
 
 interface UseMagneticEffectOptions {
@@ -24,11 +24,11 @@ export function useMagneticEffect(
   const isActive = ref(false) // Track if effect is actively applied
   const smoothTransform = ref('translate(0px, 0px) scale(1)')
   let cleanupMouseEffect: (() => void) | null = null
-  let elementX = ref(0)
-  let elementY = ref(0)
-  let isOutside = ref(true)
-  let elementHeight = ref(0)
-  let elementWidth = ref(0)
+  const elementX = ref(0)
+  const elementY = ref(0)
+  const isOutside = ref(true)
+  const elementHeight = ref(0)
+  const elementWidth = ref(0)
 
   let animationFrameId: number | null = null // Keep this if requestAnimationFrame is used later
 
@@ -79,11 +79,11 @@ export function useMagneticEffect(
       if (newTarget && !isInitialized.value) {
         // --- Initialize ---
         const mouseEffect = useMouseInElement(target as Ref<HTMLElement>) // Cast as non-null here
-        elementX = mouseEffect.elementX
-        elementY = mouseEffect.elementY
-        isOutside = mouseEffect.isOutside
-        elementHeight = mouseEffect.elementHeight
-        elementWidth = mouseEffect.elementWidth
+        elementX.value = mouseEffect.elementX.value
+        elementY.value = mouseEffect.elementY.value
+        isOutside.value = mouseEffect.isOutside.value
+        elementHeight.value = mouseEffect.elementHeight.value
+        elementWidth.value = mouseEffect.elementWidth.value
         // console.log('[MagneticEffect] Initialized for target:', newTarget); // Remove Log
 
         // Setup watcher that depends on useMouseInElement refs
