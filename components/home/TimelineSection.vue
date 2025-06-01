@@ -2,13 +2,15 @@
   <section class="section-padding">
     <div class="container-custom">
       <div class="mb-12 text-center timeline-header">
-        <h2 class="mb-4">{{ title }}</h2>
-        <div class="w-24 h-1 bg-mauve mx-auto rounded-full"></div>
+        <h2 class="mb-4 gradient-text">{{ title }}</h2>
+        <div class="timeline-divider"></div>
       </div>
       
       <div class="relative max-w-5xl mx-auto">
-        <!-- Timeline vertical line -->
-        <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 h-full w-0.5 bg-surface2 timeline-line"></div>
+        <!-- Timeline vertical line with gradient -->
+        <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-0 h-full timeline-line-container">
+          <div class="timeline-line"></div>
+        </div>
         
         <!-- Timeline items -->
         <div class="space-y-12">
@@ -32,12 +34,15 @@
               </div>
               
               <!-- Center: Year and dot -->
-              <div class="relative flex items-center">
-                <!-- Dot on the line -->
-                <div class="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-mauve rounded-full border-4 border-base"></div>
-                <!-- Year badge -->
-                <div class="bg-surface1 text-text px-4 py-2 rounded-full font-semibold whitespace-nowrap timeline-year">
-                  {{ item.year }}
+              <div class="relative flex items-center justify-center">
+                <!-- Enhanced dot with pulse -->
+                <div class="timeline-dot-container">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-dot-pulse"></div>
+                </div>
+                <!-- Year badge with glass effect -->
+                <div class="timeline-year-badge">
+                  <span class="timeline-year-text">{{ item.year }}</span>
                 </div>
               </div>
               
@@ -57,9 +62,9 @@
             <!-- Mobile: Stacked layout -->
             <div class="md:hidden space-y-4">
               <div class="text-center timeline-year">
-                <span class="bg-surface1 text-text px-6 py-3 rounded-full font-bold inline-block">
-                  {{ item.year }}
-                </span>
+                <div class="timeline-year-badge mobile">
+                  <span class="timeline-year-text">{{ item.year }}</span>
+                </div>
               </div>
               <div class="timeline-card">
                 <Card :glass="true">
@@ -93,53 +98,264 @@ interface TimelineSectionProps {
 
 const props = defineProps<TimelineSectionProps>();
 
-// Simple animation using class selectors
+// Enhanced timeline animations with intersection observer
 onMounted(() => {
-  // Initial opacity for all elements
-  const header = document.querySelector('.timeline-header') as HTMLElement;
-  const line = document.querySelector('.timeline-line') as HTMLElement;
-  const years = document.querySelectorAll('.timeline-year');
-  const cards = document.querySelectorAll('.timeline-card');
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
   
-  // Set initial opacity
-  if (header) header.style.opacity = '0';
-  if (line) line.style.opacity = '0';
-  years.forEach(el => (el as HTMLElement).style.opacity = '0');
-  cards.forEach(el => (el as HTMLElement).style.opacity = '0');
-  
-  // Animate after a short delay
-  setTimeout(() => {
-    // Animate header
-    if (header) {
-      header.style.opacity = '1';
-      header.classList.add('animate-slide-up');
-    }
-    
-    // Animate line
-    if (line) {
-      setTimeout(() => {
-        line.style.opacity = '1';
-        line.classList.add('animate-fade-in');
-      }, 200);
-    }
-    
-    // Animate timeline items
-    const items = document.querySelectorAll('.timeline-item');
-    items.forEach((item, index) => {
-      const year = item.querySelector('.timeline-year') as HTMLElement;
-      const card = item.querySelector('.timeline-card') as HTMLElement;
-      
-      setTimeout(() => {
-        if (year) {
-          year.style.opacity = '1';
-          year.classList.add('animate-fade-in');
-        }
-        if (card) {
-          card.style.opacity = '1';
-          card.classList.add(index % 2 === 0 ? 'animate-slide-right' : 'animate-slide-left');
-        }
-      }, 400 + (index * 150));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('timeline-visible');
+      }
     });
-  }, 100);
+  }, observerOptions);
+  
+  // Observe timeline elements
+  document.querySelectorAll('.timeline-item').forEach((item) => {
+    observer.observe(item);
+  });
+  
+  // Animate header immediately
+  const header = document.querySelector('.timeline-header');
+  if (header) {
+    setTimeout(() => {
+      header.classList.add('timeline-visible');
+    }, 100);
+  }
 });
 </script>
+
+<style scoped>
+/* Timeline header animation */
+.timeline-header {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--animation-slow) var(--ease-out);
+}
+
+.timeline-header.timeline-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Timeline divider */
+.timeline-divider {
+  width: 6rem;
+  height: 3px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--mauve), transparent);
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Timeline line */
+.timeline-line-container {
+  width: 2px;
+}
+
+.timeline-line {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent,
+    var(--surface2) 10%,
+    var(--surface2) 90%,
+    transparent
+  );
+  opacity: 0;
+  animation: lineGrow 1s var(--ease-out) forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes lineGrow {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Timeline items animation */
+.timeline-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all var(--animation-slow) var(--ease-out);
+}
+
+.timeline-item.timeline-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger effect for items */
+.timeline-item:nth-child(1) { transition-delay: 0.1s; }
+.timeline-item:nth-child(2) { transition-delay: 0.2s; }
+.timeline-item:nth-child(3) { transition-delay: 0.3s; }
+.timeline-item:nth-child(4) { transition-delay: 0.4s; }
+.timeline-item:nth-child(5) { transition-delay: 0.5s; }
+
+/* Timeline dot */
+.timeline-dot-container {
+  @apply absolute left-1/2 transform -translate-x-1/2;
+  z-index: 10;
+}
+
+.timeline-dot {
+  @apply w-4 h-4 rounded-full;
+  background: var(--mauve);
+  border: 4px solid var(--base);
+  transition: all var(--animation-base) var(--ease-spring);
+}
+
+.timeline-dot-pulse {
+  @apply absolute inset-0 rounded-full;
+  background: var(--mauve);
+  opacity: 0.3;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.timeline-visible .timeline-dot {
+  transform: scale(1.2);
+}
+
+/* Year badge */
+.timeline-year-badge {
+  @apply relative z-20 inline-flex items-center justify-center;
+  background: linear-gradient(135deg, 
+    rgba(var(--surface1-rgb, 69, 71, 90), 0.8),
+    rgba(var(--surface2-rgb, 88, 91, 112), 0.6)
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(var(--overlay0-rgb, 108, 112, 134), 0.3);
+  border-radius: 9999px;
+  padding: 0.5rem 1.5rem;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all var(--animation-base) var(--ease-out);
+}
+
+.timeline-year-badge.mobile {
+  padding: 0.75rem 2rem;
+}
+
+.timeline-year-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.timeline-year-text {
+  @apply font-bold text-text;
+  letter-spacing: 0.05em;
+}
+
+/* Timeline card animations */
+.timeline-card {
+  opacity: 0;
+  transition: all var(--animation-slow) var(--ease-out);
+}
+
+.timeline-visible .timeline-card:nth-child(even) {
+  animation: slideInRight var(--animation-slow) var(--ease-out) forwards;
+}
+
+.timeline-visible .timeline-card:nth-child(odd) {
+  animation: slideInLeft var(--animation-slow) var(--ease-out) forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile timeline cards */
+@media (max-width: 767px) {
+  .timeline-visible .timeline-card {
+    animation: fadeInUp var(--animation-slow) var(--ease-out) forwards;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Hover effects for cards */
+.timeline-card:hover {
+  transform: scale(1.02);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .timeline-header,
+  .timeline-item,
+  .timeline-line,
+  .timeline-dot,
+  .timeline-card {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+  
+  .timeline-visible .timeline-card,
+  .timeline-visible .timeline-dot {
+    opacity: 1;
+    transform: none;
+  }
+}
+</style>

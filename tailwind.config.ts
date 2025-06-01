@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import { colors } from './constants/colors'
 
 export default {
   content: [
@@ -13,7 +12,34 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      colors,
+      colors: {
+        base: 'var(--base)',
+        mantle: 'var(--mantle)',
+        crust: 'var(--crust)',
+        surface0: 'var(--surface0)',
+        surface1: 'var(--surface1)',
+        surface2: 'var(--surface2)',
+        overlay0: 'var(--overlay0)',
+        overlay1: 'var(--overlay1)',
+        overlay2: 'var(--overlay2)',
+        text: 'var(--text)',
+        subtext0: 'var(--subtext0)',
+        subtext1: 'var(--subtext1)',
+        rosewater: 'var(--rosewater)',
+        flamingo: 'var(--flamingo)',
+        pink: 'var(--pink)',
+        mauve: 'var(--mauve)',
+        red: 'var(--red)',
+        maroon: 'var(--maroon)',
+        peach: 'var(--peach)',
+        yellow: 'var(--yellow)',
+        green: 'var(--green)',
+        teal: 'var(--teal)',
+        sky: 'var(--sky)',
+        sapphire: 'var(--sapphire)',
+        blue: 'var(--blue)',
+        lavender: 'var(--lavender)'
+      },
       fontFamily: {
         'sans': ['Inter', 'sans-serif'],
         'mono': ['JetBrains Mono', 'monospace'],

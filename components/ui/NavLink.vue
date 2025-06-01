@@ -3,11 +3,18 @@
     ref="elementRef"
     :to="to"
     :class="navLinkClasses"
+    :style="magneticStyle"
     :aria-current="isActive ? 'page' : undefined"
-    @click="$emit('click')"
+    @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
-    <Icon v-if="icon" :name="icon" class="w-5 h-5" />
-    <span>{{ label }}</span>
+    <span class="nav-link-bg"></span>
+    <span class="nav-link-content">
+      <Icon v-if="icon" :name="icon" class="nav-link-icon" />
+      <span class="nav-link-label">{{ label }}</span>
+    </span>
+    <span class="nav-link-indicator" v-if="!mobile"></span>
   </NuxtLink>
 </template>
 
@@ -55,30 +62,41 @@ const isActive = computed(() => {
 });
 
 // Events
-defineEmits(['click']);
+const emit = defineEmits(['click']);
+
+// State
+const isHovered = ref(false);
+
+// Handlers
+const handleClick = (event: MouseEvent) => {
+  emit('click', event);
+};
+
+const handleMouseEnter = () => {
+  isHovered.value = true;
+};
+
+const handleMouseLeave = () => {
+  isHovered.value = false;
+};
 
 // Compute dynamic classes
 const navLinkClasses = computed(() => {
-  const baseMobile = 'flex items-center px-3 py-2 space-x-3 w-full rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-base'; // Added focus styles for mobile consistency
-  const baseDesktop = `relative inline-block text-subtext0 after:content-[''] after:absolute after:w-0 after:h-0.5 after:bottom-0 after:left-0 after:transition-all after:duration-300 focus:outline-none focus-visible:underline focus-visible:decoration-2 focus-visible:underline-offset-4`; // Added focus styles for desktop
-  const common = 'transition-all duration-300 cursor-pointer';
-
-  let stateClasses = '';
-  if (isActive.value) {
-    stateClasses = props.mobile
-      ? `bg-surface1 text-${props.color}` // Active mobile
-      : `text-${props.color} after:bg-${props.color} after:w-full font-medium`; // Active desktop
-  } else {
-    stateClasses = props.mobile
-      ? `hover:bg-surface0 focus-visible:ring-${props.color}` // Inactive mobile hover + focus ring
-      : `hover:text-${props.color} hover:after:bg-${props.color} hover:after:w-full focus-visible:text-${props.color} focus-visible:decoration-${props.color}`; // Inactive desktop hover + focus styles
-  }
+  const base = 'nav-link relative overflow-hidden cursor-pointer';
+  const mobileClasses = 'nav-link-mobile flex items-center px-3 py-2 space-x-3 w-full rounded-lg';
+  const desktopClasses = 'nav-link-desktop inline-flex items-center space-x-2 py-1';
+  
+  const focusClasses = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-base';
+  
+  const activeClasses = isActive.value ? 'nav-link-active' : '';
+  const colorClass = `nav-link-${props.color}`;
 
   return [
-    common,
-    props.mobile ? baseMobile : baseDesktop,
-    stateClasses
-    // 'magnetic-effect' class removed
+    base,
+    props.mobile ? mobileClasses : desktopClasses,
+    focusClasses,
+    activeClasses,
+    colorClass
   ];
 });
 
@@ -97,5 +115,152 @@ watch(elementRef, (newVal) => {
 }, { flush: 'post', immediate: true }); // flush: 'post' ensures $el is available after render
 
 // Pass the ref holding the actual HTML element to the composable
-const { magneticStyle } = useMagneticEffect(htmlElementRef);
+const { magneticStyle } = useMagneticEffect(htmlElementRef, {
+  maxDistance: 100,
+  strength: 0.2,
+  disabled: computed(() => props.mobile)
+});
 </script>
+
+<style scoped>
+/* Base nav link styles */
+.nav-link {
+  transition: var(--transition-base);
+  transform-style: preserve-3d;
+}
+
+/* Content wrapper */
+.nav-link-content {
+  @apply relative z-10 flex items-center;
+  transition: var(--transition-fast);
+}
+
+/* Icon styles */
+.nav-link-icon {
+  @apply w-5 h-5;
+  transition: transform var(--animation-base) var(--ease-spring);
+}
+
+/* Label styles */
+.nav-link-label {
+  transition: var(--transition-fast);
+}
+
+/* Background layer for hover effects */
+.nav-link-bg {
+  @apply absolute inset-0 opacity-0;
+  background: currentColor;
+  transition: opacity var(--animation-base) var(--ease-out);
+  border-radius: inherit;
+}
+
+/* Desktop specific styles */
+.nav-link-desktop {
+  @apply text-subtext0;
+}
+
+.nav-link-desktop .nav-link-content {
+  @apply space-x-2;
+}
+
+.nav-link-desktop:hover .nav-link-icon {
+  transform: translateY(-2px) rotate(-5deg);
+}
+
+.nav-link-desktop:active .nav-link-icon {
+  transform: translateY(0) rotate(0);
+}
+
+/* Underline indicator for desktop */
+.nav-link-indicator {
+  @apply absolute bottom-0 left-0 h-0.5 w-0;
+  background: currentColor;
+  transition: width var(--animation-base) var(--ease-out);
+}
+
+.nav-link:hover .nav-link-indicator,
+.nav-link-active .nav-link-indicator {
+  @apply w-full;
+}
+
+/* Mobile specific styles */
+.nav-link-mobile .nav-link-bg {
+  opacity: 0.05;
+}
+
+.nav-link-mobile:hover .nav-link-bg {
+  opacity: 0.1;
+}
+
+.nav-link-mobile:active .nav-link-bg {
+  opacity: 0.15;
+}
+
+.nav-link-mobile.nav-link-active .nav-link-bg {
+  opacity: 0.15;
+}
+
+/* Active state */
+.nav-link-active {
+  @apply font-medium;
+}
+
+.nav-link-active .nav-link-icon {
+  animation: iconPulse 2s var(--ease-out) infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Color variants */
+.nav-link-mauve { color: var(--mauve); }
+.nav-link-mauve:hover { color: var(--mauve); }
+.nav-link-mauve .nav-link-bg { background: var(--mauve); }
+.nav-link-mauve .nav-link-indicator { background: var(--mauve); }
+
+.nav-link-blue { color: var(--blue); }
+.nav-link-blue:hover { color: var(--blue); }
+.nav-link-blue .nav-link-bg { background: var(--blue); }
+.nav-link-blue .nav-link-indicator { background: var(--blue); }
+
+.nav-link-lavender { color: var(--lavender); }
+.nav-link-lavender:hover { color: var(--lavender); }
+.nav-link-lavender .nav-link-bg { background: var(--lavender); }
+.nav-link-lavender .nav-link-indicator { background: var(--lavender); }
+
+/* Hover color transition for desktop */
+.nav-link-desktop:not(.nav-link-active) {
+  color: var(--subtext0);
+}
+
+.nav-link-desktop:not(.nav-link-active):hover {
+  color: inherit;
+}
+
+/* Focus visible enhancements */
+.nav-link:focus-visible .nav-link-content {
+  transform: scale(1.05);
+}
+
+.nav-link:focus-visible .nav-link-bg {
+  opacity: 0.1;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .nav-link-content,
+  .nav-link-icon,
+  .nav-link-bg,
+  .nav-link-indicator {
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+  
+  .nav-link:hover .nav-link-icon {
+    transform: none !important;
+  }
+}
+</style>

@@ -5,9 +5,11 @@
   # 'self' autorise le contenu depuis la même origine (domaine).
   # 'unsafe-inline' est nécessaire pour les styles/scripts inline (à améliorer si possible).
   # data: autorise les images encodées en base64.
+  # https://*.tile.openstreetmap.org autorise les tuiles de carte OpenStreetMap.
+  # https://unpkg.com autorise le CDN unpkg pour les icônes Leaflet.
   # object-src 'none' empêche l'inclusion de plugins (Flash, etc.).
   # frame-ancestors 'none' empêche le site d'être intégré dans un iframe (similaire à X-Frame-Options).
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none';
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.openstreetmap.org; style-src 'self' 'unsafe-inline' https://www.openstreetmap.org; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://unpkg.com https://www.openstreetmap.org; font-src 'self'; connect-src 'self' https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://www.openstreetmap.org; frame-src 'self' https://www.openstreetmap.org; child-src https://www.openstreetmap.org; object-src 'none'; frame-ancestors 'none';
 
   # HTTP STRICT TRANSPORT SECURITY (HSTS)
   # Force les navigateurs à utiliser HTTPS. max-age est en secondes (ici, 2 ans).

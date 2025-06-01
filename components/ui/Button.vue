@@ -5,11 +5,17 @@
     :to="to"
     :class="buttonClasses"
     :style="magneticStyle"
-    @click="$emit('click', $event)"
+    @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
-    <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
-    <span v-if="$slots.default"><slot /></span>
-    <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    <span class="button-bg" :class="`bg-${color}`"></span>
+    <span class="button-content">
+      <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
+      <span v-if="$slots.default"><slot /></span>
+      <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    </span>
+    <span class="button-ripple" ref="rippleRef"></span>
   </NuxtLink>
   <button
     ref="elementRef"
@@ -18,17 +24,23 @@
     :class="buttonClasses"
     :style="magneticStyle"
     :disabled="disabled"
-    @click="$emit('click', $event)"
+    @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
-    <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
-    <span v-if="$slots.default"><slot /></span>
-    <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    <span class="button-bg" :class="`bg-${color}`"></span>
+    <span class="button-content">
+      <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
+      <span v-if="$slots.default"><slot /></span>
+      <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    </span>
+    <span class="button-ripple" ref="rippleRef"></span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'; // Import PropType and ref
-import { useMagneticEffect } from '~/composables/useMagneticEffect'; // Import the composable
+import { computed, ref, watch, type PropType } from 'vue';
+import { useMagneticEffect } from '~/composables/useMagneticEffect';
 
 // Define types directly
 type AccentColor = 'rosewater' | 'flamingo' | 'pink' | 'mauve' | 'red' | 'maroon' | 'peach' | 'yellow' | 'green' | 'teal' | 'sky' | 'sapphire' | 'blue' | 'lavender';
@@ -79,8 +91,12 @@ const props = defineProps({
   }
 });
 
-// Gestion des événements
-defineEmits(['click']);
+// Event management
+const emit = defineEmits(['click']);
+
+// Refs for ripple effect
+const rippleRef = ref<HTMLElement>();
+const isHovered = ref(false);
 
 // Size classes mapping
 const sizeClasses: Record<ButtonSize, string> = {
@@ -89,35 +105,31 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: 'px-6 py-3 text-lg'
 };
 
-// Génération des classes combinées
-// Dynamically compute button classes
+// Enhanced button classes with better structure
 const buttonClasses = computed(() => {
-  const base = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-base';
+  const base = 'button-base relative inline-flex items-center justify-center rounded-lg font-medium overflow-hidden';
   const size = sizeClasses[props.size];
   
   let variantStyle = '';
   switch (props.variant) {
     case 'solid':
-      // Use text-crust for better contrast on accent backgrounds
-      variantStyle = `bg-${props.color} text-crust hover:brightness-110 active:brightness-95 shadow-md`;
+      variantStyle = 'button-solid';
       break;
     case 'outline':
-      variantStyle = `border-2 border-${props.color} text-${props.color} bg-transparent hover:bg-${props.color}/10 active:bg-${props.color}/20`;
+      variantStyle = `button-outline border-2 border-${props.color}`;
       break;
     case 'ghost':
-      variantStyle = `text-${props.color} bg-transparent hover:bg-${props.color}/10 active:bg-${props.color}/20`;
+      variantStyle = 'button-ghost';
       break;
   }
 
   const state = props.disabled
     ? 'opacity-50 cursor-not-allowed'
-    : 'cursor-pointer active:scale-95'; // Simplified active state
+    : 'cursor-pointer';
 
-  // Apply the ring color based on the button's color prop for better visibility
-  const focusRing = `focus-visible:ring-${props.color}`;
+  const focusRing = `focus-visible:ring-2 focus-visible:ring-${props.color} focus-visible:ring-offset-2 focus-visible:ring-offset-base`;
 
-  // Add the magnetic effect class
-  return [base, size, variantStyle, state, focusRing, props.className]; // Remove 'magnetic-effect' class
+  return [base, size, variantStyle, state, focusRing, props.className];
 });
 
 // Magnetic Effect Setup
@@ -136,7 +148,202 @@ watch(elementRef, (newVal) => {
 
 // Pass the ref holding the actual HTML element to the composable
 const { magneticStyle } = useMagneticEffect(htmlElementRef, {
-  maxDistance: 200, // Increase activation distance for buttons
-  disabled: computed(() => props.disabled) // Pass disabled state reactively
+  maxDistance: 150,
+  strength: 0.3,
+  disabled: computed(() => props.disabled)
 });
+
+// Ripple effect on click
+const handleClick = (event: MouseEvent) => {
+  emit('click', event);
+  
+  if (!props.disabled && rippleRef.value && elementRef.value) {
+    const button = elementRef.value.$el || elementRef.value;
+    const rect = button.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    // Create ripple
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    
+    rippleRef.value.appendChild(ripple);
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  }
+};
+
+// Hover state management
+const handleMouseEnter = () => {
+  isHovered.value = true;
+};
+
+const handleMouseLeave = () => {
+  isHovered.value = false;
+};
 </script>
+
+<style scoped>
+/* Base button styles */
+.button-base {
+  transition: var(--transition-spring);
+  transform-style: preserve-3d;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Button background layer */
+.button-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: var(--transition-base), transform var(--animation-base) var(--ease-spring);
+  transform: translateZ(-1px);
+  will-change: transform, opacity;
+}
+
+/* Button content layer */
+.button-content {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+/* Solid variant */
+.button-solid .button-bg {
+  opacity: 1;
+}
+
+.button-solid .button-content {
+  color: var(--crust);
+}
+
+.button-solid:hover:not(:disabled) .button-bg {
+  filter: brightness(1.15) saturate(1.2);
+  transform: translateZ(-1px) scale(1.02);
+}
+
+.button-solid:active:not(:disabled) .button-bg {
+  filter: brightness(0.9);
+  transform: translateZ(-1px) scale(var(--scale-press));
+}
+
+/* Outline variant */
+.button-outline .button-bg {
+  opacity: 0;
+}
+
+.button-outline .button-content {
+  color: var(--color);
+}
+
+.button-outline:hover:not(:disabled) .button-bg {
+  opacity: 0.15;
+  transform: translateZ(-1px) scale(1.02);
+}
+
+.button-outline:active:not(:disabled) .button-bg {
+  opacity: 0.25;
+  transform: translateZ(-1px) scale(var(--scale-press));
+}
+
+/* Ghost variant */
+.button-ghost .button-bg {
+  opacity: 0;
+}
+
+.button-ghost .button-content {
+  color: var(--color);
+}
+
+.button-ghost:hover:not(:disabled) .button-bg {
+  opacity: 0.08;
+  transform: translateZ(-1px) scale(1.05);
+}
+
+.button-ghost:active:not(:disabled) .button-bg {
+  opacity: 0.15;
+  transform: translateZ(-1px) scale(var(--scale-press));
+}
+
+/* Hover and active states */
+.button-base:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.01);
+  box-shadow: 
+    0 10px 20px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(var(--color-rgb, 203, 166, 247), 0.1);
+}
+
+.button-base:active:not(:disabled) {
+  transform: translateY(0) scale(var(--scale-press));
+  box-shadow: 
+    0 2px 4px -2px rgba(0, 0, 0, 0.2),
+    0 0 0 2px rgba(var(--color-rgb, 203, 166, 247), 0.2);
+  transition-duration: 50ms;
+}
+
+/* Ripple effect container */
+.button-ripple {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* Enhanced ripple animation */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, currentColor 10%, transparent 70%);
+  opacity: 0.4;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  animation: rippleEffect var(--animation-slow) var(--ease-out);
+  pointer-events: none;
+}
+
+@keyframes rippleEffect {
+  to {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+/* Dynamic color variables with RGB values for effects */
+.button-base {
+  --color: var(--mauve);
+  --color-rgb: 203, 166, 247;
+}
+
+.button-base:has(.bg-rosewater) { --color: var(--rosewater); --color-rgb: 245, 224, 220; }
+.button-base:has(.bg-flamingo) { --color: var(--flamingo); --color-rgb: 242, 205, 205; }
+.button-base:has(.bg-pink) { --color: var(--pink); --color-rgb: 245, 194, 231; }
+.button-base:has(.bg-mauve) { --color: var(--mauve); --color-rgb: 203, 166, 247; }
+.button-base:has(.bg-red) { --color: var(--red); --color-rgb: 243, 139, 168; }
+.button-base:has(.bg-maroon) { --color: var(--maroon); --color-rgb: 235, 160, 172; }
+.button-base:has(.bg-peach) { --color: var(--peach); --color-rgb: 250, 179, 135; }
+.button-base:has(.bg-yellow) { --color: var(--yellow); --color-rgb: 249, 226, 175; }
+.button-base:has(.bg-green) { --color: var(--green); --color-rgb: 166, 227, 161; }
+.button-base:has(.bg-teal) { --color: var(--teal); --color-rgb: 148, 226, 213; }
+.button-base:has(.bg-sky) { --color: var(--sky); --color-rgb: 137, 220, 235; }
+.button-base:has(.bg-sapphire) { --color: var(--sapphire); --color-rgb: 116, 199, 236; }
+.button-base:has(.bg-blue) { --color: var(--blue); --color-rgb: 137, 180, 250; }
+.button-base:has(.bg-lavender) { --color: var(--lavender); --color-rgb: 180, 190, 254; }
+
+/* Add subtle glow on focus */
+.button-base:focus-visible {
+  box-shadow: 
+    0 0 0 3px rgba(var(--color-rgb), 0.3),
+    0 0 20px -5px rgba(var(--color-rgb), 0.5);
+}
+</style>

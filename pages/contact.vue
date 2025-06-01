@@ -62,19 +62,28 @@
           </p>
         </div>
         
-        <!-- Interactive Map -->
-        <Suspense>
-          <template #default>
-            <LazyMapComponent
-              :center="mapComponentData.center"
-              :zoom="mapComponentData.zoom"
-              :marker="mapComponentData.marker"
-            />
-          </template>
-          <template #fallback>
-            <LoadingState />
-          </template>
-        </Suspense>
+        <!-- Map Section -->
+        <div class="max-w-6xl mx-auto">
+          <!-- Simple Map Component -->
+          <LazySimpleMap />
+          
+          <!-- Optional: Keep the interactive map component for later debugging
+          <Suspense>
+            <template #default>
+              <LazyMapComponent
+                :center="mapComponentData.center"
+                :zoom="mapComponentData.zoom"
+                :marker="mapComponentData.marker"
+              />
+            </template>
+            <template #fallback>
+              <div class="h-[500px] flex items-center justify-center">
+                <LoadingState />
+              </div>
+            </template>
+          </Suspense>
+          -->
+        </div>
       </div>
     </section>
   </div>
@@ -194,6 +203,8 @@ const mapComponentData = ref<MapCoordinates>({
 const LazyContactForm = defineAsyncComponent(() => import('@/components/contact/ContactForm.vue'))
 const LazyContactInfo = defineAsyncComponent(() => import('@/components/contact/ContactInfo.vue'))
 const LazyMapComponent = defineAsyncComponent(() => import('@/components/contact/MapComponent.vue'))
+const LazyStaticMap = defineAsyncComponent(() => import('@/components/contact/StaticMap.vue'))
+const LazySimpleMap = defineAsyncComponent(() => import('@/components/contact/SimpleMap.vue'))
 
 // Page meta
 useSeoMeta({

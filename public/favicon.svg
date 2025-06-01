@@ -1,9 +1,31 @@
 <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <path 
-    d="M16 4 L24 28 L20 28 L16 16 L12 28 L8 28 L16 4 Z M14 12 L18 12 L16 6 L14 12 Z" 
-    fill="#cba6f7"
-    stroke="#cba6f7"
-    stroke-width="0.5"
-    stroke-linejoin="round"
-  />
+  <defs>
+    <!-- Gradient principal pour favicon -->
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#cba6f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#89b4fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#94e2d5;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Ombre douce -->
+    <filter id="faviconShadow">
+      <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Fond circulaire subtil -->
+  <circle cx="16" cy="16" r="14" fill="#1e1e2e" opacity="0.05"/>
+  
+  <!-- Logo A simplifié pour favicon -->
+  <g filter="url(#faviconShadow)">
+    <path d="M16 6 L22 24 L19 24 L17.75 20 L14.25 20 L13 24 L10 24 L16 6 Z M15 17.5 L17 17.5 L16 14 L15 17.5 Z" 
+          fill="url(#faviconGradient)"
+          stroke="url(#faviconGradient)"
+          stroke-width="0.5"
+          stroke-linejoin="round"
+          stroke-linecap="round"/>
+    
+    <!-- Point décoratif au sommet -->
+    <circle cx="16" cy="6" r="1" fill="url(#faviconGradient)"/>
+  </g>
 </svg>

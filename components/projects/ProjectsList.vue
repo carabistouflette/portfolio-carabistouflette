@@ -38,7 +38,7 @@
     </div>
     
     <!-- Projects grid -->
-    <div v-if="filteredProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-if="filteredProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
       <div 
         v-for="(project, index) in filteredProjects" 
         :key="project.id"
@@ -47,6 +47,7 @@
         <ProjectCard
           :project="project"
           @navigate="navigateToProject"
+          class="h-full"
         />
       </div>
     </div>
@@ -78,42 +79,42 @@ const projects = ref([
   {
     id: 1,
     title: 'Système de monitoring embarqué',
-    description: 'Développement d\'un système de monitoring pour applications embarquées avec interface de visualisation en temps réel.',
+    description: 'Développement d\'un système de monitoring pour applications embarquées. Interface de visualisation en temps réel.',
     category: 'Système Embarqué',
     technologies: ['C', 'ARM', 'RTOS']
   },
   {
     id: 2,
     title: 'Gestionnaire de base de données SQL optimisé',
-    description: 'Implémentation d\'un gestionnaire de base de données SQL avec optimisation des requêtes et indexation avancée.',
+    description: 'Gestionnaire de base de données SQL personnalisé. Optimisation des requêtes et indexation avancée.',
     category: 'Base de Données',
     technologies: ['SQL', 'C++', 'Algorithmes']
   },
   {
     id: 3,
     title: 'Configuration réseau automatisée',
-    description: 'Outil d\'automatisation de configuration réseau pour environnements multi-serveurs avec monitoring intégré.',
+    description: 'Outil d\'automatisation pour la configuration réseau. Gestion multi-serveurs avec monitoring intégré.',
     category: 'Administration Réseau',
     technologies: ['Shell', 'Python', 'Networking']
   },
   {
     id: 4,
     title: 'Compilateur minimaliste',
-    description: 'Implémentation d\'un compilateur minimaliste pour un langage de programmation expérimental orienté systèmes embarqués.',
+    description: 'Compilateur minimaliste pour un langage expérimental. Optimisé pour les systèmes embarqués.',
     category: 'Programmation Bas Niveau',
     technologies: ['C', 'Assembly', 'Compiler Design']
   },
   {
     id: 5,
     title: 'Interface de contrôle pour microcontrôleurs',
-    description: 'Conception d\'une interface web permettant de programmer et contrôler des microcontrôleurs à distance.',
+    description: 'Interface web pour programmer et contrôler des microcontrôleurs. Communication à distance en temps réel.',
     category: 'Web',
     technologies: ['JavaScript', 'Vue', 'WebSockets', 'C']
   },
   {
     id: 6,
     title: 'Système de fichiers personnalisé',
-    description: 'Implémentation d\'un système de fichiers léger optimisé pour les systèmes embarqués avec ressources limitées.',
+    description: 'Système de fichiers léger pour systèmes embarqués. Optimisé pour les ressources limitées.',
     category: 'Programmation Bas Niveau',
     technologies: ['C', 'Kernel', 'File Systems']
   }

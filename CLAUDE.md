@@ -67,3 +67,6 @@ Cloudflare Pages deployment via Wrangler:
 - Configuration in `wrangler.toml`
 - Environment variables for production/preview
 - Output directory: `.output/public`
+
+## Development Guidelines
+- Don't push or commit the changes without user approval

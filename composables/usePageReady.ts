@@ -1,20 +1,33 @@
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 
 /**
  * Composable to handle page ready state and batch animations
  */
+const pageReadyState = ref(false)
+const readyCallbacks: (() => void)[] = []
+
 export const usePageReady = () => {
-  const isReady = ref(false)
-  const readyCallbacks: (() => void)[] = []
+  const isReady = computed(() => pageReadyState.value)
 
   /**
    * Register a callback to be executed when the page is ready
    */
   const onReady = (callback: () => void) => {
-    if (isReady.value) {
+    if (pageReadyState.value) {
       callback()
     } else {
       readyCallbacks.push(callback)
+    }
+  }
+  
+  /**
+   * Manually set the page ready state
+   */
+  const setPageReady = (ready: boolean) => {
+    pageReadyState.value = ready
+    if (ready) {
+      readyCallbacks.forEach(cb => cb())
+      readyCallbacks.length = 0
     }
   }
 
@@ -49,7 +62,7 @@ export const usePageReady = () => {
     // Small delay to ensure everything is painted
     await new Promise(resolve => setTimeout(resolve, 50))
     
-    isReady.value = true
+    pageReadyState.value = true
     readyCallbacks.forEach(cb => cb())
     readyCallbacks.length = 0
   }
@@ -60,6 +73,7 @@ export const usePageReady = () => {
 
   return {
     isReady,
-    onReady
+    onReady,
+    setPageReady
   }
 }

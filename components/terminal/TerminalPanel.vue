@@ -1,23 +1,43 @@
 <template>
-  <div class="terminal-panel font-mono fixed bottom-0 left-0 right-0 bg-base border-t-2 border-surface0 shadow-2xl overflow-hidden z-50 transition-transform duration-300 ease-in-out"
-       :style="{ 
-         backgroundColor: '#1e1e2e', 
-         height: `${terminalHeight}px`,
-         minHeight: '150px',
-         maxHeight: '80vh',
-         transform: isVisible ? 'translateY(0)' : 'translateY(100%)'
-       }">
-    <!-- Resize handle -->
-    <div 
-      class="resize-handle absolute top-0 left-0 right-0 h-2 bg-surface1 cursor-ns-resize hover:bg-surface2 transition-colors group"
-      @mousedown="startResize"
-    >
-      <div class="resize-indicator absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex gap-1">
-        <div class="w-8 h-0.5 bg-overlay0 rounded-full transition-colors group-hover:bg-text"></div>
+  <Transition name="terminal-slide">
+    <div v-if="isVisible" 
+         class="terminal-panel font-mono bg-base border-t-2 border-surface0 shadow-2xl overflow-hidden"
+         :style="{ 
+           position: 'fixed',
+           left: '0',
+           right: '0',
+           bottom: '0',
+           zIndex: '9999',
+           backgroundColor: '#1e1e2e', 
+           height: `${terminalHeight}px`,
+           minHeight: '150px',
+           maxHeight: '80vh'
+         }">
+    <!-- Terminal Header -->
+    <div class="terminal-header flex items-center justify-between px-4 py-2 bg-surface1/50">
+      <!-- Resize handle -->
+      <div 
+        class="resize-handle flex-1 h-6 cursor-ns-resize hover:bg-surface2/20 transition-colors rounded flex items-center justify-center group"
+        @mousedown="startResize"
+      >
+        <div class="resize-indicator flex gap-1">
+          <div class="w-8 h-0.5 bg-overlay0 rounded-full transition-colors group-hover:bg-text"></div>
+        </div>
       </div>
+      
+      <!-- Close button -->
+      <button
+        @click="$emit('close')"
+        class="ml-2 p-1 rounded hover:bg-surface2 transition-colors"
+        title="Close Terminal (Esc)"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
     
-    <div class="terminal-content h-full pt-3 px-4 pb-4 flex flex-col">
+    <div class="terminal-content h-[calc(100%-40px)] px-4 pb-4 flex flex-col">
       <div ref="outputArea" class="terminal-output flex-grow overflow-y-auto mb-2 text-text pr-2">
         <div v-for="(line, index) in outputLines" :key="index" v-html="line"></div>
       </div>
@@ -37,6 +57,7 @@
       </div>
     </div>
   </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -50,6 +71,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const emit = defineEmits(['close'])
 
 const { currentDirectory, executeCommand } = useTerminal()
 const { theme: currentTheme, setTheme } = useTheme()
@@ -69,27 +92,6 @@ const isResizing = ref(false)
 const startY = ref(0)
 const startHeight = ref(0)
 
-// Log when component mounts
-onMounted(() => {
-  console.log('TerminalPanel component mounted')
-  console.log('Initial visibility:', props.isVisible)
-  
-  // Debug: Force visibility after mount to test
-  setTimeout(() => {
-    console.log('Debug check - Is terminal in DOM?', document.querySelector('.terminal-panel'))
-    const panel = document.querySelector('.terminal-panel') as HTMLElement
-    if (panel) {
-      console.log('Terminal panel found, computed styles:', {
-        transform: window.getComputedStyle(panel).transform,
-        bottom: window.getComputedStyle(panel).bottom,
-        height: window.getComputedStyle(panel).height,
-        zIndex: window.getComputedStyle(panel).zIndex,
-        display: window.getComputedStyle(panel).display,
-        visibility: window.getComputedStyle(panel).visibility
-      })
-    }
-  }, 1000)
-})
 const outputArea = ref<HTMLElement | null>(null)
 const inputFieldRef = ref<HTMLInputElement | null>(null)
 const commandHistory = ref<string[]>([])
@@ -240,9 +242,6 @@ const stopResize = () => {
 
 // Load saved height on mount
 onMounted(() => {
-  console.log('TerminalPanel component mounted')
-  console.log('Initial visibility:', props.isVisible)
-  
   // Load saved terminal height
   const savedHeight = localStorage.getItem('terminal-height')
   if (savedHeight) {
@@ -252,7 +251,6 @@ onMounted(() => {
 
 // Ensure input field gets focus when terminal becomes visible
 watch(() => props.isVisible, (newValue) => {
-  console.log('Terminal visibility changed in component:', newValue)
   if (newValue) {
     nextTick(() => {
       inputFieldRef.value?.focus()
@@ -295,13 +293,19 @@ watch(() => props.isVisible, (newValue) => {
   touch-action: none;
 }
 
-.resize-handle::before {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: 0;
-  right: 0;
-  height: 8px;
-  cursor: ns-resize;
+/* Terminal slide animation */
+.terminal-slide-enter-active,
+.terminal-slide-leave-active {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.terminal-slide-enter-from {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.terminal-slide-leave-to {
+  transform: translateY(100%);
+  opacity: 0;
 }
 </style>

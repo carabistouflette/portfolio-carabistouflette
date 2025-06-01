@@ -13,7 +13,7 @@
       <div
         v-for="item in contactItems"
         :key="item.type"
-        class="group flex items-center p-4 glass-card hover:bg-surface0/70 transition-all duration-300"
+        class="group flex items-center p-4 glass-card hover:bg-surface0/70"
       >
         <div
           class="w-12 h-12 rounded-full flex items-center justify-center mr-4 transition-transform group-hover:scale-110"

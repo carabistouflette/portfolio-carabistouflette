@@ -1,6 +1,10 @@
 <template>
   <PageLoader>
     <div class="min-h-screen flex flex-col bg-base text-text relative">
+      <!-- Skip to content link for accessibility -->
+      <a href="#main-content" class="skip-to-content">
+        Skip to main content
+      </a>
       <!-- Animated background pattern -->
       <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="absolute w-full h-full">
@@ -18,7 +22,7 @@
       </div>
       
       <TheHeader class="relative z-20" />
-      <main class="flex-grow relative z-10">
+      <main id="main-content" class="flex-grow relative z-10" tabindex="-1">
         <slot />
       </main>
       <TheFooter
@@ -33,8 +37,8 @@
       <!-- Terminal Toggle Button -->
       <button
         @click="toggleTerminal"
-        class="fixed bottom-4 right-4 z-30 bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
-        :class="{ 'bottom-[calc(33.333333%+1rem)]': isTerminalVisible }"
+        class="fixed bottom-4 right-4 z-[10000] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
+        :class="{ 'bg-surface1': isTerminalVisible }"
         title="Toggle Terminal (Ctrl+`)"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,7 +50,14 @@
       </button>
       
       <!-- Terminal Panel -->
-      <TerminalPanel :is-visible="isTerminalVisible" />
+      <ClientOnly>
+        <Teleport to="body">
+          <TerminalPanel 
+            :is-visible="isTerminalVisible" 
+            @close="isTerminalVisible = false"
+          />
+        </Teleport>
+      </ClientOnly>
     </div>
   </PageLoader>
 </template>
@@ -58,11 +69,11 @@ import PageLoader from '~/components/layout/PageLoader.vue'
 
 // Terminal state
 const isTerminalVisible = ref(false)
+const terminalHeight = ref(300) // Default terminal height
 
 // Toggle terminal function
 const toggleTerminal = () => {
   isTerminalVisible.value = !isTerminalVisible.value
-  console.log('Terminal visibility toggled:', isTerminalVisible.value)
 }
 
 // Keyboard shortcut handler
@@ -82,6 +93,12 @@ const handleKeydown = (event: KeyboardEvent) => {
 // Set up keyboard listeners
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
+  
+  // Load saved terminal height
+  const savedHeight = localStorage.getItem('terminal-height')
+  if (savedHeight) {
+    terminalHeight.value = parseInt(savedHeight, 10)
+  }
 })
 
 onUnmounted(() => {

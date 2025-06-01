@@ -5,68 +5,85 @@
       <!-- Group name and email in a grid on desktop -->
       <div v-if="index === 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Name field -->
-        <div class="space-y-2">
-          <label :for="field.name" class="block text-subtext0 font-medium">{{ field.label }}</label>
-          <input
-            :id="field.name"
-            v-model="form[field.name]"
-            :type="field.type"
-            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
-            :class="{ 'border-red': errors[field.name] }"
-            :placeholder="field.label"
-            required
-            :aria-invalid="!!errors[field.name]"
-            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
-          />
+        <div class="form-field space-y-2">
+          <label :for="field.name" class="form-label">{{ field.label }}</label>
+          <div class="form-input-wrapper">
+            <input
+              :id="field.name"
+              v-model="form[field.name]"
+              :type="field.type"
+              class="form-input"
+              :class="{ 'form-input-error': errors[field.name] }"
+              :placeholder="field.label"
+              required
+              :aria-invalid="!!errors[field.name]"
+              :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+              @focus="handleFocus(field.name)"
+              @blur="handleBlur(field.name)"
+            />
+            <div class="form-input-underline"></div>
+          </div>
           <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
         </div>
         
         <!-- Email field (second field) -->
-        <div v-if="formFields[1]" class="space-y-2">
-          <label :for="formFields[1].name" class="block text-subtext0 font-medium">{{ formFields[1].label }}</label>
-          <input
-            :id="formFields[1].name"
-            v-model="form[formFields[1].name]"
-            :type="formFields[1].type"
-            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
-            :class="{ 'border-red': errors[formFields[1].name] }"
-            :placeholder="formFields[1].label"
-            required
-            :aria-invalid="!!errors[formFields[1].name]"
-            :aria-describedby="errors[formFields[1].name] ? `${formFields[1].name}-error` : undefined"
-          />
+        <div v-if="formFields[1]" class="form-field space-y-2">
+          <label :for="formFields[1].name" class="form-label">{{ formFields[1].label }}</label>
+          <div class="form-input-wrapper">
+            <input
+              :id="formFields[1].name"
+              v-model="form[formFields[1].name]"
+              :type="formFields[1].type"
+              class="form-input"
+              :class="{ 'form-input-error': errors[formFields[1].name] }"
+              :placeholder="formFields[1].label"
+              required
+              :aria-invalid="!!errors[formFields[1].name]"
+              :aria-describedby="errors[formFields[1].name] ? `${formFields[1].name}-error` : undefined"
+              @focus="handleFocus(formFields[1].name)"
+              @blur="handleBlur(formFields[1].name)"
+            />
+            <div class="form-input-underline"></div>
+          </div>
           <p v-if="errors[formFields[1].name]" :id="`${formFields[1].name}-error`" class="text-red text-sm">{{ errors[formFields[1].name] }}</p>
         </div>
       </div>
       
       <!-- Skip email field as it's already rendered -->
       <template v-else-if="index !== 1">
-        <div class="space-y-2">
-          <label :for="field.name" class="block text-subtext0 font-medium">{{ field.label }}</label>
-          <input
-            v-if="field.type !== 'textarea'"
-            :id="field.name"
-            v-model="form[field.name]"
-            :type="field.type"
-            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all"
-            :class="{ 'border-red': errors[field.name] }"
-            :placeholder="field.label"
-            required
-            :aria-invalid="!!errors[field.name]"
-            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
-          />
-          <textarea
-            v-else
-            :id="field.name"
-            v-model="form[field.name]"
-            rows="6"
-            class="w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg focus:border-mauve transition-all resize-none"
-            :class="{ 'border-red': errors[field.name] }"
-            :placeholder="field.label"
-            required
-            :aria-invalid="!!errors[field.name]"
-            :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
-          ></textarea>
+        <div class="form-field space-y-2">
+          <label :for="field.name" class="form-label">{{ field.label }}</label>
+          <div class="form-input-wrapper">
+            <input
+              v-if="field.type !== 'textarea'"
+              :id="field.name"
+              v-model="form[field.name]"
+              :type="field.type"
+              class="form-input"
+              :class="{ 'form-input-error': errors[field.name] }"
+              :placeholder="field.label"
+              required
+              :aria-invalid="!!errors[field.name]"
+              :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+              @focus="handleFocus(field.name)"
+              @blur="handleBlur(field.name)"
+            />
+            <textarea
+              v-else
+              :id="field.name"
+              v-model="form[field.name]"
+              rows="6"
+              class="form-input form-textarea"
+              :class="{ 'form-input-error': errors[field.name] }"
+              :placeholder="field.label"
+              required
+              :aria-invalid="!!errors[field.name]"
+              :aria-describedby="errors[field.name] ? `${field.name}-error` : undefined"
+              @focus="handleFocus(field.name)"
+              @blur="handleBlur(field.name)"
+            ></textarea>
+            <div class="form-input-underline"></div>
+          </div>
           <p v-if="errors[field.name]" :id="`${field.name}-error`" class="text-red text-sm">{{ errors[field.name] }}</p>
         </div>
       </template>
@@ -175,6 +192,20 @@ const errors = reactive<FormErrors>(
   props.formFields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {})
 );
 
+// Focus state tracking
+const focusedField = ref<string | null>(null);
+
+// Input handlers
+const handleFocus = (fieldName: string) => {
+  focusedField.value = fieldName;
+};
+
+const handleBlur = (fieldName: string) => {
+  if (focusedField.value === fieldName) {
+    focusedField.value = null;
+  }
+};
+
 // Submit form
 // Handles the entire form submission process, including state updates, API call, and error/success handling.
 const submitForm = async (event: Event) => {
@@ -253,3 +284,170 @@ const submitForm = async (event: Event) => {
   }
 };
 </script>
+
+<style scoped>
+/* Form field wrapper */
+.form-field {
+  position: relative;
+  animation: fieldFadeIn var(--animation-base) var(--ease-out) forwards;
+  opacity: 0;
+}
+
+.form-field:nth-child(1) { animation-delay: 0.1s; }
+.form-field:nth-child(2) { animation-delay: 0.2s; }
+.form-field:nth-child(3) { animation-delay: 0.3s; }
+.form-field:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fieldFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Form label */
+.form-label {
+  @apply block text-subtext0 font-medium mb-2;
+  transition: color var(--animation-fast) var(--ease-out);
+}
+
+.form-input-wrapper:focus-within .form-label {
+  color: var(--mauve);
+}
+
+/* Form input wrapper */
+.form-input-wrapper {
+  @apply relative;
+}
+
+/* Form input base styles */
+.form-input {
+  @apply w-full px-4 py-3 bg-surface0 border border-surface1 rounded-lg;
+  @apply transition-all duration-300 ease-out;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+
+.form-textarea {
+  @apply resize-none;
+}
+
+/* Input states */
+.form-input:hover {
+  @apply border-surface2;
+  background: rgba(var(--surface0-rgb, 49, 50, 68), 0.8);
+}
+
+.form-input:focus {
+  @apply border-transparent;
+  background: rgba(var(--surface0-rgb, 49, 50, 68), 0.6);
+  box-shadow: 0 4px 20px -5px rgba(203, 166, 247, 0.3);
+}
+
+.form-input-error {
+  @apply border-red;
+  animation: inputShake 0.4s var(--ease-out);
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Animated underline */
+.form-input-underline {
+  @apply absolute bottom-0 left-0 h-0.5 w-full;
+  background: linear-gradient(90deg, var(--mauve), var(--blue), var(--lavender));
+  background-size: 200% 100%;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--animation-base) var(--ease-out);
+  border-radius: 9999px;
+}
+
+.form-input:focus ~ .form-input-underline {
+  transform: scaleX(1);
+  animation: underlineGradient 3s linear infinite;
+}
+
+@keyframes underlineGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Error message animation */
+.form-field p {
+  animation: errorSlide var(--animation-fast) var(--ease-out);
+}
+
+@keyframes errorSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Success/Error message animations */
+.animate-slide-up {
+  animation: slideUp var(--animation-base) var(--ease-out);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Submit button loading state */
+.form-field button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Placeholder animation */
+.form-input::placeholder {
+  color: var(--overlay0);
+  transition: opacity var(--animation-fast) var(--ease-out);
+}
+
+.form-input:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* Focus visible for accessibility */
+.form-input:focus-visible {
+  box-shadow: 
+    0 0 0 3px rgba(203, 166, 247, 0.3),
+    0 4px 20px -5px rgba(203, 166, 247, 0.3);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .form-field,
+  .form-input,
+  .form-input-underline,
+  .form-field p {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .form-input-error {
+    animation: none;
+  }
+}
+</style>
