@@ -8,8 +8,8 @@
             <span class="gradient-text">Mes Projets</span>
           </h1>
           <p class="text-lg md:text-xl text-subtext0 mb-8 animate-fade-in">
-            Découvrez mes réalisations en programmation bas niveau, 
-            systèmes embarqués et administration réseau.
+            Découvrez mes réalisations en programmation, 
+            développement web et administration réseau.
           </p>
         </div>
       </div>
@@ -50,8 +50,8 @@ import ProjectsList from '@/components/projects/ProjectsList.vue'
 // Page meta
 useSeoMeta({
   title: 'Projets - Alexis Robin Portfolio',
-  description: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation bas niveau, systèmes embarqués, et administration réseau.',
+  description: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation, développement web, et administration réseau.',
   ogTitle: 'Projets - Alexis Robin Portfolio',
-  ogDescription: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation bas niveau, systèmes embarqués, et administration réseau.',
+  ogDescription: 'Explorez les projets réalisés par Alexis Robin, incluant des travaux en programmation, développement web, et administration réseau.',
 })
 </script>

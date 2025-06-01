@@ -2,7 +2,7 @@
   <div ref="pageWrapperRef">
     <HeroBanner
       :title="'Alexis Robin'"
-      :subtitle="'Développeur Système Embarqué & Passionné de Programmation Bas Niveau'"
+      :subtitle="'Développeur Full Stack & Passionné de Programmation'"
       :description="'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, je suis un passionné de programmation bas niveau, de philosophie et de photographie.'"
       :primary-button="{ to: '/projects', text: 'Découvrir mes projets', iconRight: 'heroicons:arrow-right' }"
       :profile-image="'/profile-logo.svg'"
@@ -20,7 +20,7 @@
       <div class="container-custom text-center">
         <h2 class="mb-6 animate-slide-up !text-3xl md:!text-4xl">Envie de voir mes projets ?</h2>
         <p class="text-lg mb-8 max-w-2xl mx-auto">
-          Découvrez mes réalisations en programmation bas niveau, systèmes embarqués et plus encore.
+          Découvrez mes réalisations en programmation, développement web et plus encore.
         </p>
         <Button 
           to="/projects" 
@@ -64,15 +64,15 @@ onMounted(() => {
 const aboutSectionData = ref({
   title: 'À propos de moi',
   aboutText: [
-    'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, je suis passionné par la programmation bas niveau et les systèmes embarqués.',
-    'Mon parcours m\'a permis de développer des compétences en <span class="text-peach">C</span>, <span class="text-blue">SQL</span>, <span class="text-green">Java</span>, et <span class="text-yellow">administration réseau</span>.',
+    'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, je suis passionné par la programmation et le développement d\'applications performantes.',
+    'Mon parcours m\'a permis de développer des compétences en <span class="text-peach">Java</span>, <span class="text-blue">SQL</span>, <span class="text-green">Python</span>, et <span class="text-yellow">administration réseau</span>.',
     'En dehors de l\'informatique, je développe un intérêt pour la <span class="text-lavender">philosophie</span> et la <span class="text-sky">photographie</span>.'
   ],
   skills: [
     {
-      title: 'Programmation C',
-      description: 'Développement bas niveau et systèmes embarqués',
-      icon: 'mdi:language-c',
+      title: 'Programmation Java',
+      description: 'Développement orienté objet et applications robustes',
+      icon: 'mdi:language-java',
       bgColor: 'bg-peach'
     },
     {
@@ -128,9 +128,9 @@ import TimelineSection from '@/components/home/TimelineSection.vue'
 // Page meta
 useSeoMeta({
   title: 'Accueil - Alexis Robin Portfolio',
-  description: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation bas niveau, les systèmes embarqués et l\'administration système.',
+  description: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation, le développement web et l\'administration système.',
   ogTitle: 'Accueil - Alexis Robin Portfolio',
-  ogDescription: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation bas niveau, les systèmes embarqués et l\'administration système.',
+  ogDescription: 'Portfolio d\'Alexis Robin, étudiant en informatique passionné par la programmation, le développement web et l\'administration système.',
 })
 
 // Schema.org Person
@@ -148,7 +148,7 @@ useHead({
           // e.g., 'https://github.com/yourusername',
           // 'https://linkedin.com/in/yourprofile'
         ],
-        jobTitle: 'Développeur Système Embarqué', // Extracted from subtitle
+        jobTitle: 'Développeur Full Stack', // Extracted from subtitle
         description: 'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, passionné de programmation bas niveau, de philosophie et de photographie.', // Extracted from HeroBanner description
         image: '/profile-logo.svg' // Extracted from HeroBanner profileImage
       })

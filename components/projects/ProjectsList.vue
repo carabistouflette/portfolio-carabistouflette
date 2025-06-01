@@ -78,10 +78,10 @@ const projectCardWrappers = ref<HTMLElement[]>([])
 const projects = ref([
   {
     id: 1,
-    title: 'Système de monitoring embarqué',
-    description: 'Développement d\'un système de monitoring pour applications embarquées. Interface de visualisation en temps réel.',
-    category: 'Système Embarqué',
-    technologies: ['C', 'ARM', 'RTOS']
+    title: 'Application de gestion de tâches',
+    description: 'Développement d\'une application web moderne pour la gestion de tâches et projets. Interface intuitive et responsive.',
+    category: 'Développement Web',
+    technologies: ['Vue.js', 'TypeScript', 'Tailwind CSS']
   },
   {
     id: 2,
@@ -99,10 +99,10 @@ const projects = ref([
   },
   {
     id: 4,
-    title: 'Compilateur minimaliste',
-    description: 'Compilateur minimaliste pour un langage expérimental. Optimisé pour les systèmes embarqués.',
-    category: 'Programmation Bas Niveau',
-    technologies: ['C', 'Assembly', 'Compiler Design']
+    title: 'API REST pour e-commerce',
+    description: 'Conception et implémentation d\'une API REST complète pour une plateforme e-commerce. Documentation avec Swagger.',
+    category: 'Développement Web',
+    technologies: ['Java', 'Spring Boot', 'PostgreSQL']
   },
   {
     id: 5,
@@ -113,10 +113,10 @@ const projects = ref([
   },
   {
     id: 6,
-    title: 'Système de fichiers personnalisé',
-    description: 'Système de fichiers léger pour systèmes embarqués. Optimisé pour les ressources limitées.',
-    category: 'Programmation Bas Niveau',
-    technologies: ['C', 'Kernel', 'File Systems']
+    title: 'Dashboard analytique',
+    description: 'Tableau de bord interactif pour la visualisation de données. Graphiques temps réel et export de rapports.',
+    category: 'Développement Web',
+    technologies: ['React', 'D3.js', 'Node.js']
   }
 ])
 

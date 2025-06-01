@@ -71,7 +71,7 @@ const emit = defineEmits(['navigate'])
 // Computed
 const categoryClass = computed(() => {
   const categories = {
-    'Système Embarqué': 'category-embedded',
+    'Développement Web': 'category-webdev',
     'Programmation Bas Niveau': 'category-lowlevel',
     'Administration Réseau': 'category-network',
     'Base de Données': 'category-database',
@@ -135,7 +135,7 @@ useHead({
 }
 
 /* Category color variants */
-.category-embedded {
+.category-webdev {
   background: linear-gradient(135deg, rgba(250, 179, 135, 0.2), rgba(250, 179, 135, 0.3));
   color: var(--peach);
   border-color: rgba(250, 179, 135, 0.3);

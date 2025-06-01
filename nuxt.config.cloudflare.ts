@@ -20,7 +20,7 @@ export default defineNuxtConfig({
       head: {
         title: 'Alexis Robin - Portfolio',
         meta: [
-          { name: 'description', content: 'Portfolio d\'Alexis Robin - Développeur système embarqué et passionné de programmation bas niveau' }
+          { name: 'description', content: 'Portfolio d\'Alexis Robin - Développeur Full Stack et passionné de programmation' }
         ],
         link: [
           { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

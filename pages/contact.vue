@@ -153,8 +153,8 @@ const LazyContactInfo = defineAsyncComponent(() => import('@/components/contact/
 // Page meta
 useSeoMeta({
   title: 'Contact - Alexis Robin Portfolio',
-  description: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, systèmes embarqués et programmation bas niveau.',
+  description: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, développement web et programmation.',
   ogTitle: 'Contact - Alexis Robin Portfolio',
-  ogDescription: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, systèmes embarqués et programmation bas niveau.',
+  ogDescription: 'Contactez Alexis Robin pour discuter de projets, poser des questions ou en savoir plus sur son parcours en informatique, développement web et programmation.',
 })
 </script>
