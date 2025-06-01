@@ -64,9 +64,9 @@ onMounted(() => {
 const aboutSectionData = ref({
   title: 'À propos de moi',
   aboutText: [
-    'Étudiant à l\'IUT informatique de Montpellier en parcours DACS, je suis passionné par la programmation et le développement d\'applications performantes.',
-    'Mon parcours m\'a permis de développer des compétences en <span class="text-peach">Java</span>, <span class="text-blue">SQL</span>, <span class="text-green">Python</span>, et <span class="text-yellow">administration réseau</span>.',
-    'En dehors de l\'informatique, je développe un intérêt pour la <span class="text-lavender">philosophie</span> et la <span class="text-sky">photographie</span>.'
+    'Développeur <span class="text-peach">passionné</span> et <span class="text-green">créatif</span>, je suis étudiant à l\'IUT informatique de Montpellier en parcours DACS. Ma <span class="text-blue">curiosité insatiable</span> et mon <span class="text-lavender">esprit analytique</span> me poussent constamment à explorer de nouvelles technologies et à repousser les limites du possible.',
+    'Reconnu pour ma <span class="text-yellow">rigueur</span>, mon <span class="text-sky">autonomie</span> et ma capacité à <span class="text-peach">résoudre des problèmes complexes</span>, j\'ai développé une expertise solide en <span class="text-green">Java</span>, <span class="text-blue">SQL</span>, <span class="text-lavender">Python</span>, et <span class="text-yellow">développement Full Stack</span>. Mon approche méthodique et mon souci du détail me permettent de concevoir des solutions élégantes et performantes.',
+    'Au-delà du code, je cultive un <span class="text-lavender">esprit critique</span> nourri par ma passion pour la philosophie, et un <span class="text-sky">regard créatif</span> aiguisé par la photographie. Cette polyvalence enrichit ma vision du développement et me permet d\'apporter des perspectives innovantes à chaque projet.'
   ],
   skills: [
     {

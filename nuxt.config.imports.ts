@@ -24,9 +24,7 @@ export default defineNuxtConfig({
     },
   
     css: [
-      '~/assets/css/main.css',
-      '~/assets/css/catppuccin.css',
-      '~/assets/css/interaction-styles.css'
+      '~/assets/css/main.css'
     ],
   
     tailwindcss: {

@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { navigateTo } from '#app'
 import { useAnimations } from '@/composables/useAnimations'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
 
@@ -85,10 +86,10 @@ const projects = ref([
   },
   {
     id: 2,
-    title: 'Gestionnaire de base de données SQL optimisé',
-    description: 'Gestionnaire de base de données SQL personnalisé. Optimisation des requêtes et indexation avancée.',
-    category: 'Base de Données',
-    technologies: ['SQL', 'C++', 'Algorithmes']
+    title: 'Gestionnaire de Bulk CSV SMAG',
+    description: 'Application full-stack innovante pour simplifier la gestion des fichiers CSV chez SMAG. Automatisation des jointures et interface intuitive.',
+    category: 'Développement Web',
+    technologies: ['Vue.js', 'FastAPI', 'Python', 'PostgreSQL']
   },
   {
     id: 3,
@@ -166,10 +167,13 @@ const clearFilters = () => {
   activeCategories.value = []
 }
 
-const navigateToProject = (projectId: number) => {
-  // In a real app, you might want to navigate to a detailed project page
-  // For this example, we'll just log the ID
-  console.log(`Navigating to project ${projectId}`)
+const navigateToProject = async (projectId: number) => {
+  // Navigate to project detail page
+  if (projectId === 2) {
+    await navigateTo('/projects/bulk-csv-smag')
+  } else {
+    console.log(`Navigating to project ${projectId}`)
+  }
 }
 
 // Animations

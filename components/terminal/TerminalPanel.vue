@@ -63,7 +63,6 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, computed, onMounted } from 'vue'
 import { useTerminal } from '~/composables/useTerminal'
-import { useTheme } from '~/composables/useTheme'
 
 const props = defineProps({
   isVisible: {
@@ -75,7 +74,6 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const { currentDirectory, executeCommand } = useTerminal()
-const { theme: currentTheme, setTheme } = useTheme()
 
 const commandInput = ref('')
 const outputLines = ref<string[]>([
@@ -134,19 +132,6 @@ const handleCommand = async () => {
   // Handle special commands
   if (result.length === 1 && result[0] === 'CLEAR_TERMINAL') {
     outputLines.value = []
-  } else if (input.toLowerCase().startsWith('theme')) {
-    // Handle theme command specifically
-    const [, themeName] = input.split(/\s+/)
-    if (themeName && ['latte', 'frappe', 'macchiato', 'mocha'].includes(themeName.toLowerCase())) {
-      setTheme(themeName.toLowerCase() as any)
-      outputLines.value.push(`<span class="text-green-400">Theme changed to ${themeName}</span>`)
-    } else if (!themeName) {
-      outputLines.value.push('Usage: theme <variant>')
-      outputLines.value.push('Available themes: latte, frappe, macchiato, mocha')
-    } else {
-      outputLines.value.push(`<span class="text-red-400">Invalid theme: ${themeName}</span>`)
-      outputLines.value.push('Available themes: latte, frappe, macchiato, mocha')
-    }
   } else {
     // Add command result to output
     outputLines.value.push(...result)

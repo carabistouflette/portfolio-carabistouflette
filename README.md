@@ -5,8 +5,7 @@ This project is a personal portfolio website built with Nuxt 3, Vue 3, and Tailw
 ## ✨ Features
 
 *   **Framework:** Built with [Nuxt 3](https://nuxt.com/) (v3.16+) and [Vue 3](https://vuejs.org/).
-*   **Styling:** Styled using [Tailwind CSS](https://tailwindcss.com/) with a custom configuration.
-*   **Theme Switching:** Includes a [Catppuccin](https://github.com/catppuccin/catppuccin) theme switcher (light/dark modes).
+*   **Styling:** Styled using [Tailwind CSS](https://tailwindcss.com/) with Catppuccin Mocha theme.
 *   **TypeScript:** Fully typed codebase for enhanced maintainability.
 *   **Responsive Design:** Adapts seamlessly to various screen sizes (desktop, tablet, mobile).
 *   **Contact Form:** Features a functional contact form with server-side validation (using Nuxt server routes).

@@ -594,27 +594,4 @@ onUnmounted(() => {
     opacity: 1;
   }
 }
-
-/* Dark theme adjustments */
-:root.mocha .timeline-divider,
-:root.macchiato .timeline-divider,
-:root.frappe .timeline-divider {
-  filter: brightness(1.2);
-}
-
-/* Light theme adjustments */
-:root.latte .timeline-year-badge {
-  background: linear-gradient(135deg, 
-    rgba(var(--surface0-rgb), 0.95),
-    rgba(var(--surface1-rgb), 0.85)
-  );
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
-}
-
-:root.latte .timeline-dot {
-  box-shadow: 0 0 0 6px rgba(var(--mauve-rgb), 0.08);
-}
 </style>

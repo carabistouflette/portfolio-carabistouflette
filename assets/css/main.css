@@ -4,14 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Appliquer les couleurs Catppuccin directement */
+/* Catppuccin Mocha theme */
 :root {
   color-scheme: dark;
 }
 
 @layer base {
   :root {
-    /* Default to Mocha theme - will be overridden by useTheme */
+    /* Catppuccin Mocha color palette */
     --base: #1e1e2e;
     --mantle: #181825;
     --crust: #11111b;
@@ -71,14 +71,13 @@
     --rotate-hover: 3deg;
   }
 
-  /* Enable smooth theme transitions */
+  /* Disable theme transitions since we have only one theme */
   * {
-    transition: var(--transition-colors);
+    transition: none;
   }
 
   body {
     @apply bg-base text-text font-sans antialiased min-h-screen;
-    transition: var(--transition-colors);
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -299,17 +299,6 @@ useIntersectionObserver(
 .about-content > div:last-child > div:nth-child(2) { animation-delay: 0.7s; }
 .about-content > div:last-child > div:nth-child(3) { animation-delay: 0.8s; }
 
-/* Light theme adjustments */
-:root.latte .skill-card {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-:root.latte .skill-card:hover {
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.08),
-    0 0 0 1px rgba(var(--mauve-rgb), 0.15);
-}
-
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .about-header,

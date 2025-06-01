@@ -27,7 +27,7 @@ This is a Nuxt 3 portfolio application optimized for Cloudflare Pages deployment
 
 ### Tech Stack
 - **Framework**: Nuxt 3 with Vue 3
-- **Styling**: Tailwind CSS with Catppuccin theme system
+- **Styling**: Tailwind CSS with Catppuccin Mocha theme
 - **TypeScript**: Strict mode enabled
 - **Animations**: VueUse Motion library
 
@@ -36,9 +36,8 @@ The project uses dual configuration:
 1. `nuxt.config.ts` - Base configuration for all environments
 2. `nuxt.config.cloudflare.ts` - Production overrides for Cloudflare deployment (selective component loading, bundle optimization)
 
-### Theme System
-- Catppuccin themes (Latte, Frappe, Macchiato, Mocha) with localStorage persistence
-- Theme management via `composables/useTheme.ts`
+### Color System
+- Catppuccin Mocha color palette
 - Color constants centralized in `constants/colors.ts`
 
 ### Component Organization
