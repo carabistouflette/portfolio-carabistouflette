@@ -14,8 +14,8 @@
     "lint:fix": "eslint . --fix",
     "cf:dev": "NITRO_PRESET=cloudflare-pages nuxt dev",
     "cf:build": "NITRO_PRESET=cloudflare-pages nuxt build && node scripts/optimize-assets.js",
-    "cf:preview": "wrangler pages dev .output/public --compatibility-date=2025-03-18",
-    "cf:deploy": "npm run cf:build && wrangler pages deploy .output/public"
+    "cf:preview": "wrangler pages dev dist --compatibility-date=2025-03-18",
+    "cf:deploy": "npm run cf:build && wrangler pages deploy dist"
   },
   "dependencies": {
     "@motionone/vue": "^10.16.4",

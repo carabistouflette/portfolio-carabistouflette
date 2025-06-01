@@ -16,12 +16,32 @@ const execAsync = promisify(exec);
 
 // Déterminer le chemin de base
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const outputDir = path.resolve(__dirname, '../.output/public');
+
+// Déterminer le répertoire de sortie en fonction du preset utilisé
+async function getOutputDir() {
+  const nuxtOutputDir = path.resolve(__dirname, '../.output/public');
+  const cloudflareOutputDir = path.resolve(__dirname, '../dist');
+  
+  // Vérifier quel répertoire existe
+  try {
+    await fs.access(cloudflareOutputDir);
+    console.log('📂 Utilisation du répertoire Cloudflare: dist/');
+    return cloudflareOutputDir;
+  } catch {
+    try {
+      await fs.access(nuxtOutputDir);
+      console.log('📂 Utilisation du répertoire Nuxt: .output/public/');
+      return nuxtOutputDir;
+    } catch {
+      throw new Error('Aucun répertoire de sortie trouvé');
+    }
+  }
+}
 
 /**
  * Optimisation des images
  */
-async function optimizeImages() {
+async function optimizeImages(outputDir) {
   try {
     console.log('🔍 Recherche des images...');
     const imageFiles = [
@@ -76,19 +96,19 @@ async function findFiles(directory, extension) {
 async function main() {
   console.log('🚀 Démarrage de l\'optimisation des ressources...');
   
+  let outputDir;
   try {
-    // Vérifier que le dossier de sortie existe
-// Ensure the build output directory exists before attempting optimizations.
-    await fs.access(outputDir);
+    // Déterminer le bon répertoire de sortie
+    outputDir = await getOutputDir();
   } catch (error) {
-    console.error(`❌ Le répertoire de sortie n'existe pas: ${outputDir}`);
+    console.error('❌ Aucun répertoire de sortie trouvé');
     console.error('Exécutez d\'abord "npm run build" ou "npm run cf:build"');
     process.exit(1);
   }
   
   // Décommentez la ligne suivante si vous avez installé les dépendances nécessaires
   // pour l'optimisation des images (optipng-bin et mozjpeg)
-  await optimizeImages();
+  await optimizeImages(outputDir);
   
   console.log('🎉 Toutes les optimisations sont terminées!');
 }
