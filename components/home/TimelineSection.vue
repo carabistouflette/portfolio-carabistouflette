@@ -355,7 +355,7 @@ onUnmounted(() => {
 
 /* Timeline center elements */
 .timeline-center {
-  z-index: 10;
+  z-index: 20;
 }
 
 /* Timeline dot wrapper */
@@ -365,7 +365,7 @@ onUnmounted(() => {
 
 .timeline-dot-container {
   @apply relative;
-  z-index: 10;
+  z-index: 25;
 }
 
 .timeline-dot {
@@ -456,7 +456,8 @@ onUnmounted(() => {
 
 /* Year badge */
 .timeline-year-badge {
-  @apply relative z-20 inline-flex items-center justify-center;
+  @apply relative inline-flex items-center justify-center;
+  z-index: 30;
   background: linear-gradient(135deg, 
     rgba(var(--surface1-rgb), 0.9),
     rgba(var(--surface2-rgb), 0.7)
