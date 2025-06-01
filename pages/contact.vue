@@ -51,56 +51,12 @@
         </div>
       </div>
     </section>
-    
-    <!-- Map Section (optional, could be added later) -->
-    <section class="py-16 bg-mantle">
-      <div class="container-custom text-center">
-        <div class="mb-12">
-          <h2 class="mb-4 !text-3xl md:!text-4xl">Me retrouver</h2>
-          <p class="text-subtext0 max-w-2xl mx-auto">
-            Actuellement basé à Montpellier, je suis disponible pour des rencontres professionnelles et des projets dans la région.
-          </p>
-        </div>
-        
-        <!-- Map Section -->
-        <div class="max-w-6xl mx-auto">
-          <!-- Simple Map Component -->
-          <LazySimpleMap />
-          
-          <!-- Optional: Keep the interactive map component for later debugging
-          <Suspense>
-            <template #default>
-              <LazyMapComponent
-                :center="mapComponentData.center"
-                :zoom="mapComponentData.zoom"
-                :marker="mapComponentData.marker"
-              />
-            </template>
-            <template #fallback>
-              <div class="h-[500px] flex items-center justify-center">
-                <LoadingState />
-              </div>
-            </template>
-          </Suspense>
-          -->
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref } from 'vue'
 import { useSeoMeta } from '#imports'
-
-interface MapCoordinates {
-  center: [number, number];
-  zoom: number;
-  marker: {
-    position: [number, number];
-    popup: string;
-  };
-}
 
 const LoadingState = defineAsyncComponent(() => import('@/components/ui/LoadingState.vue'))
 
@@ -191,20 +147,8 @@ const contactInfoData = ref({
   }
 })
 
-const mapComponentData = ref<MapCoordinates>({
-  center: [43.6109, 3.8767],
-  zoom: 13,
-  marker: {
-    position: [43.6109, 3.8767],
-    popup: '<b>Montpellier</b><br>Ville étudiante dynamique'
-  }
-})
-
 const LazyContactForm = defineAsyncComponent(() => import('@/components/contact/ContactForm.vue'))
 const LazyContactInfo = defineAsyncComponent(() => import('@/components/contact/ContactInfo.vue'))
-const LazyMapComponent = defineAsyncComponent(() => import('@/components/contact/MapComponent.vue'))
-const LazyStaticMap = defineAsyncComponent(() => import('@/components/contact/StaticMap.vue'))
-const LazySimpleMap = defineAsyncComponent(() => import('@/components/contact/SimpleMap.vue'))
 
 // Page meta
 useSeoMeta({
