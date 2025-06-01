@@ -286,7 +286,7 @@ onUnmounted(() => {
 /* Timeline line */
 .timeline-line-container {
   width: 3px;
-  z-index: -1;
+  z-index: 10;
 }
 
 .timeline-line {
