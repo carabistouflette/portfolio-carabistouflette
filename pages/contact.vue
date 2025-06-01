@@ -132,6 +132,14 @@ const contactInfoData = ref({
       href: 'https://linkedin.com/in/alexis-robin-41703a2ab'
     },
     {
+      type: 'website',
+      title: 'GitHub',
+      value: 'github.com/carabistouflette',
+      icon: 'mdi:github',
+      iconBg: 'bg-mauve/20',
+      href: 'https://github.com/carabistouflette'
+    },
+    {
       type: 'location',
       title: 'Localisation',
       value: 'Montpellier, France',
