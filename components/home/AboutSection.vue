@@ -2,7 +2,7 @@
   <section class="section-padding" :style="{ backgroundColor: 'rgba(var(--ctp-mantle-rgb), 0.7)' }"> <!-- Use RGBA with 70% opacity -->
     <div class="container-custom">
       <div class="mb-12 text-center">
-        <h2 class="mb-4 animate-slide-up">{{ title }}</h2>
+        <h2 class="mb-4 animate-slide-up !text-3xl md:!text-4xl">{{ title }}</h2>
         <div class="w-24 h-1 bg-mauve mx-auto rounded-full"></div>
       </div>
       

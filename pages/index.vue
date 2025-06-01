@@ -18,7 +18,7 @@
     />
     <section class="section-padding bg-mantle">
       <div class="container-custom text-center">
-        <h2 class="mb-6 animate-slide-up">Envie de voir mes projets ?</h2>
+        <h2 class="mb-6 animate-slide-up !text-3xl md:!text-4xl">Envie de voir mes projets ?</h2>
         <p class="text-lg mb-8 max-w-2xl mx-auto">
           Découvrez mes réalisations en programmation bas niveau, systèmes embarqués et plus encore.
         </p>

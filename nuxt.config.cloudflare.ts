@@ -7,8 +7,12 @@ export default defineNuxtConfig({
       '@nuxtjs/tailwindcss',
       '@vueuse/nuxt',
       '@nuxt/image',
-      'nuxt-icon'
+      '@nuxt/icon'
     ],
+    
+    icon: {
+      collections: ['heroicons', 'mdi']
+    },
   
     app: {
       pageTransition: { name: 'page', mode: 'out-in' },
@@ -19,15 +23,16 @@ export default defineNuxtConfig({
           { name: 'description', content: 'Portfolio d\'Alexis Robin - Développeur système embarqué et passionné de programmation bas niveau' }
         ],
         link: [
-          { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+          { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+          { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+          { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
+          { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;600;700;800&display=swap' }
         ]
       }
     },
   
     css: [
-      '~/assets/css/main.css',
-      '~/assets/css/catppuccin.css',
-      '~/assets/css/interaction-styles.css'
+      '~/assets/css/main.css'
     ],
   
     tailwindcss: {
@@ -91,9 +96,7 @@ export default defineNuxtConfig({
     },
   
     // Configurer les plugins actifs
-    plugins: [
-      '~/plugins/icons.ts'
-    ],
+    plugins: [],
   
     // Optimisation du poids du bundle
     vite: {

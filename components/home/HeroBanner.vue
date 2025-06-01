@@ -30,10 +30,10 @@
     <div class="container-custom relative z-10">
       <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
         <div class="md:w-7/12 space-y-gap-md">
-          <h1 class="font-bold leading-tight hero-animate-item">
+          <h1 class="font-bold leading-tight hero-animate-item !text-4xl md:!text-5xl lg:!text-6xl">
             <span class="gradient-text gradient-animate">{{ props.title }}</span>
           </h1>
-          <h2 class="text-xl md:text-2xl font-medium text-subtext0 mb-gap-lg hero-animate-item hero-delay-1">
+          <h2 class="!text-xl md:!text-2xl font-medium text-subtext0 mb-gap-lg hero-animate-item hero-delay-1">
             {{ props.subtitle }}
           </h2>
           <p class="text-lg mb-gap-lg max-w-2xl hero-animate-item hero-delay-2">

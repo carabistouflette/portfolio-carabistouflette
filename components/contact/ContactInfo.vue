@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col space-y-6">
     <!-- Section title -->
     <div>
-      <h3 class="text-2xl font-bold mb-2">{{ title }}</h3>
+      <h3 class="!text-2xl md:!text-3xl font-bold mb-2">{{ title }}</h3>
       <p class="text-subtext0">
         {{ subtitle }}
       </p>

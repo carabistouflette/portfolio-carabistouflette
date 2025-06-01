@@ -2,7 +2,7 @@
   <section class="section-padding">
     <div class="container-custom">
       <div class="mb-12 text-center timeline-header">
-        <h2 class="mb-4 gradient-text">{{ title }}</h2>
+        <h2 class="mb-4 gradient-text !text-3xl md:!text-4xl">{{ title }}</h2>
         <div class="timeline-divider"></div>
       </div>
       

@@ -4,7 +4,7 @@
     <section class="bg-mantle py-16 md:py-24">
       <div class="container-custom">
         <div class="text-center max-w-3xl mx-auto">
-          <h1 class="mb-6 animate-slide-down">
+          <h1 class="mb-6 animate-slide-down !text-4xl md:!text-5xl lg:!text-6xl">
             <span class="gradient-text">Contact</span>
           </h1>
           <p class="text-lg md:text-xl text-subtext0 mb-8 animate-fade-in">
@@ -22,7 +22,7 @@
           <!-- Contact Form -->
           <div class="w-full">
             <Card glass className="p-6 md:p-8 h-full animate-slide-right">
-              <h3 class="text-2xl font-bold mb-6">Envoyez-moi un message</h3>
+              <h3 class="!text-2xl md:!text-3xl font-bold mb-6">Envoyez-moi un message</h3>
               <Suspense>
                 <template #default>
                   <LazyContactForm
@@ -56,7 +56,7 @@
     <section class="py-16 bg-mantle">
       <div class="container-custom text-center">
         <div class="mb-12">
-          <h2 class="mb-4">Me retrouver</h2>
+          <h2 class="mb-4 !text-3xl md:!text-4xl">Me retrouver</h2>
           <p class="text-subtext0 max-w-2xl mx-auto">
             Actuellement basé à Montpellier, je suis disponible pour des rencontres professionnelles et des projets dans la région.
           </p>
