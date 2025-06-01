@@ -71,53 +71,73 @@ const aboutSectionData = ref({
   skills: [
     {
       title: 'Programmation Java',
-      description: 'Développement orienté objet et applications robustes',
+      description: 'Développement orienté objet, design patterns et applications robustes',
       icon: 'mdi:language-java',
-      bgColor: 'bg-peach'
+      bgColor: 'bg-peach',
+      level: 85
     },
     {
       title: 'Base de données',
-      description: 'Gestion et administration SQL',
+      description: 'Conception, optimisation et administration de bases SQL/NoSQL',
       icon: 'mdi:database',
-      bgColor: 'bg-blue'
+      bgColor: 'bg-blue',
+      level: 80
     },
     {
-      title: 'Réseau',
-      description: 'Configuration et maintenance des infrastructures',
-      icon: 'mdi:server-network',
-      bgColor: 'bg-green'
+      title: 'Développement Web',
+      description: 'Applications modernes avec Vue.js, React et technologies Full Stack',
+      icon: 'mdi:web',
+      bgColor: 'bg-green',
+      level: 90
     },
     {
       title: 'Systèmes Linux',
-      description: 'Administration et optimisation de systèmes Linux',
+      description: 'Administration avancée, scripting Shell et optimisation système',
       icon: 'mdi:linux',
-      bgColor: 'bg-yellow'
+      bgColor: 'bg-yellow',
+      level: 75
     }
   ]
 })
 
 const timelineSectionData = ref({
   title: 'Mon parcours',
+  subtitle: 'Une passion pour la technologie qui ne cesse de grandir',
   timelineItems: [
     {
       year: 2015,
       title: 'Premier contact avec l\'informatique',
-      description: 'Je développe un premier goût de l\'informatique grâce à mon père.'
+      description: 'Découverte du monde numérique grâce à mon père. Cette première approche a éveillé ma curiosité pour comprendre comment fonctionnent les ordinateurs et les logiciels.',
+      icon: 'heroicons:computer-desktop',
+      skills: ['Windows', 'Bureautique', 'Internet']
     },
     {
       year: 2020,
       title: 'Débuts en programmation',
-      description: 'Je commence la programmation avec en premier lieu Python, découvrant l\'univers du développement.'
+      description: 'Apprentissage autodidacte de Python, mon premier langage de programmation. J\'ai rapidement été fasciné par la capacité de créer et d\'automatiser des tâches.',
+      icon: 'mdi:language-python',
+      skills: ['Python', 'Algorithmes', 'Git', 'VS Code']
     },
     {
       year: 2022,
       title: 'Exploration du bas niveau',
-      description: 'J\'essaye des langages bas niveau grâce à mon intérêt pour Linux et les systèmes d\'exploitation.'
+      description: 'Plongée dans les langages bas niveau comme C et Rust, motivé par mon intérêt pour Linux et les systèmes d\'exploitation. Cette période m\'a permis de comprendre les fondements de l\'informatique.',
+      icon: 'mdi:chip',
+      skills: ['C', 'Rust', 'Linux', 'Shell', 'Systèmes embarqués']
     },
     {
       year: 2023,
-      title: 'Études supérieures',
-      description: 'Je débute mes études supérieures et j\'apprends le Java ainsi que le PHP à l\'IUT de Montpellier.'
+      title: 'Études supérieures en informatique',
+      description: 'Début de mon parcours DACS à l\'IUT de Montpellier. Acquisition de compétences solides en Java, PHP, bases de données et méthodologies de développement professionnel.',
+      icon: 'heroicons:academic-cap',
+      skills: ['Java', 'PHP', 'SQL', 'UML', 'Agile', 'Docker']
+    },
+    {
+      year: 2024,
+      title: 'Développement Full Stack',
+      description: 'Approfondissement des technologies web modernes et création de projets personnels. Maîtrise de frameworks comme Vue.js et développement d\'applications complètes.',
+      icon: 'heroicons:code-bracket-square',
+      skills: ['Vue.js', 'Node.js', 'TypeScript', 'Tailwind', 'PostgreSQL']
     }
   ]
 })
