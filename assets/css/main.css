@@ -582,3 +582,123 @@ button:not([disabled]):active::after,
     transform: translateX(0);
   }
 }
+
+/* Enhanced scroll animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Page transition classes */
+.page-enter-animation {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+}
+
+/* Enhanced button interactions */
+.button-magnetic {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.button-magnetic:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Cursor interaction helpers */
+.cursor-hover {
+  cursor: none;
+}
+
+[data-cursor-text] {
+  cursor: none;
+}
+
+/* Enhanced micro-interactions */
+.micro-bounce {
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.micro-bounce:hover {
+  transform: scale(1.05);
+}
+
+.micro-bounce:active {
+  transform: scale(0.95);
+}
+
+/* Glass effect utilities */
+.glass-effect {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+}
+
+/* Improved loading states */
+.skeleton {
+  background: linear-gradient(90deg, 
+    rgba(var(--surface1-rgb), 0.4) 25%, 
+    rgba(var(--surface2-rgb), 0.6) 50%, 
+    rgba(var(--surface1-rgb), 0.4) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Enhanced floating animations */
+.floating-element {
+  animation: float-enhanced 6s ease-in-out infinite;
+}
+
+@keyframes float-enhanced {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+}
+
+/* Improved parallax effects */
+.parallax-element {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* Staggered animation utilities */
+.stagger-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: stagger-in 0.6s ease-out forwards;
+}
+
+.stagger-animation:nth-child(1) { animation-delay: 0ms; }
+.stagger-animation:nth-child(2) { animation-delay: 100ms; }
+.stagger-animation:nth-child(3) { animation-delay: 200ms; }
+.stagger-animation:nth-child(4) { animation-delay: 300ms; }
+.stagger-animation:nth-child(5) { animation-delay: 400ms; }
+
+@keyframes stagger-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

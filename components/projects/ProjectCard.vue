@@ -3,15 +3,34 @@
     :hover="true" 
     :glass="true"
     :loading="loading"
-    class="h-full flex flex-col project-card"
+    class="h-full flex flex-col project-card group"
+    ref="cardRef"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+    @mousemove="handleMouseMove"
   >
+    <!-- Floating elements for enhanced visual effect -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
+      <div 
+        class="absolute w-3 h-3 bg-gradient-to-r from-mauve/40 to-pink/40 rounded-full blur-sm transition-all duration-500"
+        :style="floatingElementStyle(0)"
+      ></div>
+      <div 
+        class="absolute w-2 h-2 bg-gradient-to-r from-blue/40 to-teal/40 rounded-full blur-sm transition-all duration-700"
+        :style="floatingElementStyle(1)"
+      ></div>
+      <div 
+        class="absolute w-4 h-4 bg-gradient-to-r from-green/30 to-yellow/30 rounded-full blur-sm transition-all duration-600"
+        :style="floatingElementStyle(2)"
+      ></div>
+    </div>
     <template #header>
       <!-- Make header relative for absolute positioning of category -->
       <div class="relative">
         <h3 class="text-xl font-bold pr-40">{{ project.title }}</h3> <!-- Increased padding-right to avoid overlap with tag -->
         <!-- Position category tag absolutely -->
         <span
-          class="project-category-badge"
+          class="project-category-badge group-hover:animate-pulse"
           :class="categoryClass"
         >
           {{ project.category }}
@@ -25,9 +44,10 @@
       <div class="space-y-3">
         <div class="flex flex-wrap gap-2">
           <span 
-            v-for="tech in project.technologies" 
+            v-for="(tech, index) in project.technologies" 
             :key="tech"
-            class="tech-tag"
+            class="tech-tag group-hover:animate-bounce"
+            :style="{ animationDelay: `${index * 100}ms` }"
           >
             {{ tech }}
           </span>
@@ -68,6 +88,18 @@ const props = defineProps({
 // Emit
 const emit = defineEmits(['navigate'])
 
+// Card interaction state
+const cardRef = ref<HTMLElement | null>(null)
+const isHovered = ref(false)
+const mousePosition = ref({ x: 0, y: 0 })
+
+// Floating elements positions
+const floatingElements = ref([
+  { x: 10, y: 15, baseX: 10, baseY: 15 },
+  { x: 85, y: 25, baseX: 85, baseY: 25 },
+  { x: 75, y: 80, baseX: 75, baseY: 80 }
+])
+
 // Computed
 const categoryClass = computed(() => {
   const categories = {
@@ -80,6 +112,50 @@ const categoryClass = computed(() => {
   
   return categories[props.project.category as keyof typeof categories] || 'category-default'
 })
+
+// Mouse interaction handlers
+const handleMouseEnter = () => {
+  isHovered.value = true
+}
+
+const handleMouseLeave = () => {
+  isHovered.value = false
+  // Reset floating elements to base positions
+  floatingElements.value.forEach((element) => {
+    element.x = element.baseX
+    element.y = element.baseY
+  })
+}
+
+const handleMouseMove = (e: MouseEvent) => {
+  if (!cardRef.value || !isHovered.value) return
+  
+  const rect = cardRef.value.getBoundingClientRect()
+  mousePosition.value = {
+    x: ((e.clientX - rect.left) / rect.width) * 100,
+    y: ((e.clientY - rect.top) / rect.height) * 100
+  }
+  
+  // Update floating elements with parallax effect
+  floatingElements.value.forEach((element, index) => {
+    const strength = (index + 1) * 0.5 // Different strength for each element
+    const offsetX = (mousePosition.value.x - 50) * strength * 0.2
+    const offsetY = (mousePosition.value.y - 50) * strength * 0.2
+    
+    element.x = Math.max(0, Math.min(100, element.baseX + offsetX))
+    element.y = Math.max(0, Math.min(100, element.baseY + offsetY))
+  })
+}
+
+// Floating element style
+const floatingElementStyle = (index: number) => {
+  const element = floatingElements.value[index]
+  return {
+    left: `${element.x}%`,
+    top: `${element.y}%`,
+    opacity: isHovered.value ? 0.8 : 0.4
+  }
+}
 
 // Methods
 const navigateToProject = () => {

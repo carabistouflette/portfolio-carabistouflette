@@ -29,21 +29,25 @@
               <!-- Left content (even items) or empty space (odd items) -->
               <div>
                 <div v-if="index % 2 === 0" class="ml-auto max-w-lg timeline-card timeline-card-left">
-                  <Card :glass="true" class="group hover:scale-[1.02] transition-all duration-300">
+                  <Card :glass="true" class="group hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-mauve/10">
                     <template #header>
                       <div class="flex items-start justify-between">
                         <h3 class="text-2xl font-bold mb-3 text-text group-hover:text-mauve transition-colors">
                           {{ item.title }}
                         </h3>
-                        <Icon v-if="item.icon" :name="item.icon" class="w-6 h-6 text-mauve opacity-60" />
+                        <div class="flex items-center space-x-2">
+                          <Icon v-if="item.icon" :name="item.icon" class="w-6 h-6 text-mauve opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+                          <div class="w-2 h-2 bg-gradient-to-r from-mauve to-pink rounded-full opacity-60 group-hover:opacity-100 group-hover:animate-pulse"></div>
+                        </div>
                       </div>
                     </template>
-                    <p class="text-subtext0 leading-relaxed mb-4">{{ item.description }}</p>
+                    <p class="text-subtext0 leading-relaxed mb-4 group-hover:text-subtext1 transition-colors duration-300">{{ item.description }}</p>
                     <div v-if="item.skills" class="flex flex-wrap gap-2">
                       <span
-                        v-for="skill in item.skills"
+                        v-for="(skill, skillIndex) in item.skills"
                         :key="skill"
-                        class="px-3 py-1 text-xs font-medium bg-surface1/50 text-subtext1 rounded-full"
+                        class="px-3 py-1 text-xs font-medium bg-surface1/50 text-subtext1 rounded-full hover:bg-surface2/70 hover:text-text hover:scale-105 transition-all duration-200 cursor-default"
+                        :style="{ transitionDelay: `${skillIndex * 50}ms` }"
                       >
                         {{ skill }}
                       </span>
@@ -75,21 +79,25 @@
               <!-- Right content (odd items) or empty space (even items) -->
               <div>
                 <div v-if="index % 2 !== 0" class="max-w-lg timeline-card timeline-card-right">
-                  <Card :glass="true" class="group hover:scale-[1.02] transition-all duration-300">
+                  <Card :glass="true" class="group hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-mauve/10">
                     <template #header>
                       <div class="flex items-start justify-between">
                         <h3 class="text-2xl font-bold mb-3 text-text group-hover:text-mauve transition-colors">
                           {{ item.title }}
                         </h3>
-                        <Icon v-if="item.icon" :name="item.icon" class="w-6 h-6 text-mauve opacity-60" />
+                        <div class="flex items-center space-x-2">
+                          <Icon v-if="item.icon" :name="item.icon" class="w-6 h-6 text-mauve opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" />
+                          <div class="w-2 h-2 bg-gradient-to-r from-mauve to-pink rounded-full opacity-60 group-hover:opacity-100 group-hover:animate-pulse"></div>
+                        </div>
                       </div>
                     </template>
-                    <p class="text-subtext0 leading-relaxed mb-4">{{ item.description }}</p>
+                    <p class="text-subtext0 leading-relaxed mb-4 group-hover:text-subtext1 transition-colors duration-300">{{ item.description }}</p>
                     <div v-if="item.skills" class="flex flex-wrap gap-2">
                       <span
-                        v-for="skill in item.skills"
+                        v-for="(skill, skillIndex) in item.skills"
                         :key="skill"
-                        class="px-3 py-1 text-xs font-medium bg-surface1/50 text-subtext1 rounded-full"
+                        class="px-3 py-1 text-xs font-medium bg-surface1/50 text-subtext1 rounded-full hover:bg-surface2/70 hover:text-text hover:scale-105 transition-all duration-200 cursor-default"
+                        :style="{ transitionDelay: `${skillIndex * 50}ms` }"
                       >
                         {{ skill }}
                       </span>

@@ -127,7 +127,6 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, computed, nextTick } from 'vue';
-import { usePerformance } from '~/composables/usePerformance';
 
 interface HeroBannerProps {
   title: string;
@@ -190,16 +189,25 @@ const mousePos = ref({ x: 0, y: 0 });
 // Animation frame ID for cleanup
 let animationFrameId: number | null = null;
 
-// Use performance composable
-const {
-  prefersReducedMotion,
-  isMobile,
-  shouldAnimate,
-  detectDeviceCapabilities,
-  setupMotionListener,
-  getOptimalParticleCount,
-  getAnimationSmoothness
-} = usePerformance();
+// Performance detection
+const prefersReducedMotion = ref(false)
+const isMobile = ref(false)
+const shouldAnimate = computed(() => !prefersReducedMotion.value && !isMobile.value)
+
+const detectDeviceCapabilities = () => {
+  if (typeof window === 'undefined') return
+  prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  isMobile.value = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
+
+const getOptimalParticleCount = () => {
+  if (!shouldAnimate.value) return 0
+  return isMobile.value ? 8 : 20
+}
+
+const getAnimationSmoothness = () => {
+  return isMobile.value ? 0.01 : 0.02
+}
 
 // Enhanced parallax effect on mouse move with particle interaction
 const handleMouseMove = (e: MouseEvent) => {
@@ -409,9 +417,8 @@ const animateParticles = () => {
 };
 
 onMounted(async () => {
-  // Detect device capabilities and setup listeners
+  // Detect device capabilities
   detectDeviceCapabilities();
-  setupMotionListener();
   
   if (sectionRef.value) {
     sectionRef.value.addEventListener('mousemove', handleMouseMove);

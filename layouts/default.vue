@@ -66,10 +66,30 @@
 import { ref, provide, onMounted, onUnmounted } from 'vue'
 import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
 import PageLoader from '~/components/layout/PageLoader.vue'
+import { useCustomCursor } from '~/composables/useCustomCursor'
+import { useScrollRevealList } from '~/composables/useScrollReveal'
+import { usePageTransitions } from '~/composables/usePageTransitions'
 
 // Terminal state
 const isTerminalVisible = ref(false)
 const terminalHeight = ref(300) // Default terminal height
+
+// Initialize enhanced interactions
+const { setupScrollRevealAnimations } = usePageTransitions()
+const { registerElements } = useScrollRevealList({
+  threshold: 0.15,
+  distance: '40px',
+  duration: 800,
+  stagger: 150
+})
+
+// Custom cursor for desktop
+const customCursor = useCustomCursor({
+  enabled: true,
+  size: 24,
+  color: 'rgba(203, 166, 247, 0.8)',
+  mixBlendMode: 'difference'
+})
 
 // Toggle terminal function
 const toggleTerminal = () => {
@@ -90,7 +110,7 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 }
 
-// Set up keyboard listeners
+// Set up keyboard listeners and enhanced features
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
   
@@ -99,6 +119,12 @@ onMounted(() => {
   if (savedHeight) {
     terminalHeight.value = parseInt(savedHeight, 10)
   }
+  
+  // Setup enhanced scroll animations
+  setupScrollRevealAnimations()
+  
+  // Register elements for scroll reveal
+  registerElements('.particle, .noise-pattern')
 })
 
 onUnmounted(() => {
