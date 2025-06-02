@@ -353,7 +353,7 @@
                       </div>
                     </div>
                     <div class="flex items-start gap-3">
-                      <Icon name="vscode-icons:file-type-dockerfile" class="w-6 h-6 mt-0.5" />
+                      <Icon name="vscode-icons:file-type-docker" class="w-6 h-6 mt-0.5" />
                       <div>
                         <strong>Docker Compose</strong>
                         <p class="text-sm text-subtext0">Orchestration locale pour le développement</p>
