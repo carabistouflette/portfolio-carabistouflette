@@ -190,7 +190,11 @@ const handleMouseLeave = () => {
 const handleMouseMove = (e: MouseEvent) => {
   if (!cardRef.value || !isHovered.value) return
   
-  const rect = cardRef.value.getBoundingClientRect()
+  // Access the root element of the Card component
+  const cardElement = cardRef.value.$el as HTMLElement
+  if (!cardElement) return
+  
+  const rect = cardElement.getBoundingClientRect()
   mousePosition.value = {
     x: ((e.clientX - rect.left) / rect.width) * 100,
     y: ((e.clientY - rect.top) / rect.height) * 100
