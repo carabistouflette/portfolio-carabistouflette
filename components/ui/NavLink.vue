@@ -171,16 +171,9 @@ const { magneticStyle } = useMagneticEffect(htmlElementRef, {
   transform: translateY(0) rotate(0);
 }
 
-/* Underline indicator for desktop */
+/* Remove individual underline indicators - handled by parent navigation */
 .nav-link-indicator {
-  @apply absolute bottom-0 left-0 h-0.5 w-0;
-  background: currentColor;
-  transition: width var(--animation-base) var(--ease-out);
-}
-
-.nav-link:hover .nav-link-indicator,
-.nav-link-active .nav-link-indicator {
-  @apply w-full;
+  display: none;
 }
 
 /* Mobile specific styles */

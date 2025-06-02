@@ -6,10 +6,15 @@ interface ScrollRevealOptions {
   animationClass?: string
   stagger?: number
   once?: boolean
-  direction?: 'up' | 'down' | 'left' | 'right' | 'fade'
+  direction?: 'up' | 'down' | 'left' | 'right' | 'fade' | 'scale' | 'rotate' | 'flip' | 'zoom'
   distance?: string
   duration?: number
   delay?: number
+  scale?: number
+  rotate?: number
+  blur?: boolean
+  cascade?: boolean
+  easing?: string
 }
 
 export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
@@ -22,7 +27,12 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
     direction = 'up',
     distance = '30px',
     duration = 600,
-    delay = 0
+    delay = 0,
+    scale = 0.9,
+    rotate = 10,
+    blur = true,
+    cascade = false,
+    easing = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
   } = options
 
   const elements = ref<Set<HTMLElement>>(new Set())
@@ -30,10 +40,14 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
 
   // Animation styles based on direction
   const getInitialStyles = (direction: string) => {
-    const baseStyles = {
+    const baseStyles: Record<string, string> = {
       opacity: '0',
-      transition: `all ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-      willChange: 'transform, opacity'
+      transition: `all ${duration}ms ${easing}`,
+      willChange: 'transform, opacity, filter'
+    }
+    
+    if (blur) {
+      baseStyles.filter = 'blur(5px)'
     }
 
     switch (direction) {
@@ -47,6 +61,14 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
         return { ...baseStyles, transform: `translateX(-${distance})` }
       case 'fade':
         return { ...baseStyles, transform: 'scale(0.95)' }
+      case 'scale':
+        return { ...baseStyles, transform: `scale(${scale})` }
+      case 'rotate':
+        return { ...baseStyles, transform: `rotate(${rotate}deg) scale(0.9)` }
+      case 'flip':
+        return { ...baseStyles, transform: 'perspective(600px) rotateY(90deg)' }
+      case 'zoom':
+        return { ...baseStyles, transform: 'scale(0.5)' }
       default:
         return { ...baseStyles, transform: `translateY(${distance})` }
     }
@@ -54,7 +76,8 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
 
   const getFinalStyles = () => ({
     opacity: '1',
-    transform: 'translateY(0) translateX(0) scale(1)'
+    transform: 'translateY(0) translateX(0) scale(1) rotate(0deg) rotateY(0deg)',
+    filter: 'blur(0)'
   })
 
   // Apply initial styles to element
@@ -66,12 +89,21 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
   // Reveal element with animation
   const revealElement = (element: HTMLElement, index: number = 0) => {
     const finalStyles = getFinalStyles()
-    const elementDelay = delay + (index * stagger)
+    const elementDelay = cascade ? delay + (index * stagger) : delay
+    
+    // Add initial class for CSS hooks
+    element.classList.add('scroll-reveal-initial')
     
     setTimeout(() => {
       element.style.transitionDelay = `${elementDelay}ms`
       Object.assign(element.style, finalStyles)
       element.classList.add(animationClass)
+      element.classList.remove('scroll-reveal-initial')
+      
+      // Dispatch custom event
+      element.dispatchEvent(new CustomEvent('scrollreveal:revealed', {
+        detail: { index, delay: elementDelay }
+      }))
     }, 0)
   }
 
@@ -122,7 +154,11 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
             // Reset element if not once
             const element = entry.target as HTMLElement
             element.classList.remove(animationClass)
+            element.classList.add('scroll-reveal-initial')
             applyInitialStyles(element)
+            
+            // Dispatch custom event
+            element.dispatchEvent(new CustomEvent('scrollreveal:hidden'))
           }
         })
       },

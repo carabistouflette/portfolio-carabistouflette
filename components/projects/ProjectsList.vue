@@ -38,11 +38,19 @@
     </div>
     
     <!-- Projects grid -->
-    <div v-if="filteredProjects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+    <ScrollRevealList
+      v-if="filteredProjects.length > 0"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
+      direction="scale"
+      :stagger="120"
+      :delay="200"
+      :duration="800"
+      :threshold="0.1"
+    >
       <div 
-        v-for="(project, index) in filteredProjects" 
+        v-for="project in filteredProjects" 
         :key="project.id"
-        :ref="el => { if (el) projectCardWrappers[index] = el as HTMLElement }"
+        class="h-full"
       >
         <ProjectCard
           :project="project"
@@ -50,30 +58,28 @@
           class="h-full"
         />
       </div>
-    </div>
+    </ScrollRevealList>
     
     <!-- Empty state -->
-    <div v-else class="text-center py-12">
+    <ScrollReveal v-else direction="fade" :delay="300" class="text-center py-12">
       <Icon name="heroicons:folder-open" class="w-16 h-16 mx-auto text-overlay0 mb-4" />
       <h3 class="text-xl mb-2">Aucun projet trouvé</h3>
       <p class="text-subtext0">Essayez de modifier vos critères de recherche ou de réinitialiser les filtres.</p>
       <Button @click="clearFilters" variant="outline" class="mt-4">
         Réinitialiser les filtres
       </Button>
-    </div>
+    </ScrollReveal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { navigateTo } from '#app'
-import { useAnimations } from '@/composables/useAnimations'
 import ProjectCard from '@/components/projects/ProjectCard.vue'
 
 // State
 const searchQuery = ref('')
 const activeCategories = ref<string[]>([])
-const projectCardWrappers = ref<HTMLElement[]>([])
 
 // Mock projects data
 const projects = ref([
@@ -187,18 +193,5 @@ const navigateToProject = async (projectId: number) => {
   }
 }
 
-// Animations
-const { animateListOnScroll } = useAnimations()
-
-onMounted(() => {
-  // Watch for changes in filteredProjects to re-apply refs if needed
-  watch(filteredProjects, async () => {
-    // Reset refs before next tick update
-    projectCardWrappers.value = []
-    // Wait for DOM update
-    await nextTick()
-    // Apply animation to the updated list
-    animateListOnScroll(projectCardWrappers, 'opacity-1 translate-y-0', 0.1, 100)
-  }, { immediate: true }) // immediate: true to run on initial mount
-})
+// No additional animations needed - handled by ScrollReveal components
 </script>

@@ -65,18 +65,10 @@
         </button>
         
         <!-- Mobile Menu Button -->
-        <button
-          class="group p-2.5 rounded-xl bg-surface0/50 hover:bg-surface0 text-text transition-all duration-300"
-          :class="{ 'text-red hover:text-red': isMobileMenuOpen }"
-          @click="toggleMobileMenu"
-          aria-label="Toggle menu"
-        >
-          <Icon
-            :name="isMobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3'"
-            class="w-5 h-5 transition-all duration-300"
-            :class="{ 'rotate-180': isMobileMenuOpen }"
-          />
-        </button>
+        <BurgerMenu 
+          :is-open="isMobileMenuOpen"
+          @toggle="toggleMobileMenu"
+        />
       </div>
     </div>
 

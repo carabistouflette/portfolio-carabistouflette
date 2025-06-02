@@ -4,24 +4,48 @@
     :glass="true"
     :loading="loading"
     class="h-full flex flex-col project-card group"
+    :style="tiltStyle"
     ref="cardRef"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
   >
-    <!-- Floating elements for enhanced visual effect -->
+    <!-- Enhanced visual effects -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
+      <!-- Dynamic glow effect -->
       <div 
-        class="absolute w-3 h-3 bg-gradient-to-r from-mauve/40 to-pink/40 rounded-full blur-sm transition-all duration-500"
+        class="absolute w-full h-full opacity-0 group-hover:opacity-30 transition-opacity duration-500"
+        :style="{
+          background: `radial-gradient(circle at ${glowPosition.x}% ${glowPosition.y}%, var(--mauve) 0%, transparent 50%)`
+        }"
+      ></div>
+      
+      <!-- Floating elements for enhanced visual effect -->
+      <div 
+        class="absolute w-3 h-3 bg-gradient-to-r from-mauve/40 to-pink/40 rounded-full transition-all duration-500"
         :style="floatingElementStyle(0)"
       ></div>
       <div 
-        class="absolute w-2 h-2 bg-gradient-to-r from-blue/40 to-teal/40 rounded-full blur-sm transition-all duration-700"
+        class="absolute w-2 h-2 bg-gradient-to-r from-blue/40 to-teal/40 rounded-full transition-all duration-700"
         :style="floatingElementStyle(1)"
       ></div>
       <div 
-        class="absolute w-4 h-4 bg-gradient-to-r from-green/30 to-yellow/30 rounded-full blur-sm transition-all duration-600"
+        class="absolute w-4 h-4 bg-gradient-to-r from-green/30 to-yellow/30 rounded-full transition-all duration-600"
         :style="floatingElementStyle(2)"
+      ></div>
+      
+      <!-- Animated border glow -->
+      <div 
+        class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style="
+          background: linear-gradient(45deg, transparent, var(--mauve), transparent);
+          background-size: 200% 200%;
+          animation: borderGlow 3s ease-in-out infinite;
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          padding: 1px;
+        "
       ></div>
     </div>
     <template #header>
@@ -79,7 +103,7 @@
           <span 
             v-for="(tech, index) in project.technologies" 
             :key="tech"
-            class="tech-tag group-hover:animate-bounce"
+            class="tech-tag"
             :style="{ animationDelay: `${index * 100}ms` }"
           >
             {{ tech }}
@@ -126,6 +150,8 @@ const emit = defineEmits(['navigate'])
 const cardRef = ref<HTMLElement | null>(null)
 const isHovered = ref(false)
 const mousePosition = ref({ x: 0, y: 0 })
+const tiltStyle = ref<Record<string, string>>({})  // Style 3D pour tilt effect
+const glowPosition = ref({ x: 50, y: 50 })  // Position pour effet de lueur
 
 // GitHub stats
 const githubStats = ref<{ stars?: number; forks?: number; language?: string } | null>(null)
@@ -153,11 +179,11 @@ onMounted(async () => {
   }
 })
 
-// Floating elements positions
+// Floating elements positions with scale
 const floatingElements = ref([
-  { x: 10, y: 15, baseX: 10, baseY: 15 },
-  { x: 85, y: 25, baseX: 85, baseY: 25 },
-  { x: 75, y: 80, baseX: 75, baseY: 80 }
+  { x: 10, y: 15, baseX: 10, baseY: 15, scale: 1 },
+  { x: 85, y: 25, baseX: 85, baseY: 25, scale: 1 },
+  { x: 75, y: 80, baseX: 75, baseY: 80, scale: 1 }
 ])
 
 // Computed
@@ -180,11 +206,22 @@ const handleMouseEnter = () => {
 
 const handleMouseLeave = () => {
   isHovered.value = false
-  // Reset floating elements to base positions
+  
+  // Reset tilt
+  tiltStyle.value = {
+    transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)',
+    transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+  }
+  
+  // Reset floating elements with spring animation
   floatingElements.value.forEach((element) => {
     element.x = element.baseX
     element.y = element.baseY
+    element.scale = 1
   })
+  
+  // Reset glow position
+  glowPosition.value = { x: 50, y: 50 }
 }
 
 const handleMouseMove = (e: MouseEvent) => {
@@ -195,29 +232,43 @@ const handleMouseMove = (e: MouseEvent) => {
   if (!cardElement) return
   
   const rect = cardElement.getBoundingClientRect()
-  mousePosition.value = {
-    x: ((e.clientX - rect.left) / rect.width) * 100,
-    y: ((e.clientY - rect.top) / rect.height) * 100
+  const x = ((e.clientX - rect.left) / rect.width) * 100
+  const y = ((e.clientY - rect.top) / rect.height) * 100
+  
+  mousePosition.value = { x, y }
+  glowPosition.value = { x, y }
+  
+  // Calculate 3D tilt
+  const tiltX = (y - 50) / 4  // Reduced tilt for subtlety
+  const tiltY = (x - 50) / -4
+  
+  tiltStyle.value = {
+    transform: `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`,
+    transition: 'none'  // Disable transition during mouse move for responsiveness
   }
   
-  // Update floating elements with parallax effect
+  // Update floating elements with enhanced parallax effect
   floatingElements.value.forEach((element, index) => {
-    const strength = (index + 1) * 0.5 // Different strength for each element
-    const offsetX = (mousePosition.value.x - 50) * strength * 0.2
-    const offsetY = (mousePosition.value.y - 50) * strength * 0.2
+    const strength = (index + 1) * 0.5
+    const offsetX = (x - 50) * strength * 0.3
+    const offsetY = (y - 50) * strength * 0.3
+    const scale = 1 + (strength * 0.1)  // Add scale variation
     
-    element.x = Math.max(0, Math.min(100, element.baseX + offsetX))
-    element.y = Math.max(0, Math.min(100, element.baseY + offsetY))
+    element.x = Math.max(-10, Math.min(110, element.baseX + offsetX))
+    element.y = Math.max(-10, Math.min(110, element.baseY + offsetY))
+    element.scale = scale
   })
 }
 
-// Floating element style
+// Floating element style with scale
 const floatingElementStyle = (index: number) => {
   const element = floatingElements.value[index]
   return {
     left: `${element.x}%`,
     top: `${element.y}%`,
-    opacity: isHovered.value ? 0.8 : 0.4
+    opacity: isHovered.value ? 0.8 : 0.4,
+    transform: `translate(-50%, -50%) scale(${element.scale || 1})`,
+    filter: isHovered.value ? 'blur(0.5px)' : 'blur(1px)'
   }
 }
 
@@ -253,11 +304,21 @@ useHead({
 <style scoped>
 /* Project card enhancements */
 .project-card {
-  transition: var(--transition-base), transform var(--animation-base) var(--ease-spring);
+  transition: var(--transition-base);
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
+/* Remove default hover transform since we handle it with tilt */
 .project-card:hover {
-  transform: translateY(-4px) scale(1.01);
+  /* Transform handled by tiltStyle */
+}
+
+/* Border glow animation */
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Category badge styling */
@@ -319,6 +380,20 @@ useHead({
   transition: var(--transition-fast);
   position: relative;
   overflow: hidden;
+  animation: none;
+}
+
+/* Hover state animations for tech tags */
+.group:hover .tech-tag {
+  animation: techTagBounce 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes techTagBounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-4px) scale(1.05); }
+  60% { transform: translateY(2px) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
 }
 
 .tech-tag::before {

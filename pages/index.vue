@@ -1,5 +1,25 @@
 <template>
-  <div ref="pageWrapperRef">
+  <div ref="pageWrapperRef" class="relative overflow-hidden">
+    <!-- Background parallax layers -->
+    <div class="fixed inset-0 pointer-events-none">
+      <div 
+        ref="bgLayer1"
+        class="absolute inset-0 opacity-20"
+        :style="{ transform: bgLayer1Transform }"
+      >
+        <div class="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-mauve/30 to-pink/30 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-40 right-20 w-96 h-96 bg-gradient-to-br from-blue/20 to-teal/20 rounded-full blur-3xl"></div>
+      </div>
+      <div 
+        ref="bgLayer2"
+        class="absolute inset-0 opacity-10"
+        :style="{ transform: bgLayer2Transform }"
+      >
+        <div class="absolute top-1/2 left-1/3 w-80 h-80 bg-gradient-to-br from-green/30 to-yellow/30 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-40 w-72 h-72 bg-gradient-to-br from-lavender/25 to-mauve/25 rounded-full blur-3xl"></div>
+      </div>
+    </div>
+    
     <HeroBanner
       :title="'Alexis Robin'"
       :subtitle="'Développeur Full Stack & Passionné de Programmation'"
@@ -7,17 +27,24 @@
       :primary-button="{ to: '/projects', text: 'Découvrir mes projets', iconRight: 'heroicons:arrow-right' }"
       :profile-image="'/profile-logo.svg'"
     />
-    <AboutSection
-      :title="aboutSectionData.title"
-      :about-text="aboutSectionData.aboutText"
-      :skills="aboutSectionData.skills"
-    />
-    <TimelineSection
-      :title="timelineSectionData.title"
-      :timeline-items="timelineSectionData.timelineItems"
-    />
-    <section class="section-padding bg-mantle">
-      <div class="container-custom text-center">
+    
+    <div ref="aboutRef" class="relative">
+      <AboutSection
+        :title="aboutSectionData.title"
+        :about-text="aboutSectionData.aboutText"
+        :skills="aboutSectionData.skills"
+      />
+    </div>
+    
+    <div ref="timelineRef" class="relative">
+      <TimelineSection
+        :title="timelineSectionData.title"
+        :timeline-items="timelineSectionData.timelineItems"
+      />
+    </div>
+    
+    <section ref="ctaRef" class="section-padding bg-mantle relative">
+      <div class="container-custom text-center relative z-10">
         <h2 class="mb-6 animate-slide-up !text-3xl md:!text-4xl">Envie de voir mes projets ?</h2>
         <p class="text-lg mb-8 max-w-2xl mx-auto">
           Découvrez mes réalisations en programmation, développement web et plus encore.
@@ -32,6 +59,15 @@
           Explorer mes projets
         </Button>
       </div>
+      <!-- Floating elements with parallax -->
+      <div 
+        class="absolute inset-0 pointer-events-none overflow-hidden"
+        :style="{ transform: ctaParallaxTransform }"
+      >
+        <div class="absolute top-10 right-10 w-20 h-20 bg-gradient-to-br from-mauve/20 to-pink/20 rounded-lg rotate-12 blur-sm"></div>
+        <div class="absolute bottom-20 left-20 w-16 h-16 bg-gradient-to-br from-blue/20 to-teal/20 rounded-full blur-sm"></div>
+        <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-gradient-to-br from-green/15 to-yellow/15 rounded-lg -rotate-6 blur-sm"></div>
+      </div>
     </section>
   </div>
 </template>
@@ -41,8 +77,19 @@ import { defineAsyncComponent, ref, onMounted } from 'vue'
 import { scroll, animate } from 'motion'
 import { colors } from '@/constants/colors' // Import colors
 import { useSeoMeta, useHead } from '#imports'
+import { useParallax } from '~/composables/useParallax'
 
 const pageWrapperRef = ref<HTMLElement | null>(null)
+const bgLayer1 = ref<HTMLElement | null>(null)
+const bgLayer2 = ref<HTMLElement | null>(null)
+const aboutRef = ref<HTMLElement | null>(null)
+const timelineRef = ref<HTMLElement | null>(null)
+const ctaRef = ref<HTMLElement | null>(null)
+
+// Parallax effects
+const { transform: bgLayer1Transform } = useParallax(bgLayer1, { speed: 0.3 })
+const { transform: bgLayer2Transform } = useParallax(bgLayer2, { speed: 0.5 })
+const { transform: ctaParallaxTransform } = useParallax(ctaRef, { speed: 0.2, offset: -50 })
 
 onMounted(() => {
   if (pageWrapperRef.value) {

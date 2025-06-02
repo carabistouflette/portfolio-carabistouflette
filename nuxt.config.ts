@@ -40,8 +40,8 @@ export default defineNuxtConfig({
   },
 
   app: {
-    pageTransition: false,
-    layoutTransition: false,
+    pageTransition: { name: 'page', mode: 'out-in' },
+    layoutTransition: { name: 'layout', mode: 'out-in' },
     head: {
       title: 'Alexis Robin - Portfolio | Développeur Full Stack',
       meta: [
