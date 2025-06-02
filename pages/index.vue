@@ -189,7 +189,7 @@ const timelineSectionData = ref({
   ]
 })
 
-// Import TimelineSection directly to test
+// Import components directly
 import TimelineSection from '@/components/home/TimelineSection.vue'
 
 // Page meta
