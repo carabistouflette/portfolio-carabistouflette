@@ -97,6 +97,9 @@ const setup = () => {
   isMobile.value = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   
+  // Firefox detection
+  const isFirefox = navigator.userAgent.toLowerCase().includes('firefox')
+  
   if (!props.enabled || isMobile.value || prefersReducedMotion.value) {
     return
   }
@@ -112,6 +115,25 @@ const setup = () => {
     *, *::before, *::after {
       cursor: none !important;
     }
+    ${isFirefox ? `
+    .simple-cursor {
+      mix-blend-mode: normal !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    .cursor-dot {
+      background: #cba6f7 !important;
+      box-shadow: 0 0 8px rgba(203, 166, 247, 0.6) !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    .cursor-ring {
+      border-color: #cba6f7 !important;
+      box-shadow: 0 0 12px rgba(203, 166, 247, 0.4) !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    ` : ''}
   `
   document.head.appendChild(style)
   
@@ -132,6 +154,13 @@ const setup = () => {
   
   // Start animation loop
   animate()
+  
+  // Force initial visibility for Firefox
+  if (isFirefox) {
+    setTimeout(() => {
+      isVisible.value = true
+    }, 100)
+  }
 }
 
 const cleanup = () => {
