@@ -42,6 +42,39 @@
     
     <template #footer>
       <div class="space-y-3">
+        <!-- GitHub badges if project has GitHub info -->
+        <div v-if="project.githubRepo && githubStats" class="github-badges">
+          <a 
+            v-if="githubStats.stars !== undefined"
+            :href="`https://github.com/${project.githubRepo}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="github-badge stars-badge"
+            @click.stop
+          >
+            <Icon name="mdi:star" class="badge-icon" />
+            <span>{{ formatNumber(githubStats.stars) }}</span>
+          </a>
+          <a 
+            v-if="githubStats.forks !== undefined"
+            :href="`https://github.com/${project.githubRepo}/fork`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="github-badge forks-badge"
+            @click.stop
+          >
+            <Icon name="mdi:source-fork" class="badge-icon" />
+            <span>{{ formatNumber(githubStats.forks) }}</span>
+          </a>
+          <div 
+            v-if="githubStats.language"
+            class="github-badge language-badge"
+          >
+            <Icon name="mdi:language" class="badge-icon" />
+            <span>{{ githubStats.language }}</span>
+          </div>
+        </div>
+        
         <div class="flex flex-wrap gap-2">
           <span 
             v-for="(tech, index) in project.technologies" 
@@ -55,7 +88,7 @@
         
         <div v-if="project.hasDetailsPage" class="flex justify-center mt-4">
           <Button
-            variant="primary"
+            variant="solid"
             color="mauve"
             iconRight="heroicons:arrow-right"
             size="md"
@@ -70,8 +103,9 @@
   </Card>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, watchEffect } from 'vue'
 import { useHead } from '#imports'
+import { useGitHubRepo, formatNumber } from '~/composables/useGitHub'
 
 // Props
 const props = defineProps({
@@ -92,6 +126,32 @@ const emit = defineEmits(['navigate'])
 const cardRef = ref<HTMLElement | null>(null)
 const isHovered = ref(false)
 const mousePosition = ref({ x: 0, y: 0 })
+
+// GitHub stats
+const githubStats = ref<{ stars?: number; forks?: number; language?: string } | null>(null)
+
+// Fetch GitHub stats if project has a repo
+onMounted(async () => {
+  if (props.project.githubRepo) {
+    try {
+      const [owner, repoName] = props.project.githubRepo.split('/')
+      const { repo } = useGitHubRepo(owner, repoName)
+      
+      // Watch for repo data
+      watchEffect(() => {
+        if (repo.value) {
+          githubStats.value = {
+            stars: repo.value.stargazers_count,
+            forks: repo.value.forks_count,
+            language: repo.value.language
+          }
+        }
+      })
+    } catch (error) {
+      console.error('Error fetching GitHub stats:', error)
+    }
+  }
+})
 
 // Floating elements positions
 const floatingElements = ref([
@@ -312,6 +372,52 @@ useHead({
 
 .project-card:hover :deep(.button-base) {
   transform: translateX(4px);
+}
+
+/* GitHub badges */
+.github-badges {
+  @apply flex flex-wrap gap-2 mb-2;
+}
+
+.github-badge {
+  @apply inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+  @apply transition-all duration-200 cursor-pointer;
+  backdrop-filter: blur(8px);
+  border: 1px solid transparent;
+}
+
+.badge-icon {
+  @apply text-sm;
+}
+
+.stars-badge {
+  @apply text-yellow;
+  background-color: rgba(249, 226, 175, 0.1);
+  border-color: rgba(249, 226, 175, 0.2);
+}
+
+.stars-badge:hover {
+  background-color: rgba(249, 226, 175, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px -2px rgba(249, 226, 175, 0.3);
+}
+
+.forks-badge {
+  @apply text-blue;
+  background-color: rgba(137, 180, 250, 0.1);
+  border-color: rgba(137, 180, 250, 0.2);
+}
+
+.forks-badge:hover {
+  background-color: rgba(137, 180, 250, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px -2px rgba(137, 180, 250, 0.3);
+}
+
+.language-badge {
+  @apply text-mauve;
+  background-color: rgba(203, 166, 247, 0.1);
+  border-color: rgba(203, 166, 247, 0.2);
 }
 
 /* Details button specific styling */

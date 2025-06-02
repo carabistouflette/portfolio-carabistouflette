@@ -37,6 +37,11 @@ const navigationItems = [
     icon: 'heroicons:code-bracket'
   },
   {
+    path: '/github',
+    label: 'GitHub',
+    icon: 'mdi:github'
+  },
+  {
     path: '/contact',
     label: 'Contact',
     icon: 'heroicons:envelope'

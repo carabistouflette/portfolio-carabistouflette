@@ -113,14 +113,14 @@ const isMobileMenuOpen: Ref<boolean> = ref(false)
 const headerRef: Ref<HTMLElement | null> = ref(null)
 const mousePosition = ref({ x: 0, y: 0 })
 
-// Particle animation
+// Particle animation - using deterministic values to avoid hydration mismatch
 const particles = ref(Array.from({ length: 5 }, (_, i) => ({
   id: i,
-  x: Math.random() * 100,
-  y: Math.random() * 100,
-  baseX: Math.random() * 100,
-  baseY: Math.random() * 100,
-  speed: 0.5 + Math.random() * 0.5
+  x: (i * 20 + 10) % 100,
+  y: ((i * 30 + 15) % 100),
+  baseX: (i * 20 + 10) % 100,
+  baseY: ((i * 30 + 15) % 100),
+  speed: 0.5 + (i * 0.1)
 })))
 
 // Scroll handler

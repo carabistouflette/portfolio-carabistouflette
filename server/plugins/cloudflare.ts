@@ -19,17 +19,20 @@ export default defineNitroPlugin((nitroApp) => {
     // Ajouter une politique de sécurité du contenu (CSP)
     const cspDirectives = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: blob:",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://www.openstreetmap.org",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.openstreetmap.org",
+      "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://unpkg.com https://www.openstreetmap.org https://avatars.githubusercontent.com https://*.githubusercontent.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self'",
+      "connect-src 'self' https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://www.openstreetmap.org https://api.github.com",
       "media-src 'self'",
       "object-src 'none'",
-      "frame-src 'self'",
+      "frame-src 'self' https://www.openstreetmap.org",
+      "child-src https://www.openstreetmap.org",
       "frame-ancestors 'none'"
     ]
     
-    event.node.res.setHeader('Content-Security-Policy', cspDirectives.join('; '))
+    // Commenté temporairement pour éviter les conflits avec la CSP définie dans nuxt.config.ts
+    // En production, cette CSP sera utilisée à la place de celle dans nuxt.config.ts
+    // event.node.res.setHeader('Content-Security-Policy', cspDirectives.join('; '))
   })
 })

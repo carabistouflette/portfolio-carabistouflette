@@ -45,6 +45,11 @@ export default defineNuxtConfig({
     head: {
       title: 'Alexis Robin - Portfolio | Développeur Système Embarqué',
       meta: [
+        // Content Security Policy pour autoriser les images GitHub et Google Fonts (sans frame-ancestors qui n'est pas supporté dans meta)
+        { 
+          'http-equiv': 'Content-Security-Policy', 
+          content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.openstreetmap.org; style-src 'self' 'unsafe-inline' https://www.openstreetmap.org https://fonts.googleapis.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://unpkg.com https://www.openstreetmap.org https://avatars.githubusercontent.com https://*.githubusercontent.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://www.openstreetmap.org https://api.github.com; frame-src 'self' https://www.openstreetmap.org; child-src https://www.openstreetmap.org; object-src 'none';" 
+        },
         { name: 'description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau. Découvrez mes projets et compétences.' },
         { name: 'keywords', content: 'Alexis Robin, développeur, système embarqué, programmation bas niveau, informatique, IUT Montpellier, DACS, portfolio' },
         { name: 'author', content: 'Alexis Robin' },
