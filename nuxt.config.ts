@@ -43,15 +43,15 @@ export default defineNuxtConfig({
     pageTransition: false,
     layoutTransition: false,
     head: {
-      title: 'Alexis Robin - Portfolio | Développeur Système Embarqué',
+      title: 'Alexis Robin - Portfolio | Développeur Full Stack',
       meta: [
         // Content Security Policy pour autoriser les images GitHub et Google Fonts (sans frame-ancestors qui n'est pas supporté dans meta)
         { 
           'http-equiv': 'Content-Security-Policy', 
           content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.openstreetmap.org; style-src 'self' 'unsafe-inline' https://www.openstreetmap.org https://fonts.googleapis.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://unpkg.com https://www.openstreetmap.org https://avatars.githubusercontent.com https://*.githubusercontent.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://tiles.stadiamaps.com https://www.openstreetmap.org https://api.github.com; frame-src 'self' https://www.openstreetmap.org; child-src https://www.openstreetmap.org; object-src 'none';" 
         },
-        { name: 'description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau. Découvrez mes projets et compétences.' },
-        { name: 'keywords', content: 'Alexis Robin, développeur, système embarqué, programmation bas niveau, informatique, IUT Montpellier, DACS, portfolio' },
+        { name: 'description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement full stack et programmation bas niveau. Découvrez mes projets et compétences.' },
+        { name: 'keywords', content: 'Alexis Robin, développeur, full stack, programmation bas niveau, informatique, IUT Montpellier, DACS, portfolio' },
         { name: 'author', content: 'Alexis Robin' },
         { name: 'robots', content: 'index, follow' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -59,16 +59,16 @@ export default defineNuxtConfig({
         // Open Graph meta tags
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'Alexis Robin - Portfolio' },
-        { property: 'og:title', content: 'Alexis Robin - Portfolio | Développeur Système Embarqué' },
-        { property: 'og:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau.' },
+        { property: 'og:title', content: 'Alexis Robin - Portfolio | Développeur Full Stack' },
+        { property: 'og:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement full stack et programmation bas niveau.' },
         { property: 'og:image', content: '/profile-logo.svg' },
         { property: 'og:image:alt', content: 'Logo d\'Alexis Robin' },
         { property: 'og:locale', content: 'fr_FR' },
         
         // Twitter Card meta tags
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'Alexis Robin - Portfolio | Développeur Système Embarqué' },
-        { name: 'twitter:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement système embarqué et programmation bas niveau.' },
+        { name: 'twitter:title', content: 'Alexis Robin - Portfolio | Développeur Full Stack' },
+        { name: 'twitter:description', content: 'Portfolio d\'Alexis Robin - Étudiant en informatique spécialisé en développement full stack et programmation bas niveau.' },
         { name: 'twitter:image', content: '/profile-logo.svg' },
         
         // Additional meta tags

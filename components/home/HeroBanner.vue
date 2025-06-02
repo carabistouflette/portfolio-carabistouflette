@@ -95,7 +95,7 @@
                 <div class="profile-inner absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
                 <img 
                   :src="props.profileImage" 
-                  alt="Photo de profil d'Alexis Robin, développeur système embarqué" 
+                  alt="Photo de profil d'Alexis Robin, développeur full stack" 
                   class="w-32 h-32 relative z-20 profile-image"
                   loading="eager"
                   importance="high"
@@ -148,7 +148,7 @@ const props = withDefaults(defineProps<HeroBannerProps>(), {
   secondaryButton: undefined,
   primaryButton: () => ({ to: '/projects', text: 'Découvrir mes projets', iconRight: 'heroicons:arrow-right' }),
   title: 'Alexis Robin',
-  subtitle: 'Développeur Système Embarqué & Passionné de Programmation Bas Niveau',
+  subtitle: 'Développeur Full Stack & Passionné de Programmation Bas Niveau',
   description: "Étudiant à l'IUT informatique de Montpellier en parcours DACS, je suis un passionné de programmation bas niveau, de philosophie et de photographie.",
   profileImage: '/profile-logo.svg'
 });

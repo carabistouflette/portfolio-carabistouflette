@@ -134,7 +134,7 @@ const categories = computed(() => {
 
 // Category classes for styling
 const categoryClasses: Record<string, string> = {
-  'Système Embarqué': 'bg-peach/20 text-peach',
+  'Full Stack': 'bg-peach/20 text-peach',
   'Programmation Bas Niveau': 'bg-blue/20 text-blue',
   'Administration Réseau': 'bg-green/20 text-green',
   'Base de Données': 'bg-yellow/20 text-yellow',
