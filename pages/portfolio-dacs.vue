@@ -8,7 +8,7 @@
             Portfolio d'apprentissage
           </h1>
           <p class="text-xl text-subtext1 mb-8">
-            Compétences maîtrisées lors de ma formation en 3ème année de parcours DACS
+            Compétences maîtrisées lors de ma formation en 2ème année de parcours DACS
           </p>
           <div class="inline-flex items-center px-6 py-3 bg-mauve/10 border border-mauve/30 rounded-full">
             <Icon name="heroicons:academic-cap" class="w-6 h-6 mr-3 text-mauve" />
@@ -296,8 +296,8 @@ onMounted(() => {
 // Page meta
 useSeoMeta({
   title: 'Portfolio d\'apprentissage - Alexis Robin',
-  description: 'Portfolio d\'apprentissage - Compétences maîtrisées en 3ème année : Optimiser, Gérer, Conduire',
+  description: 'Portfolio d\'apprentissage - Compétences maîtrisées en 2ème année : Optimiser, Gérer, Conduire',
   ogTitle: 'Portfolio d\'apprentissage - Alexis Robin',
-  ogDescription: 'Portfolio d\'apprentissage - Compétences maîtrisées en 3ème année : Optimiser, Gérer, Conduire',
+  ogDescription: 'Portfolio d\'apprentissage - Compétences maîtrisées en 2ème année : Optimiser, Gérer, Conduire',
 })
 </script>
