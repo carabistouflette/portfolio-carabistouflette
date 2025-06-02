@@ -91,7 +91,7 @@
           <div class="relative profile-container magnetic-container">
             <!-- Profile circle with enhanced effects -->
             <div class="profile-wrapper">
-              <div class="profile-circle w-64 h-64 rounded-full mx-auto flex items-center justify-center relative z-10 magnetic-element">
+              <div class="profile-circle w-64 h-64 rounded-full mx-auto flex items-center justify-center relative z-10 magnetic-element" @click="handleLogoClick">
                 <div class="profile-inner absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
                 <img 
                   :src="props.profileImage" 
@@ -414,6 +414,34 @@ const animateParticles = () => {
   });
   
   animationFrameId = requestAnimationFrame(animateParticles);
+};
+
+// Handle logo click animation
+const handleLogoClick = () => {
+  const magneticContainer = sectionRef.value?.querySelector('.magnetic-container');
+  const profileCircle = sectionRef.value?.querySelector('.profile-circle');
+  if (!magneticContainer || !profileCircle) return;
+  
+  // Animation subtile
+  profileCircle.classList.add('logo-click-animation');
+  
+  // Créer une onde subtile
+  const rect = profileCircle.getBoundingClientRect();
+  const ripple = document.createElement('div');
+  ripple.className = 'logo-ripple';
+  ripple.style.width = ripple.style.height = '400px';
+  ripple.style.left = (rect.left + rect.width / 2 - 200) + 'px';
+  ripple.style.top = (rect.top + rect.height / 2 - 200) + 'px';
+  
+  document.body.appendChild(ripple);
+  
+  // Supprimer l'onde après l'animation
+  setTimeout(() => ripple.remove(), 2000);
+  
+  // Retirer la classe d'animation après la fin
+  setTimeout(() => {
+    profileCircle.classList.remove('logo-click-animation');
+  }, 400);
 };
 
 onMounted(async () => {
@@ -1008,5 +1036,88 @@ html {
     transition: none;
     transform: none;
   }
+}
+
+/* Logo click animation - ultra fluide */
+.logo-click-animation {
+  animation: logoClickSmooth 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+@keyframes logoClickSmooth {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  40% {
+    transform: scale(0.97) translateZ(0);
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+  }
+}
+
+/* Onde subtile au clic */
+:global(.logo-ripple) {
+  position: fixed;
+  border-radius: 50%;
+  border: 1px solid rgba(203, 166, 247, 0.2);
+  background: radial-gradient(circle, rgba(203, 166, 247, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1000;
+  animation: logoRippleSmooth 2s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes logoRippleSmooth {
+  0% {
+    transform: scale(0) translateZ(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2) translateZ(0);
+    opacity: 0;
+  }
+}
+
+/* Animation fluide du glow lors du clic */
+.logo-click-animation .profile-glow {
+  animation: smoothGlow 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+@keyframes smoothGlow {
+  0% {
+    opacity: 0.6;
+    transform: scale(1) translateZ(0);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.05) translateZ(0);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+/* Transition fluide sur le logo */
+.profile-circle {
+  transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: transform;
+}
+
+.profile-circle:active {
+  transform: scale(0.98) translateZ(0);
+}
+
+/* Ajout d'un indicateur visuel que le logo est cliquable */
+.profile-circle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.profile-circle:active {
+  transform: scale(0.95);
 }
 </style>
