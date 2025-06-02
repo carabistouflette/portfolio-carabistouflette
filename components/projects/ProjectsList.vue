@@ -109,11 +109,11 @@ const projects = ref([
   },
   {
     id: 4,
-    title: 'API REST pour e-commerce',
-    description: 'Conception et implémentation d\'une API REST complète pour une plateforme e-commerce. Documentation avec Swagger.',
+    title: 'Vote en Ligne Sécurisé',
+    description: 'Système de vote électronique utilisant le chiffrement El Gamal et les preuves à divulgation nulle pour garantir l\'anonymat et la vérifiabilité.',
     category: 'Développement Web',
-    technologies: ['Java', 'Spring Boot', 'PostgreSQL'],
-    hasDetailsPage: false
+    technologies: ['Java', 'Spring', 'PostgreSQL', 'Sockets'],
+    hasDetailsPage: true
   },
   {
     id: 5,
@@ -188,6 +188,8 @@ const navigateToProject = async (projectId: number) => {
   // Navigate to project detail page
   if (projectId === 2) {
     await navigateTo('/projects/bulk-csv-smag')
+  } else if (projectId === 4) {
+    await navigateTo('/projects/voting-app')
   } else {
     console.log(`Navigating to project ${projectId}`)
   }

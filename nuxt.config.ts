@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ],
 
   icon: {
-    collections: ['heroicons', 'mdi']
+    collections: ['heroicons', 'mdi', 'logos', 'simple-icons']
   },
 
   image: {
