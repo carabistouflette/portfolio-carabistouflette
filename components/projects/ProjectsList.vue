@@ -111,7 +111,7 @@ const projects = ref([
     id: 4,
     title: 'Vote en Ligne Sécurisé',
     description: 'Système de vote électronique utilisant le chiffrement El Gamal et les preuves à divulgation nulle pour garantir l\'anonymat et la vérifiabilité.',
-    category: 'Développement Web',
+    category: 'Sécurité & Cryptographie',
     technologies: ['Java', 'Spring', 'PostgreSQL', 'Sockets'],
     hasDetailsPage: true
   },
@@ -144,7 +144,8 @@ const categoryClasses: Record<string, string> = {
   'Programmation Bas Niveau': 'bg-blue/20 text-blue',
   'Administration Réseau': 'bg-green/20 text-green',
   'Base de Données': 'bg-yellow/20 text-yellow',
-  'Web': 'bg-mauve/20 text-mauve'
+  'Web': 'bg-mauve/20 text-mauve',
+  'Sécurité & Cryptographie': 'bg-red/20 text-red'
 }
 
 // Filtered projects based on search and category filters
