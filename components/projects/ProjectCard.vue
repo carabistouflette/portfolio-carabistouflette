@@ -6,6 +6,10 @@
     class="h-full flex flex-col project-card group"
     :style="tiltStyle"
     ref="cardRef"
+    data-magnetic
+    data-cursor-type="pointer"
+    data-cursor-text="VIEW"
+    data-cursor-color="var(--mauve)"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
@@ -117,7 +121,7 @@
             iconRight="heroicons:arrow-right"
             size="md"
             class="details-button w-full justify-center font-semibold shadow-lg hover:shadow-xl"
-            @click="navigateToProject"
+            @click="navigateToProject($event)"
           >
             Voir les détails
           </Button>
@@ -130,6 +134,7 @@
 import { computed, ref, onMounted, watchEffect } from 'vue'
 import { useHead } from '#imports'
 import { useGitHubRepo, formatNumber } from '~/composables/useGitHub'
+import { useCardInteractions } from '~/composables/useMicroInteractions'
 
 // Props
 const props = defineProps({
@@ -155,6 +160,9 @@ const glowPosition = ref({ x: 50, y: 50 })  // Position pour effet de lueur
 
 // GitHub stats
 const githubStats = ref<{ stars?: number; forks?: number; language?: string } | null>(null)
+
+// Enhanced interactions
+const { handleCardClick, handleCardHover } = useCardInteractions()
 
 // Fetch GitHub stats if project has a repo
 onMounted(async () => {
@@ -199,13 +207,15 @@ const categoryClass = computed(() => {
   return categories[props.project.category as keyof typeof categories] || 'category-default'
 })
 
-// Mouse interaction handlers
+// Enhanced mouse interaction handlers
 const handleMouseEnter = () => {
   isHovered.value = true
+  handleCardHover(true)
 }
 
 const handleMouseLeave = () => {
   isHovered.value = false
+  handleCardHover(false)
   
   // Reset tilt
   tiltStyle.value = {
@@ -272,8 +282,11 @@ const floatingElementStyle = (index: number) => {
   }
 }
 
-// Methods
-const navigateToProject = () => {
+// Enhanced methods with micro-interactions
+const navigateToProject = (event?: MouseEvent) => {
+  if (event) {
+    handleCardClick(event)
+  }
   emit('navigate', props.project.id)
 }
 
@@ -372,15 +385,16 @@ useHead({
   border-color: rgba(108, 112, 134, 0.3);
 }
 
-/* Technology tags */
+/* Enhanced technology tags with glowing effects */
 .tech-tag {
   @apply text-xs font-medium px-2.5 py-1 rounded-md;
   background: rgba(var(--surface1-rgb, 69, 71, 90), 0.6);
   border: 1px solid rgba(var(--surface2-rgb, 88, 91, 112), 0.3);
-  transition: var(--transition-fast);
+  transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
   animation: none;
+  cursor: pointer;
 }
 
 /* Hover state animations for tech tags */
@@ -405,13 +419,35 @@ useHead({
 }
 
 .tech-tag:hover {
-  background: rgba(var(--surface2-rgb, 88, 91, 112), 0.7);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  background: rgba(var(--surface2-rgb, 88, 91, 112), 0.8);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 8px 15px -3px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(var(--mauve-rgb, 203, 166, 247), 0.3);
+  border-color: rgba(203, 166, 247, 0.5);
+  animation: techTagGlow 0.8s ease-in-out;
 }
 
 .tech-tag:hover::before {
   opacity: 1;
+}
+
+@keyframes techTagGlow {
+  0% {
+    box-shadow: 
+      0 8px 15px -3px rgba(0, 0, 0, 0.2),
+      0 0 15px rgba(var(--mauve-rgb, 203, 166, 247), 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 12px 20px -3px rgba(0, 0, 0, 0.3),
+      0 0 25px rgba(var(--mauve-rgb, 203, 166, 247), 0.6);
+  }
+  100% {
+    box-shadow: 
+      0 8px 15px -3px rgba(0, 0, 0, 0.2),
+      0 0 15px rgba(var(--mauve-rgb, 203, 166, 247), 0.3);
+  }
 }
 
 /* Loading state skeleton */
@@ -476,9 +512,18 @@ useHead({
 }
 
 .stars-badge:hover {
-  background-color: rgba(249, 226, 175, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px -2px rgba(249, 226, 175, 0.3);
+  background-color: rgba(249, 226, 175, 0.25);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 6px 12px -2px rgba(249, 226, 175, 0.4),
+    0 0 20px rgba(249, 226, 175, 0.3);
+  animation: starPulse 0.6s ease-in-out;
+}
+
+@keyframes starPulse {
+  0% { transform: translateY(-2px) scale(1.05); }
+  50% { transform: translateY(-3px) scale(1.1) rotate(5deg); }
+  100% { transform: translateY(-2px) scale(1.05); }
 }
 
 .forks-badge {
@@ -488,9 +533,19 @@ useHead({
 }
 
 .forks-badge:hover {
-  background-color: rgba(137, 180, 250, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px -2px rgba(137, 180, 250, 0.3);
+  background-color: rgba(137, 180, 250, 0.25);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 6px 12px -2px rgba(137, 180, 250, 0.4),
+    0 0 20px rgba(137, 180, 250, 0.3);
+  animation: forkSpin 0.8s ease-in-out;
+}
+
+@keyframes forkSpin {
+  0% { transform: translateY(-2px) scale(1.05) rotate(0deg); }
+  25% { transform: translateY(-3px) scale(1.1) rotate(-10deg); }
+  75% { transform: translateY(-3px) scale(1.1) rotate(10deg); }
+  100% { transform: translateY(-2px) scale(1.05) rotate(0deg); }
 }
 
 .language-badge {

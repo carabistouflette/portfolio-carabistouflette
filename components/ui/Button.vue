@@ -5,6 +5,10 @@
     :to="to"
     :class="buttonClasses"
     :style="magneticStyle"
+    data-magnetic
+    data-cursor-type="pointer"
+    data-cursor-text="CLICK"
+    :data-cursor-color="`var(--${color})`"
     @click="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
@@ -24,6 +28,10 @@
     :class="buttonClasses"
     :style="magneticStyle"
     :disabled="disabled"
+    data-magnetic
+    data-cursor-type="pointer"
+    data-cursor-text="CLICK"
+    :data-cursor-color="`var(--${color})`"
     @click="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
@@ -41,6 +49,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, type PropType } from 'vue';
 import { useMagneticEffect } from '~/composables/useMagneticEffect';
+import { useButtonInteractions } from '~/composables/useMicroInteractions';
 
 // Define types directly
 type AccentColor = 'rosewater' | 'flamingo' | 'pink' | 'mauve' | 'red' | 'maroon' | 'peach' | 'yellow' | 'green' | 'teal' | 'sky' | 'sapphire' | 'blue' | 'lavender';
@@ -153,38 +162,53 @@ const { magneticStyle } = useMagneticEffect(htmlElementRef, {
   disabled: computed(() => props.disabled)
 });
 
-// Ripple effect on click
+// Enhanced interactions
+const { handleButtonClick, handleButtonHover } = useButtonInteractions();
+
+// Enhanced click with ripple and micro-interactions
 const handleClick = (event: MouseEvent) => {
   emit('click', event);
   
-  if (!props.disabled && rippleRef.value && elementRef.value) {
-    const button = elementRef.value.$el || elementRef.value;
-    const rect = button.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  if (!props.disabled) {
+    // Trigger micro-interactions
+    handleButtonClick(event);
     
-    // Create ripple
-    const ripple = document.createElement('span');
-    ripple.className = 'ripple';
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-    
-    rippleRef.value.appendChild(ripple);
-    
-    // Remove ripple after animation
-    setTimeout(() => {
-      ripple.remove();
-    }, 600);
+    // Create ripple effect
+    if (rippleRef.value && elementRef.value) {
+      const button = elementRef.value.$el || elementRef.value;
+      const rect = button.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      // Create ripple
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      rippleRef.value.appendChild(ripple);
+      
+      // Remove ripple after animation
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    }
   }
 };
 
-// Hover state management
+// Enhanced hover state management
 const handleMouseEnter = () => {
   isHovered.value = true;
+  if (!props.disabled) {
+    handleButtonHover(true);
+  }
 };
 
 const handleMouseLeave = () => {
   isHovered.value = false;
+  if (!props.disabled) {
+    handleButtonHover(false);
+  }
 };
 </script>
 
@@ -274,20 +298,29 @@ const handleMouseLeave = () => {
   transform: translateZ(-1px) scale(var(--scale-press));
 }
 
-/* Hover and active states */
+/* Enhanced hover and active states with shake animation */
 .button-base:hover:not(:disabled) {
-  transform: translateY(-1px) scale(1.01);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 
-    0 10px 20px -5px rgba(0, 0, 0, 0.2),
-    0 0 0 2px rgba(var(--color-rgb, 203, 166, 247), 0.1);
+    0 15px 30px -5px rgba(0, 0, 0, 0.25),
+    0 0 0 3px rgba(var(--color-rgb, 203, 166, 247), 0.15),
+    0 0 20px rgba(var(--color-rgb, 203, 166, 247), 0.2);
+  animation: buttonShake 0.5s ease-in-out;
 }
 
 .button-base:active:not(:disabled) {
   transform: translateY(0) scale(var(--scale-press));
   box-shadow: 
-    0 2px 4px -2px rgba(0, 0, 0, 0.2),
-    0 0 0 2px rgba(var(--color-rgb, 203, 166, 247), 0.2);
+    0 5px 15px -3px rgba(0, 0, 0, 0.3),
+    0 0 0 4px rgba(var(--color-rgb, 203, 166, 247), 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
   transition-duration: 50ms;
+}
+
+@keyframes buttonShake {
+  0%, 100% { transform: translateY(-2px) scale(1.02) rotate(0deg); }
+  25% { transform: translateY(-2px) scale(1.02) rotate(0.5deg); }
+  75% { transform: translateY(-2px) scale(1.02) rotate(-0.5deg); }
 }
 
 /* Ripple effect container */

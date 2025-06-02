@@ -146,12 +146,32 @@ const { magneticStyle } = useMagneticEffect(htmlElementRef, {
   transition: var(--transition-fast);
 }
 
-/* Background layer for hover effects */
+/* Enhanced background layer for hover effects */
 .nav-link-bg {
   @apply absolute inset-0 opacity-0;
-  background: currentColor;
-  transition: opacity var(--animation-base) var(--ease-out);
+  background: linear-gradient(135deg, currentColor, transparent, currentColor);
+  background-size: 200% 100%;
+  transition: all var(--animation-base) var(--ease-out);
   border-radius: inherit;
+}
+
+.nav-link:hover .nav-link-bg {
+  animation: waveEffect 0.8s ease-in-out;
+}
+
+@keyframes waveEffect {
+  0% {
+    background-position: 0% 50%;
+    opacity: 0;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.15;
+  }
+  100% {
+    background-position: 200% 50%;
+    opacity: 0.1;
+  }
 }
 
 /* Desktop specific styles */
@@ -164,11 +184,18 @@ const { magneticStyle } = useMagneticEffect(htmlElementRef, {
 }
 
 .nav-link-desktop:hover .nav-link-icon {
-  transform: translateY(-2px) rotate(-5deg);
+  transform: translateY(-3px) rotate(-8deg) scale(1.1);
+  animation: iconBounce 0.6s ease-in-out;
 }
 
 .nav-link-desktop:active .nav-link-icon {
-  transform: translateY(0) rotate(0);
+  transform: translateY(1px) rotate(2deg) scale(0.95);
+}
+
+@keyframes iconBounce {
+  0% { transform: translateY(-3px) rotate(-8deg) scale(1.1); }
+  50% { transform: translateY(-5px) rotate(-12deg) scale(1.15); }
+  100% { transform: translateY(-3px) rotate(-8deg) scale(1.1); }
 }
 
 /* Remove individual underline indicators - handled by parent navigation */

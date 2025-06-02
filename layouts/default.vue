@@ -37,7 +37,7 @@
       <!-- Terminal Toggle Button -->
       <button
         @click="toggleTerminal"
-        class="fixed bottom-4 right-4 z-[10000] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
+        class="fixed bottom-4 right-4 z-[9999] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
         :class="{ 'bg-surface1': isTerminalVisible }"
         title="Toggle Terminal (Ctrl+`)"
       >
@@ -48,6 +48,13 @@
           Terminal (Ctrl+`)
         </span>
       </button>
+      
+      <!-- Simple Cursor -->
+      <ClientOnly>
+        <Teleport to="body">
+          <SimpleCursor :enabled="true" />
+        </Teleport>
+      </ClientOnly>
       
       <!-- Terminal Panel -->
       <ClientOnly>
@@ -66,7 +73,7 @@
 import { ref, provide, onMounted, onUnmounted } from 'vue'
 import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
 import PageLoader from '~/components/layout/PageLoader.vue'
-import { useCustomCursor } from '~/composables/useCustomCursor'
+import SimpleCursor from '~/components/ui/SimpleCursor.vue'
 import { useScrollRevealList } from '~/composables/useScrollReveal'
 import { usePageTransitions } from '~/composables/usePageTransitions'
 
@@ -83,13 +90,7 @@ const { registerElements } = useScrollRevealList({
   stagger: 150
 })
 
-// Custom cursor for desktop
-const customCursor = useCustomCursor({
-  enabled: true,
-  size: 24,
-  color: 'rgba(203, 166, 247, 0.8)',
-  mixBlendMode: 'difference'
-})
+// Custom cursor will be handled by the CustomCursor component
 
 // Toggle terminal function
 const toggleTerminal = () => {
