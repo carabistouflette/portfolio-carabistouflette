@@ -18,10 +18,49 @@ logs
 .DS_Store
 .fleet
 .idea
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+Thumbs.db
 
 # Local env files
 .env
 .env.*
 !.env.example
 
+# Documentation temporaire
 TODO.md
+NOUVELLES_AMELIORATIONS.md
+README_GITHUB_INTEGRATION.md
+VISUAL_IMPROVEMENTS.md
+
+# Test files
+pages/test-*.vue
+**/test-*.vue
+**/*.test.vue
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Optional caches
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.pnpm-store/
+.npm/
+
+# PWA files
+sw.*
+workbox-*.js
