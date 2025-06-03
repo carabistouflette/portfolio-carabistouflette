@@ -6,19 +6,19 @@
         <div class="text-center max-w-4xl mx-auto">
           <h1 
             ref="heroTitle"
-            class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-mauve to-pink bg-clip-text text-transparent opacity-0"
+            class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-mauve to-pink bg-clip-text text-transparent"
           >
             Portfolio d'apprentissage
           </h1>
           <p 
             ref="heroSubtitle"
-            class="text-xl text-subtext1 mb-8 opacity-0"
+            class="text-xl text-subtext1 mb-8"
           >
             Compétences maîtrisées lors de ma formation en 2ème année de parcours DACS
           </p>
           <div 
             ref="heroBadge"
-            class="inline-flex items-center px-6 py-3 bg-mauve/10 border border-mauve/30 rounded-full opacity-0 hover:bg-mauve/20 transition-all duration-300 cursor-pointer"
+            class="inline-flex items-center px-6 py-3 bg-mauve/10 border border-mauve/30 rounded-full hover:bg-mauve/20 transition-all duration-300 cursor-pointer"
             @click="scrollToCompetences"
           >
             <Icon name="heroicons:academic-cap" class="w-6 h-6 mr-3 text-mauve animate-pulse" />
@@ -55,7 +55,7 @@
             v-for="(skill, index) in skills" 
             :key="skill.id"
             ref="skillCards"
-            class="skill-card group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105 cursor-pointer opacity-0"
+            class="skill-card group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105 cursor-pointer"
             :data-index="index"
             @mouseenter="handleHover(index)"
             @mouseleave="handleLeave(index)"
@@ -124,13 +124,13 @@
         <div class="text-center mb-16">
           <h2 
             ref="detailsTitle"
-            class="text-3xl md:text-4xl font-bold text-text mb-6 opacity-0"
+            class="text-3xl md:text-4xl font-bold text-text mb-6"
           >
             Détail des compétences acquises
           </h2>
           <p 
             ref="detailsSubtitle"
-            class="text-lg text-subtext1 max-w-3xl mx-auto opacity-0"
+            class="text-lg text-subtext1 max-w-3xl mx-auto"
           >
             Contexte et projets qui ont permis la validation de ces compétences
           </p>
@@ -141,7 +141,7 @@
             v-for="(detail, index) in skillDetails" 
             :key="detail.id"
             ref="detailCards"
-            class="detail-card p-8 rounded-2xl border border-overlay0 bg-surface0/30 opacity-0 hover:bg-surface0/50 transition-all duration-300"
+            class="detail-card p-8 rounded-2xl border border-overlay0 bg-surface0/30 hover:bg-surface0/50 transition-all duration-300"
             :data-index="index"
           >
             <div class="flex items-start mb-6">
@@ -187,13 +187,13 @@
         <div class="text-center mb-16">
           <h2 
             ref="acTitle"
-            class="text-3xl md:text-4xl font-bold text-text mb-6 opacity-0"
+            class="text-3xl md:text-4xl font-bold text-text mb-6"
           >
             Apprentissages Critiques validés
           </h2>
           <p 
             ref="acSubtitle"
-            class="text-lg text-subtext1 max-w-3xl mx-auto opacity-0"
+            class="text-lg text-subtext1 max-w-3xl mx-auto"
           >
             Détail des apprentissages critiques (AC) de niveau 2 validés à travers mes projets et expériences
           </p>
@@ -205,7 +205,7 @@
             v-for="(competence, compIndex) in apprentissagesCritiques" 
             :key="competence.id"
             ref="acCompetences"
-            class="competence-section max-w-5xl mx-auto opacity-0"
+            class="competence-section max-w-5xl mx-auto"
             :data-index="compIndex"
           >
             <!-- Header de la compétence -->
@@ -250,7 +250,7 @@
                           <div 
                             v-for="(exemple, exIndex) in ac.exemples" 
                             :key="exemple"
-                            class="exemple-item flex items-start text-sm opacity-0"
+                            class="exemple-item flex items-start text-sm"
                             :style="{ animationDelay: `${exIndex * 100}ms` }"
                           >
                             <Icon name="heroicons:arrow-right" :class="`text-${competence.color} mt-0.5 mr-2 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1`" class="w-4 h-4" />
@@ -309,6 +309,9 @@ const acCompetences = ref<HTMLElement[]>([])
 // State pour l'interactivité
 const collapsedAcs = ref<Record<string, boolean>>({})  
 const expandedSkills = ref<Set<string>>(new Set())
+
+// Flag pour savoir si les animations sont chargées
+const animationsLoaded = ref(false)
 
 const skills = ref([
   {
@@ -692,8 +695,8 @@ const animateHeroSection = async () => {
 const setupIntersectionObservers = () => {
   // Cartes de compétences
   skillCards.value.forEach((card, index) => {
-    useIntersectionObserver(card, ([{ isIntersecting }]) => {
-      if (isIntersecting && card.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(card, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(card, {
           opacity: [0, 1],
           y: [60, 0],
@@ -703,14 +706,15 @@ const setupIntersectionObservers = () => {
           delay: index * 0.15,
           easing: 'ease-out'
         })
+        stop() // Stop observing after animation
       }
-    })
+    }, { threshold: 0.1 })
   })
   
   // Section détails
   if (detailsTitle.value) {
-    useIntersectionObserver(detailsTitle.value, ([{ isIntersecting }]) => {
-      if (isIntersecting && detailsTitle.value!.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(detailsTitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(detailsTitle.value!, {
           opacity: [0, 1],
           y: [30, 0]
@@ -718,13 +722,14 @@ const setupIntersectionObservers = () => {
           duration: 0.6,
           easing: 'ease-out'
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   }
   
   if (detailsSubtitle.value) {
-    useIntersectionObserver(detailsSubtitle.value, ([{ isIntersecting }]) => {
-      if (isIntersecting && detailsSubtitle.value!.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(detailsSubtitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(detailsSubtitle.value!, {
           opacity: [0, 1],
           y: [20, 0]
@@ -733,14 +738,15 @@ const setupIntersectionObservers = () => {
           delay: 0.2,
           easing: 'ease-out'
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   }
   
   // Cartes de détails
   detailCards.value.forEach((card, index) => {
-    useIntersectionObserver(card, ([{ isIntersecting }]) => {
-      if (isIntersecting && card.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(card, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(card, {
           opacity: [0, 1],
           x: [-50, 0]
@@ -749,14 +755,15 @@ const setupIntersectionObservers = () => {
           delay: index * 0.1,
           easing: 'ease-out'
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   })
   
   // Section AC
   if (acTitle.value) {
-    useIntersectionObserver(acTitle.value, ([{ isIntersecting }]) => {
-      if (isIntersecting && acTitle.value!.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(acTitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(acTitle.value!, {
           opacity: [0, 1],
           y: [30, 0]
@@ -764,13 +771,14 @@ const setupIntersectionObservers = () => {
           duration: 0.6,
           easing: 'ease-out'
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   }
   
   if (acSubtitle.value) {
-    useIntersectionObserver(acSubtitle.value, ([{ isIntersecting }]) => {
-      if (isIntersecting && acSubtitle.value!.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(acSubtitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(acSubtitle.value!, {
           opacity: [0, 1], 
           y: [20, 0]
@@ -779,14 +787,15 @@ const setupIntersectionObservers = () => {
           delay: 0.2,
           easing: 'ease-out'
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   }
   
   // Sections de compétences AC
   acCompetences.value.forEach((section, index) => {
-    useIntersectionObserver(section, ([{ isIntersecting }]) => {
-      if (isIntersecting && section.style.opacity === '0') {
+    const { stop } = useIntersectionObserver(section, ([{ isIntersecting }]) => {
+      if (isIntersecting) {
         animate(section, {
           opacity: [0, 1],
           y: [40, 0]
@@ -808,8 +817,9 @@ const setupIntersectionObservers = () => {
             easing: 'ease-out'
           })
         })
+        stop()
       }
-    })
+    }, { threshold: 0.1 })
   })
 }
 
@@ -820,6 +830,9 @@ onMounted(async () => {
   // Configuration des observers
   await nextTick()
   setupIntersectionObservers()
+  
+  // Marquer les animations comme chargées
+  animationsLoaded.value = true
 })
 
 // Page meta
@@ -916,6 +929,14 @@ useSeoMeta({
 /* Glow effect on hover */
 .ac-card:hover {
   box-shadow: 0 0 30px rgba(var(--color-rgb), 0.15);
+}
+
+/* Fallback pour les éléments avec opacity 0 */
+.skill-card,
+.detail-card,
+.competence-section,
+.ac-card {
+  opacity: 1 !important;
 }
 
 /* Smooth number rotation */
