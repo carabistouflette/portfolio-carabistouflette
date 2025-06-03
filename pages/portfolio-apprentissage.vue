@@ -4,14 +4,24 @@
     <section class="section-padding bg-gradient-to-br from-base to-mantle relative overflow-hidden">
       <div class="container-custom relative z-10">
         <div class="text-center max-w-4xl mx-auto">
-          <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-mauve to-pink bg-clip-text text-transparent">
+          <h1 
+            ref="heroTitle"
+            class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-mauve to-pink bg-clip-text text-transparent opacity-0"
+          >
             Portfolio d'apprentissage
           </h1>
-          <p class="text-xl text-subtext1 mb-8">
+          <p 
+            ref="heroSubtitle"
+            class="text-xl text-subtext1 mb-8 opacity-0"
+          >
             Compétences maîtrisées lors de ma formation en 2ème année de parcours DACS
           </p>
-          <div class="inline-flex items-center px-6 py-3 bg-mauve/10 border border-mauve/30 rounded-full">
-            <Icon name="heroicons:academic-cap" class="w-6 h-6 mr-3 text-mauve" />
+          <div 
+            ref="heroBadge"
+            class="inline-flex items-center px-6 py-3 bg-mauve/10 border border-mauve/30 rounded-full opacity-0 hover:bg-mauve/20 transition-all duration-300 cursor-pointer"
+            @click="scrollToCompetences"
+          >
+            <Icon name="heroicons:academic-cap" class="w-6 h-6 mr-3 text-mauve animate-pulse" />
             <span class="text-mauve font-semibold">
               Niveau 2 - Compétences validées
             </span>
@@ -19,9 +29,22 @@
         </div>
       </div>
       
-      <!-- Background decorations -->
-      <div class="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-mauve/20 to-pink/20 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-blue/10 to-teal/10 rounded-full blur-3xl"></div>
+      <!-- Background decorations animées -->
+      <div ref="bgDecor1" class="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-mauve/20 to-pink/20 rounded-full blur-3xl"></div>
+      <div ref="bgDecor2" class="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-blue/10 to-teal/10 rounded-full blur-3xl"></div>
+      
+      <!-- Particules flottantes -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div 
+          v-for="i in 5" 
+          :key="`particle-${i}`"
+          class="particle absolute w-2 h-2 bg-mauve/30 rounded-full"
+          :style="{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${i * 0.5}s`
+          }"
+        ></div>
+      </div>
     </section>
 
     <!-- Skills Grid -->
@@ -32,21 +55,23 @@
             v-for="(skill, index) in skills" 
             :key="skill.id"
             ref="skillCards"
-            class="group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105"
+            class="skill-card group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105 cursor-pointer opacity-0"
+            :data-index="index"
             @mouseenter="handleHover(index)"
             @mouseleave="handleLeave(index)"
+            @click="toggleSkillDetails(skill.id)"
           >
             <!-- Skill header -->
             <div class="text-center mb-8">
               <div 
-                class="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform duration-300 group-hover:scale-110"
+                class="skill-icon w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
                 :class="skill.iconBg"
               >
-                <Icon :name="skill.icon" class="w-10 h-10" :class="skill.iconColor" />
+                <Icon :name="skill.icon" class="w-10 h-10 transition-transform duration-300 group-hover:scale-125" :class="skill.iconColor" />
               </div>
               <h3 class="text-2xl font-bold text-text mb-2">{{ skill.title }}</h3>
               <span 
-                class="text-sm px-4 py-2 rounded-full font-medium"
+                class="text-sm px-4 py-2 rounded-full font-medium transition-all duration-300 group-hover:shadow-lg"
                 :class="skill.badgeClass"
               >
                 {{ skill.level }}
@@ -78,28 +103,46 @@
               class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
               :class="skill.gradientBorder"
             ></div>
+            
+            <!-- Pulse effect on hover -->
+            <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none">
+              <div class="absolute inset-0 rounded-3xl animate-ping" :class="`bg-${skill.color}/10`"></div>
+            </div>
+            
+            <!-- Click indicator -->
+            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <Icon name="heroicons:arrow-right-circle" class="w-6 h-6" :class="skill.iconColor" />
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Detailed breakdown -->
-    <section class="section-padding bg-mantle">
+    <section ref="skillDetailsSection" class="section-padding bg-mantle">
       <div class="container-custom">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-text mb-6">
+          <h2 
+            ref="detailsTitle"
+            class="text-3xl md:text-4xl font-bold text-text mb-6 opacity-0"
+          >
             Détail des compétences acquises
           </h2>
-          <p class="text-lg text-subtext1 max-w-3xl mx-auto">
+          <p 
+            ref="detailsSubtitle"
+            class="text-lg text-subtext1 max-w-3xl mx-auto opacity-0"
+          >
             Contexte et projets qui ont permis la validation de ces compétences
           </p>
         </div>
 
         <div class="space-y-12 max-w-4xl mx-auto">
           <div 
-            v-for="detail in skillDetails" 
+            v-for="(detail, index) in skillDetails" 
             :key="detail.id"
-            class="p-8 rounded-2xl border border-overlay0 bg-surface0/30"
+            ref="detailCards"
+            class="detail-card p-8 rounded-2xl border border-overlay0 bg-surface0/30 opacity-0 hover:bg-surface0/50 transition-all duration-300"
+            :data-index="index"
           >
             <div class="flex items-start mb-6">
               <div 
@@ -139,13 +182,19 @@
     </section>
 
     <!-- Apprentissages Critiques Section -->
-    <section class="section-padding bg-base">
+    <section ref="acSection" class="section-padding bg-base">
       <div class="container-custom">
         <div class="text-center mb-16">
-          <h2 class="text-3xl md:text-4xl font-bold text-text mb-6">
+          <h2 
+            ref="acTitle"
+            class="text-3xl md:text-4xl font-bold text-text mb-6 opacity-0"
+          >
             Apprentissages Critiques validés
           </h2>
-          <p class="text-lg text-subtext1 max-w-3xl mx-auto">
+          <p 
+            ref="acSubtitle"
+            class="text-lg text-subtext1 max-w-3xl mx-auto opacity-0"
+          >
             Détail des apprentissages critiques (AC) de niveau 2 validés à travers mes projets et expériences
           </p>
         </div>
@@ -153,9 +202,11 @@
         <div class="space-y-16">
           <!-- AC par compétence -->
           <div 
-            v-for="competence in apprentissagesCritiques" 
+            v-for="(competence, compIndex) in apprentissagesCritiques" 
             :key="competence.id"
-            class="max-w-5xl mx-auto"
+            ref="acCompetences"
+            class="competence-section max-w-5xl mx-auto opacity-0"
+            :data-index="compIndex"
           >
             <!-- Header de la compétence -->
             <div class="flex items-center mb-8">
@@ -173,33 +224,49 @@
               <div 
                 v-for="(ac, index) in competence.acs" 
                 :key="`${competence.id}-ac${index}`"
-                class="group relative overflow-hidden"
+                class="ac-card group relative overflow-hidden transform transition-all duration-300 hover:-translate-y-1"
+                :data-ac-index="index"
               >
-                <div class="p-6 rounded-2xl border transition-all duration-300 hover:shadow-lg"
-                     :class="`border-${competence.color}/30 bg-${competence.color}/5 hover:bg-${competence.color}/10`">
+                <div class="p-6 rounded-2xl border transition-all duration-300 hover:shadow-xl cursor-pointer"
+                     :class="`border-${competence.color}/30 bg-${competence.color}/5 hover:bg-${competence.color}/10`"
+                     @click="toggleAcDetails(competence.id, index)">
                   <!-- AC Title -->
                   <div class="flex items-start mb-4">
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg font-bold text-sm mr-4"
+                    <span class="ac-number inline-flex items-center justify-center w-10 h-10 rounded-lg font-bold text-sm mr-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
                           :class="`bg-${competence.color}/20 text-${competence.color}`">
                       AC{{ index + 1 }}
                     </span>
-                    <h4 class="font-semibold text-text flex-1">{{ ac.title }}</h4>
+                    <h4 class="font-semibold text-text flex-1 group-hover:text-text transition-colors duration-300">{{ ac.title }}</h4>
                   </div>
                   
                   <!-- Justification -->
                   <div class="pl-14">
-                    <p class="text-subtext1 text-sm leading-relaxed mb-4">{{ ac.justification }}</p>
-                    
-                    <!-- Exemples concrets -->
-                    <div class="space-y-2">
-                      <div 
-                        v-for="exemple in ac.exemples" 
-                        :key="exemple"
-                        class="flex items-start text-sm"
-                      >
-                        <Icon name="heroicons:arrow-right" :class="`text-${competence.color} mt-0.5 mr-2 flex-shrink-0`" class="w-4 h-4" />
-                        <span class="text-subtext0">{{ exemple }}</span>
+                    <Transition name="ac-content">
+                      <div v-if="!collapsedAcs[`${competence.id}-${index}`]">
+                        <p class="text-subtext1 text-sm leading-relaxed mb-4">{{ ac.justification }}</p>
+                        
+                        <!-- Exemples concrets -->
+                        <div class="space-y-2">
+                          <div 
+                            v-for="(exemple, exIndex) in ac.exemples" 
+                            :key="exemple"
+                            class="exemple-item flex items-start text-sm opacity-0"
+                            :style="{ animationDelay: `${exIndex * 100}ms` }"
+                          >
+                            <Icon name="heroicons:arrow-right" :class="`text-${competence.color} mt-0.5 mr-2 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1`" class="w-4 h-4" />
+                            <span class="text-subtext0">{{ exemple }}</span>
+                          </div>
+                        </div>
                       </div>
+                    </Transition>
+                    
+                    <!-- Toggle indicator -->
+                    <div class="mt-4 flex items-center text-xs" :class="`text-${competence.color}`">
+                      <Icon 
+                        :name="collapsedAcs[`${competence.id}-${index}`] ? 'heroicons:chevron-down' : 'heroicons:chevron-up'" 
+                        class="w-4 h-4 mr-1 transition-transform duration-300"
+                      />
+                      <span>{{ collapsedAcs[`${competence.id}-${index}`] ? 'Voir plus' : 'Voir moins' }}</span>
                     </div>
                   </div>
                 </div>
@@ -219,10 +286,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { animate } from 'motion'
+import { ref, onMounted, watch, nextTick } from 'vue'
+import { animate, stagger } from 'motion'
+import { useIntersectionObserver } from '@vueuse/core'
 
+// Refs pour les animations
+const heroTitle = ref<HTMLElement>()
+const heroSubtitle = ref<HTMLElement>()
+const heroBadge = ref<HTMLElement>()
+const bgDecor1 = ref<HTMLElement>()
+const bgDecor2 = ref<HTMLElement>()
 const skillCards = ref<HTMLElement[]>([])
+const detailCards = ref<HTMLElement[]>([])
+const detailsTitle = ref<HTMLElement>()
+const detailsSubtitle = ref<HTMLElement>()
+const skillDetailsSection = ref<HTMLElement>()
+const acSection = ref<HTMLElement>()
+const acTitle = ref<HTMLElement>()
+const acSubtitle = ref<HTMLElement>()
+const acCompetences = ref<HTMLElement[]>([])
+
+// State pour l'interactivité
+const collapsedAcs = ref<Record<string, boolean>>({})  
+const expandedSkills = ref<Set<string>>(new Set())
 
 const skills = ref([
   {
@@ -470,16 +556,35 @@ const skillDetails = ref([
   }
 ])
 
+// Fonction pour scroll vers les compétences
+const scrollToCompetences = () => {
+  skillDetailsSection.value?.scrollIntoView({ behavior: 'smooth' })
+}
+
+// Gestion des interactions  
 const handleHover = (index: number) => {
   const card = skillCards.value[index]
   if (card) {
     animate(card, {
-      y: -8,
-      scale: 1.02
+      y: -12,
+      rotateY: 5,
+      scale: 1.03
     }, {
-      duration: 0.3,
+      duration: 0.4,
       easing: 'ease-out'
     })
+    
+    // Animer l'icône
+    const icon = card.querySelector('.skill-icon')
+    if (icon) {
+      animate(icon, {
+        rotate: 360,
+        scale: 1.1
+      }, {
+        duration: 0.6,
+        easing: 'ease-out'
+      })
+    }
   }
 }
 
@@ -488,28 +593,233 @@ const handleLeave = (index: number) => {
   if (card) {
     animate(card, {
       y: 0,
+      rotateY: 0,
       scale: 1
     }, {
-      duration: 0.3,
+      duration: 0.4,
       easing: 'ease-out'
+    })
+    
+    const icon = card.querySelector('.skill-icon')
+    if (icon) {
+      animate(icon, {
+        rotate: 0,
+        scale: 1
+      }, {
+        duration: 0.6,
+        easing: 'ease-out'
+      })
+    }
+  }
+}
+
+// Toggle des détails de compétences
+const toggleSkillDetails = (skillId: string) => {
+  if (expandedSkills.value.has(skillId)) {
+    expandedSkills.value.delete(skillId)
+  } else {
+    expandedSkills.value.add(skillId)
+  }
+}
+
+// Toggle des AC
+const toggleAcDetails = (competenceId: string, acIndex: number) => {
+  const key = `${competenceId}-${acIndex}`
+  collapsedAcs.value[key] = !collapsedAcs.value[key]
+}
+
+// Animations d'entrée
+const animateHeroSection = async () => {
+  // Titre principal
+  if (heroTitle.value) {
+    await animate(heroTitle.value, {
+      opacity: [0, 1],
+      y: [30, 0],
+      scale: [0.9, 1]
+    }, {
+      duration: 0.8,
+      easing: 'ease-out'
+    }).finished
+  }
+  
+  // Sous-titre
+  if (heroSubtitle.value) {
+    await animate(heroSubtitle.value, {
+      opacity: [0, 1],
+      y: [20, 0]
+    }, {
+      duration: 0.6,
+      delay: 0.2,
+      easing: 'ease-out'
+    }).finished
+  }
+  
+  // Badge
+  if (heroBadge.value) {
+    animate(heroBadge.value, {
+      opacity: [0, 1],
+      scale: [0.8, 1]
+    }, {
+      duration: 0.5,
+      delay: 0.4,
+      easing: 'spring'
+    })
+  }
+  
+  // Décorations de fond
+  if (bgDecor1.value && bgDecor2.value) {
+    animate(bgDecor1.value, {
+      scale: [0, 1],
+      rotate: [0, 360]
+    }, {
+      duration: 20,
+      repeat: Infinity,
+      easing: 'linear'
+    })
+    
+    animate(bgDecor2.value, {
+      scale: [0, 1],
+      rotate: [360, 0]
+    }, {
+      duration: 25,
+      repeat: Infinity,
+      easing: 'linear'
     })
   }
 }
 
-onMounted(() => {
-  // Animate cards on scroll
-  if (skillCards.value.length) {
-    skillCards.value.forEach((card, index) => {
-      animate(card, {
-        opacity: [0, 1],
-        y: [50, 0]
-      }, {
-        duration: 0.8,
-        delay: index * 0.2,
-        easing: 'ease-out'
-      })
+// Observer pour les animations au scroll
+const setupIntersectionObservers = () => {
+  // Cartes de compétences
+  skillCards.value.forEach((card, index) => {
+    useIntersectionObserver(card, ([{ isIntersecting }]) => {
+      if (isIntersecting && card.style.opacity === '0') {
+        animate(card, {
+          opacity: [0, 1],
+          y: [60, 0],
+          scale: [0.8, 1]
+        }, {
+          duration: 0.6,
+          delay: index * 0.15,
+          easing: 'ease-out'
+        })
+      }
+    })
+  })
+  
+  // Section détails
+  if (detailsTitle.value) {
+    useIntersectionObserver(detailsTitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting && detailsTitle.value!.style.opacity === '0') {
+        animate(detailsTitle.value!, {
+          opacity: [0, 1],
+          y: [30, 0]
+        }, {
+          duration: 0.6,
+          easing: 'ease-out'
+        })
+      }
     })
   }
+  
+  if (detailsSubtitle.value) {
+    useIntersectionObserver(detailsSubtitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting && detailsSubtitle.value!.style.opacity === '0') {
+        animate(detailsSubtitle.value!, {
+          opacity: [0, 1],
+          y: [20, 0]
+        }, {
+          duration: 0.6,
+          delay: 0.2,
+          easing: 'ease-out'
+        })
+      }
+    })
+  }
+  
+  // Cartes de détails
+  detailCards.value.forEach((card, index) => {
+    useIntersectionObserver(card, ([{ isIntersecting }]) => {
+      if (isIntersecting && card.style.opacity === '0') {
+        animate(card, {
+          opacity: [0, 1],
+          x: [-50, 0]
+        }, {
+          duration: 0.6,
+          delay: index * 0.1,
+          easing: 'ease-out'
+        })
+      }
+    })
+  })
+  
+  // Section AC
+  if (acTitle.value) {
+    useIntersectionObserver(acTitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting && acTitle.value!.style.opacity === '0') {
+        animate(acTitle.value!, {
+          opacity: [0, 1],
+          y: [30, 0]
+        }, {
+          duration: 0.6,
+          easing: 'ease-out'
+        })
+      }
+    })
+  }
+  
+  if (acSubtitle.value) {
+    useIntersectionObserver(acSubtitle.value, ([{ isIntersecting }]) => {
+      if (isIntersecting && acSubtitle.value!.style.opacity === '0') {
+        animate(acSubtitle.value!, {
+          opacity: [0, 1], 
+          y: [20, 0]
+        }, {
+          duration: 0.6,
+          delay: 0.2,
+          easing: 'ease-out'
+        })
+      }
+    })
+  }
+  
+  // Sections de compétences AC
+  acCompetences.value.forEach((section, index) => {
+    useIntersectionObserver(section, ([{ isIntersecting }]) => {
+      if (isIntersecting && section.style.opacity === '0') {
+        animate(section, {
+          opacity: [0, 1],
+          y: [40, 0]
+        }, {
+          duration: 0.8,
+          delay: index * 0.2,
+          easing: 'ease-out'
+        })
+        
+        // Animer les cartes AC à l'intérieur
+        const acCards = section.querySelectorAll('.ac-card')
+        acCards.forEach((card, cardIndex) => {
+          animate(card as HTMLElement, {
+            opacity: [0, 1],
+            x: [-30, 0]
+          }, {
+            duration: 0.5,
+            delay: index * 0.2 + cardIndex * 0.1,
+            easing: 'ease-out'
+          })
+        })
+      }
+    })
+  })
+}
+
+onMounted(async () => {
+  // Animations initiales
+  await animateHeroSection()
+  
+  // Configuration des observers
+  await nextTick()
+  setupIntersectionObservers()
 })
 
 // Page meta
@@ -520,3 +830,110 @@ useSeoMeta({
   ogDescription: 'Portfolio d\'apprentissage - Compétences maîtrisées en 2ème année : Optimiser, Gérer, Conduire',
 })
 </script>
+
+<style scoped>
+/* Animations des particules */
+@keyframes float-particle {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.particle {
+  animation: float-particle 20s linear infinite;
+}
+
+/* Transitions pour les AC */
+.ac-content-enter-active,
+.ac-content-leave-active {
+  transition: all 0.3s ease;
+}
+
+.ac-content-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.ac-content-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Animation des exemples */
+@keyframes slide-in-exemple {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.exemple-item {
+  animation: slide-in-exemple 0.5s ease-out forwards;
+}
+
+/* Effets de brillance */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skill-card:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+  pointer-events: none;
+}
+
+/* Glow effect on hover */
+.ac-card:hover {
+  box-shadow: 0 0 30px rgba(var(--color-rgb), 0.15);
+}
+
+/* Smooth number rotation */
+.ac-number {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Pulse animation pour le badge hero */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(var(--mauve-rgb), 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(var(--mauve-rgb), 0);
+  }
+}
+
+.hero-badge:hover {
+  animation: pulse-glow 2s infinite;
+}
+</style>
