@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { useGitHub } from '~/composables/useGitHub'
+import { useGitHubClient } from '~/composables/useGitHubClient'
 import { formatNumber } from '~/utils/github'
 
 interface Props {
@@ -107,7 +107,7 @@ const props = withDefaults(defineProps<Props>(), {
   compact: false
 })
 
-const { user, stats, loading, error } = useGitHub(props.username)
+const { user, stats, loading, error } = useGitHubClient(props.username)
 
 const mainStats = computed(() => {
   if (!stats.value || !user.value) return []

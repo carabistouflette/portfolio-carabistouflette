@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, watchEffect } from 'vue'
 import { useHead } from '#imports'
-import { useGitHubRepo } from '~/composables/useGitHub'
+import { useGitHubRepoClient } from '~/composables/useGitHubClient'
 import { formatNumber } from '~/utils/github'
 import { useCardInteractions } from '~/composables/useMicroInteractions'
 
@@ -175,7 +175,7 @@ onMounted(async () => {
   if (props.project.githubRepo) {
     try {
       const [owner, repoName] = props.project.githubRepo.split('/')
-      const { repo } = useGitHubRepo(owner, repoName)
+      const { repo } = useGitHubRepoClient(owner, repoName)
       
       // Watch for repo data
       watchEffect(() => {

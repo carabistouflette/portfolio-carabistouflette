@@ -275,7 +275,9 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useGitHub, type GitHubRepo } from '~/composables/useGitHub'
+import { useGitHub } from '~/composables/useGitHub'
+import { useGitHubClient } from '~/composables/useGitHubClient'
+import type { GitHubRepo } from '~/types/github'
 import StatsCard from '~/components/github/StatsCard.vue'
 import ActivityItem from '~/components/github/ActivityItem.vue'
 import RepoCard from '~/components/github/RepoCard.vue'
@@ -285,8 +287,8 @@ import LanguagePieChart from '~/components/github/LanguagePieChart.vue'
 // Props
 const username = 'carabistouflette'
 
-// Composables
-const { user, repos, stats, loading, error, refresh } = useGitHub(username)
+// Composables - Toujours utiliser le client direct (compatible avec SSR false)
+const { user, repos, stats, loading, error, refresh } = useGitHubClient(username)
 
 // Search and filters
 const searchQuery = ref('')
