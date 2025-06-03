@@ -30,9 +30,8 @@
                   'reveal-mask': index === 0 
                 }
               ]"
-            >
-              {{ paragraph }}
-            </p>
+              v-html="sanitize(paragraph)"
+            />
           </div>
           
           <div class="flex flex-wrap gap-4 pt-4">
@@ -107,6 +106,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
 import { useAnimations } from '@/composables/useAnimations'
+import { useSanitize } from '@/composables/useSanitize'
 interface Skill {
   title: string;
   description: string;
@@ -122,6 +122,8 @@ interface AboutSectionProps {
 }
 
 const props = defineProps<AboutSectionProps>();
+
+const { sanitize } = useSanitize()
 
 const firstParagraph = ref<HTMLElement | null>(null)
 const skillCardRefs = ref<HTMLElement[]>([])
