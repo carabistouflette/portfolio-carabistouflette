@@ -155,15 +155,11 @@ const { config, particles, orbs, shapes, time } = useBackgroundAnimations(props.
 const prefersReducedMotion = ref(false)
 
 onMounted(() => {
-  console.log('BackgroundAnimation mounted!')
-  console.log('Config:', config.value)
-  console.log('Particles:', particles.value)
-  console.log('Orbs:', orbs.value)
   
   const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   prefersReducedMotion.value = mediaQuery.matches
   
-  const handleChange = (e: any) => {
+  const handleChange = (e: MediaQueryListEvent) => {
     prefersReducedMotion.value = e.matches
   }
   

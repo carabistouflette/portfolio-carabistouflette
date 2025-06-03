@@ -148,7 +148,6 @@ onMounted(async () => {
     }
     requestAnimationFrame(finalAnimation)
   } catch (error) {
-    console.error('[PageLoader] Error:', error)
     isLoading.value = false
   } finally {
     clearTimeout(loadingTimeout)

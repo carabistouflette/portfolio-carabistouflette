@@ -192,7 +192,6 @@ const navigateToProject = async (projectId: number) => {
   } else if (projectId === 4) {
     await navigateTo('/projects/voting-app')
   } else {
-    console.log(`Navigating to project ${projectId}`)
   }
 }
 

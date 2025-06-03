@@ -80,8 +80,9 @@ export default defineNuxtConfig({
         { rel: 'alternate icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'canonical', href: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@400;600;700;800&display=swap' }
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        { rel: 'preload', as: 'style', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@600;700&display=swap' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Poppins:wght@600;700&display=swap', media: 'print', onload: 'this.media="all"' }
       ]
     }
   },
@@ -141,10 +142,26 @@ export default defineNuxtConfig({
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            // Separate vendor chunks for better caching
-            'vue-vendor': ['vue', '@vue/runtime-dom'],
-            'vueuse-vendor': ['@vueuse/core', '@vueuse/motion']
+          manualChunks: (id) => {
+            // Vendor chunks for better caching
+            if (id.includes('node_modules')) {
+              if (id.includes('vue') && !id.includes('@vueuse')) {
+                return 'vue-vendor';
+              }
+              if (id.includes('@vueuse')) {
+                return 'vueuse-vendor';
+              }
+              if (id.includes('leaflet')) {
+                return 'leaflet-vendor';
+              }
+              if (id.includes('@iconify') || id.includes('unplugin-icons')) {
+                return 'icons-vendor';
+              }
+              if (id.includes('isomorphic-dompurify')) {
+                return 'security-vendor';
+              }
+              return 'vendor';
+            }
           }
         }
       }
@@ -153,7 +170,7 @@ export default defineNuxtConfig({
 
   // Performance optimizations
   experimental: {
-    payloadExtraction: false // Reduce bundle size
+    payloadExtraction: true // Reduce bundle size by extracting payload
   },
 
   compatibilityDate: '2025-03-18'

@@ -13,6 +13,8 @@
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
+    role="article"
+    :aria-label="`Projet: ${project.title}`"
   >
     <!-- Enhanced visual effects -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
@@ -77,7 +79,8 @@
             :href="`https://github.com/${project.githubRepo}`"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-badge stars-badge"
+            class="github-badge stars-badge focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow focus-visible:ring-offset-2 focus-visible:ring-offset-base"
+            :aria-label="`${githubStats.stars} étoiles sur GitHub pour ${project.title}`"
             @click.stop
           >
             <Icon name="mdi:star" class="badge-icon" />
@@ -88,7 +91,8 @@
             :href="`https://github.com/${project.githubRepo}/fork`"
             target="_blank"
             rel="noopener noreferrer"
-            class="github-badge forks-badge"
+            class="github-badge forks-badge focus:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-base"
+            :aria-label="`${githubStats.forks} forks sur GitHub pour ${project.title}`"
             @click.stop
           >
             <Icon name="mdi:source-fork" class="badge-icon" />
@@ -120,8 +124,9 @@
             color="mauve"
             iconRight="heroicons:arrow-right"
             size="md"
-            class="details-button w-full justify-center font-semibold shadow-lg hover:shadow-xl"
+            class="details-button w-full justify-center font-semibold shadow-lg hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-mauve focus-visible:ring-offset-2 focus-visible:ring-offset-base"
             @click="navigateToProject($event)"
+            :aria-label="`Voir les détails du projet ${project.title}`"
           >
             Voir les détails
           </Button>
@@ -182,7 +187,6 @@ onMounted(async () => {
         }
       })
     } catch (error) {
-      console.error('Error fetching GitHub stats:', error)
     }
   }
 })
@@ -308,7 +312,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: () => JSON.stringify(projectSchema.value) // Use innerHTML for script content
+      children: JSON.stringify(projectSchema.value) // Use children instead of innerHTML for security
     }
   ]
 })
@@ -588,16 +592,36 @@ useHead({
 @media (prefers-reduced-motion: reduce) {
   .project-card,
   .project-category-badge,
-  .tech-tag {
-    transition-duration: 0.01ms !important;
+  .tech-tag,
+  .github-badge,
+  .details-button {
+    transition: none !important;
+    animation: none !important;
   }
   
   .project-card:hover {
-    transform: none;
+    transform: none !important;
   }
   
   .project-card:hover .project-category-badge {
-    transform: rotate(2deg);
+    transform: rotate(2deg) !important;
+  }
+  
+  .tech-tag:hover,
+  .github-badge:hover,
+  .details-button:hover {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  @keyframes borderGlow,
+  @keyframes techTagBounce,
+  @keyframes techTagGlow,
+  @keyframes starPulse,
+  @keyframes forkSpin {
+    to {
+      transform: none;
+    }
   }
 }
 </style>

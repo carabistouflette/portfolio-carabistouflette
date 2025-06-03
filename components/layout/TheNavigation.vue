@@ -46,7 +46,7 @@ defineEmits(['navigate']);
 // State
 const route = useRoute();
 const navRef = ref<HTMLElement>();
-const navLinkRefs = ref<any[]>([]);
+const navLinkRefs = ref<(InstanceType<typeof NavLink> | null)[]>([]);
 const activeIndex = ref<number | null>(null);
 const hoverIndex = ref<number | null>(null);
 const indicatorStyle = ref<Record<string, string> | null>(null);
@@ -86,7 +86,7 @@ const navigationItems = [
 ];
 
 // Refs management
-const setNavLinkRef = (index: number, el: any) => {
+const setNavLinkRef = (index: number, el: InstanceType<typeof NavLink> | null) => {
   navLinkRefs.value[index] = el;
 };
 

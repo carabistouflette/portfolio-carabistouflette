@@ -2,8 +2,8 @@
   <PageLoader>
     <div class="min-h-screen flex flex-col bg-base text-text relative">
       <!-- Skip to content link for accessibility -->
-      <a href="#main-content" class="skip-to-content">
-        Skip to main content
+      <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-mauve text-base px-4 py-2 rounded-md font-medium">
+        Aller au contenu principal
       </a>
       <!-- Animated background pattern -->
       <div class="fixed inset-0 overflow-hidden pointer-events-none">
@@ -37,9 +37,11 @@
       <!-- Terminal Toggle Button -->
       <button
         @click="toggleTerminal"
-        class="fixed bottom-4 right-4 z-[9999] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group"
+        class="fixed bottom-4 right-4 z-[9999] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-mauve focus:ring-offset-2 focus:ring-offset-base"
         :class="{ 'bg-surface1': isTerminalVisible }"
-        title="Toggle Terminal (Ctrl+`)"
+        :aria-label="isTerminalVisible ? 'Fermer le terminal' : 'Ouvrir le terminal'"
+        :aria-expanded="isTerminalVisible"
+        aria-controls="terminal-panel"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -156,6 +158,21 @@ useHead({
   border-radius: 50%;
   filter: blur(1px);
   box-shadow: 0 0 10px rgba(203, 166, 247, 0.3);
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none !important;
+  }
+  
+  .noise-pattern {
+    animation: none !important;
+  }
+  
+  button {
+    transition: none !important;
+  }
 }
 
 .particle-1 {

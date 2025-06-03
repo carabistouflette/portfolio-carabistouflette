@@ -20,7 +20,7 @@
     </div>
     <div class="container-custom flex items-center justify-between transition-all duration-300">
       <!-- Logo -->
-      <NuxtLink to="/" class="flex items-center space-x-3 group relative">
+      <NuxtLink to="/" class="flex items-center space-x-3 group relative focus:outline-none focus-visible:ring-2 focus-visible:ring-mauve focus-visible:ring-offset-2 focus-visible:ring-offset-base rounded-lg" aria-label="Retour à l'accueil - Alexis Robin">
         <div class="relative w-12 h-12 rounded-xl bg-gradient-to-br from-crust to-mantle border-2 border-surface2 overflow-hidden group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out shadow-lg hover:shadow-mauve/25">
           <div class="absolute inset-0 bg-gradient-to-br from-mauve/10 to-blue/10 group-hover:from-mauve/20 group-hover:to-blue/20 transition-all duration-300"></div>
           <div class="relative w-full h-full flex items-center justify-center text-white font-black text-lg group-hover:text-mauve transition-colors duration-300 drop-shadow-sm">
@@ -42,9 +42,10 @@
         
         <!-- Terminal Toggle Button -->
         <button
-          class="group relative p-2.5 rounded-xl bg-surface0/50 hover:bg-surface0 text-text hover:text-green transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-green/25"
+          class="group relative p-2.5 rounded-xl bg-surface0/50 hover:bg-surface0 text-text hover:text-green transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-green/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-green focus-visible:ring-offset-2 focus-visible:ring-offset-base"
           @click="toggleTerminalHandler"
-          aria-label="Toggle terminal"
+          aria-label="Ouvrir le terminal (Ctrl+`)"
+          title="Terminal (Ctrl+`)"
         >
           <Icon name="heroicons:command-line" class="w-5 h-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3" />
           <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-green/20 to-teal/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -57,9 +58,10 @@
       <div class="flex items-center space-x-2 md:hidden">
         <!-- Terminal Toggle Button (Mobile) -->
         <button
-          class="group p-2.5 rounded-xl bg-surface0/50 hover:bg-surface0 text-text hover:text-green transition-all duration-300"
+          class="group p-2.5 rounded-xl bg-surface0/50 hover:bg-surface0 text-text hover:text-green transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-green focus-visible:ring-offset-2 focus-visible:ring-offset-base"
           @click="toggleTerminalHandler"
-          aria-label="Toggle terminal"
+          aria-label="Ouvrir le terminal (Ctrl+`)"
+          title="Terminal (Ctrl+`)"
         >
           <Icon name="heroicons:command-line" class="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
         </button>
@@ -76,7 +78,7 @@
     <Transition name="mobile-menu">
       <div
         v-if="isMobileMenuOpen"
-        class="md:hidden absolute top-full left-0 right-0 bg-base/98 backdrop-blur-xl border-b border-surface0 shadow-2xl"
+        class="md:hidden absolute top-full left-0 right-0 bg-base backdrop-blur-xl border-b border-surface0 shadow-2xl"
       >
         <div class="container-custom py-6">
           <TheNavigation mobile @navigate="closeMobileMenu" />
@@ -136,7 +138,6 @@ const toggleTerminalHandler = () => {
     toggleTerminal()
     closeMobileMenu() // Close mobile menu if open when terminal is toggled
   } else {
-    console.warn('toggleTerminal function not provided')
   }
 }
 
@@ -242,9 +243,30 @@ onBeforeUnmount(() => {
 }
 
 /* Smooth focus states */
+*:focus {
+  outline: none;
+}
+
 *:focus-visible {
   outline: 2px solid var(--mauve);
   outline-offset: 2px;
   border-radius: 0.5rem;
+  transition: outline-offset 0.2s ease;
+}
+
+button:focus-visible {
+  outline-offset: 4px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .header-particle {
+    animation: none;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
 </style>

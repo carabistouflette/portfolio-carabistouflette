@@ -22,10 +22,40 @@ interface MapComponentProps {
 
 const props = defineProps<MapComponentProps>();
 
+// Type definitions for Leaflet (local types since we're dynamically importing)
+type LeafletMap = {
+  remove: () => void;
+  invalidateSize: () => void;
+};
+
+type LeafletModule = {
+  map: (element: HTMLElement) => {
+    setView: (center: [number, number], zoom: number) => LeafletMap;
+  };
+  tileLayer: (url: string, options: Record<string, unknown>) => {
+    on: (event: string, handler: (error?: unknown) => void) => void;
+    setUrl: (url: string) => void;
+    addTo: (map: LeafletMap) => void;
+  };
+  marker: (position: [number, number]) => {
+    addTo: (map: LeafletMap) => {
+      bindPopup: (content: string) => {
+        openPopup: () => void;
+      };
+    };
+  };
+  Icon: {
+    Default: {
+      prototype: Record<string, unknown>;
+      mergeOptions: (options: Record<string, string>) => void;
+    };
+  };
+};
+
 const mapContainer = ref<HTMLElement | null>(null);
 const mapLoaded = ref(false);
-let map: any = null;
-let L: any = null;
+let map: LeafletMap | null = null;
+let L: LeafletModule | null = null;
 
 onMounted(async () => {
   if (typeof window !== 'undefined') {
@@ -35,7 +65,7 @@ onMounted(async () => {
       await import('leaflet/dist/leaflet.css');
 
       // Fix default marker icon
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
         iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -65,12 +95,10 @@ onMounted(async () => {
         }
       });
 
-      tileLayer.on('tileerror', (error: any) => {
+      tileLayer.on('tileerror', (error: unknown) => {
         tilesErrored++;
-        console.error('Tile error:', error);
         // If too many errors, try fallback
         if (tilesErrored > 5 && tilesLoaded === 0) {
-          console.log('Too many tile errors, trying fallback...');
           tileLayer.setUrl('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
         }
       });
@@ -91,7 +119,6 @@ onMounted(async () => {
       }, 250);
 
     } catch (error) {
-      console.error('Map initialization error:', error);
       mapLoaded.value = false;
     }
   }

@@ -274,9 +274,9 @@ const submitForm = async (event: Event) => {
     }
 // Ensures the hidden field is cleared for any subsequent (though unlikely) interactions.
 
-  } catch (err: any) { // Catch network errors or errors thrown from the !response.ok block
-    console.error('Form submission error:', err);
-    error.value = err.message || 'An error occurred while sending your message. Please check your connection and try again.';
+  } catch (err: unknown) { // Catch network errors or errors thrown from the !response.ok block
+    const errorMessage = err instanceof Error ? err.message : 'An error occurred while sending your message. Please check your connection and try again.';
+    error.value = errorMessage;
     isSuccess.value = false;
   } finally {
     // Ensure loading state is always reset, whether the submission succeeded or failed.

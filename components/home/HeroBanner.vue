@@ -95,7 +95,7 @@
                 <div class="profile-inner absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
                 <img 
                   :src="props.profileImage" 
-                  alt="Photo de profil d'Alexis Robin, développeur full stack" 
+                  alt="Logo personnel d'Alexis Robin, développeur full stack et étudiant en informatique" 
                   class="w-32 h-32 relative z-20 profile-image"
                   loading="eager"
                   importance="high"

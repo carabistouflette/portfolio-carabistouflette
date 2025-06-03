@@ -85,7 +85,7 @@ const containerClasses = computed(() => [
 
 // Scroll reveal setup
 const { registerElement } = useScrollReveal({
-  direction: props.direction as any,
+  direction: props.direction,
   delay: props.delay,
   duration: props.duration,
   distance: props.distance,

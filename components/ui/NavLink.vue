@@ -101,14 +101,14 @@ const navLinkClasses = computed(() => {
 });
 
 // Magnetic Effect Setup
-const elementRef = ref<any>(null); // Can be NuxtLink instance
+const elementRef = ref<HTMLElement | { $el: HTMLElement } | null>(null); // Can be NuxtLink instance
 const htmlElementRef = ref<HTMLElement | null>(null); // Explicitly for the HTML element
 
 // Watch the primary ref and extract the actual HTML element once mounted
 watch(elementRef, (newVal) => {
   if (newVal) {
     // If newVal has $el (like a component instance), use $el
-    htmlElementRef.value = newVal.$el instanceof HTMLElement ? newVal.$el : null;
+    htmlElementRef.value = newVal && '$el' in newVal && newVal.$el instanceof HTMLElement ? newVal.$el : null;
   } else {
     htmlElementRef.value = null;
   }

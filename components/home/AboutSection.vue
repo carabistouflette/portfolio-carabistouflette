@@ -31,7 +31,7 @@
                 }
               ]"
             >
-              <span v-html="paragraph"></span>
+              {{ paragraph }}
             </p>
           </div>
           
@@ -127,13 +127,13 @@ const firstParagraph = ref<HTMLElement | null>(null)
 const skillCardRefs = ref<HTMLElement[]>([])
 
 // Function ref to collect skill card elements
-const setSkillCardRef = (el: any, index: number) => {
+const setSkillCardRef = (el: HTMLElement | { $el: HTMLElement } | null, index: number) => {
   if (el) {
     // Ensure the array is the correct size
     if (skillCardRefs.value.length <= index) {
       skillCardRefs.value.length = index + 1;
     }
-    skillCardRefs.value[index] = el.$el || el // Access underlying element if it's a component instance
+    skillCardRefs.value[index] = '$el' in el ? el.$el : el // Access underlying element if it's a component instance
   }
 }
 

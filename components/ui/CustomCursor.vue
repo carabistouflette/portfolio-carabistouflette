@@ -241,7 +241,7 @@ const handleElementHover = (event: MouseEvent) => {
   const customIcon = target.getAttribute('data-cursor-icon')
   const customColor = target.getAttribute('data-cursor-color')
   
-  if (customType) cursorState.value.cursorType = customType as any
+  if (customType) cursorState.value.cursorType = customType as CursorState['cursorType']
   if (customText) cursorState.value.text = customText
   if (customIcon) cursorState.value.icon = customIcon
   if (customColor) cursorState.value.color = customColor

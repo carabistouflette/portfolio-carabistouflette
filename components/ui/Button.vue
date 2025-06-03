@@ -142,14 +142,14 @@ const buttonClasses = computed(() => {
 });
 
 // Magnetic Effect Setup
-const elementRef = ref<any>(null); // Can be NuxtLink instance or button element
+const elementRef = ref<HTMLElement | { $el: HTMLElement } | null>(null); // Can be NuxtLink instance or button element
 const htmlElementRef = ref<HTMLElement | null>(null); // Explicitly for the HTML element
 
 // Watch the primary ref and extract the actual HTML element once mounted
 watch(elementRef, (newVal) => {
   if (newVal) {
     // If newVal has $el (like a component instance), use $el, otherwise assume newVal is the element
-    htmlElementRef.value = newVal.$el instanceof HTMLElement ? newVal.$el : newVal instanceof HTMLElement ? newVal : null;
+    htmlElementRef.value = newVal && '$el' in newVal && newVal.$el instanceof HTMLElement ? newVal.$el : newVal instanceof HTMLElement ? newVal : null;
   } else {
     htmlElementRef.value = null;
   }
@@ -175,7 +175,7 @@ const handleClick = (event: MouseEvent) => {
     
     // Create ripple effect
     if (rippleRef.value && elementRef.value) {
-      const button = elementRef.value.$el || elementRef.value;
+      const button = '$el' in elementRef.value ? elementRef.value.$el : elementRef.value;
       const rect = button.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
