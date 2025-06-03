@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build && node scripts/optimize-assets.js",
-    "pages:build": "NITRO_PRESET=cloudflare-pages nuxt build && node scripts/optimize-assets.js",
+    "pages:build": "nuxt generate --config nuxt.config.cloudflare.ts && node scripts/optimize-assets.js",
     "dev": "nuxt dev",
     "generate": "nuxt generate && node scripts/optimize-assets.js",
     "preview": "nuxt preview",

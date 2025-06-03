@@ -68,28 +68,16 @@ export default defineNuxtConfig({
       ]
     },
   
-    // Optimisation pour Cloudflare Pages
+    // Optimisation pour Cloudflare Pages - Mode statique uniquement
     nitro: {
-      preset: 'cloudflare-pages',
-      output: {
-        dir: '.output',
-        publicDir: '.output/public'
-      },
+      preset: 'cloudflare-pages-static',
       prerender: {
         routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
-      },
-      // Polyfills et configuration sp\u00e9cifique
-      externals: {
-        external: ['whatwg-url', 'node:url', 'node:buffer', 'node:util', 'node:querystring', 'node:stream'],
-        traceInclude: ['node_modules']
-      },
-      rollupConfig: {
-        output: {
-          entryFileNames: '_worker.js',
-          format: 'esm'
-        }
       }
     },
+    
+    // D\u00e9sactiver SSR pour Cloudflare
+    ssr: false,
   
     // Configuration de TypeScript
     typescript: {
