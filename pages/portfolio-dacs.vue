@@ -355,7 +355,7 @@ const apprentissagesCritiques = ref([
         title: 'Organiser la restitution de données à travers la programmation et la visualisation',
         justification: 'J\'ai développé une intégration complète entre les bases de données et les applications Java/Spring, avec mise en place de contraintes d\'intégrité et de politiques de sécurité strictes.',
         exemples: [
-          'Intégration JPA/Hibernate avec Spring Boot',
+          'Intégration complète base de données avec Spring Boot',
           'API REST pour la restitution des données',
           'Tableaux de bord pour la visualisation des statistiques'
         ]
@@ -410,7 +410,7 @@ const apprentissagesCritiques = ref([
         title: 'Définir et mettre en œuvre une démarche de suivi de projet',
         justification: 'La collaboration étroite en équipe sur l\'ensemble des projets universitaires m\'a permis de maîtriser le suivi de projet. J\'ai géré efficacement les retours clients et les ajustements nécessaires.',
         exemples: [
-          'Mise en place de tableaux Kanban pour le suivi',
+          'Mise en place d\'outils de suivi de projet structurés',
           'Organisation de réunions de sprint hebdomadaires',
           'Gestion des livrables et du versioning avec Git'
         ]
