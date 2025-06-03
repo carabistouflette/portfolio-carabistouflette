@@ -1,4 +1,5 @@
 import { defineEventHandler, readBody, createError } from 'h3';
+import { createRateLimiter } from '~/server/utils/rateLimiter';
 
 interface ContactRequestBody {
   name: string;
@@ -12,14 +13,22 @@ interface ContactRequestBody {
 // Basic email validation regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Créer le rate limiter pour l'endpoint de contact
+const rateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // Maximum 3 messages par IP toutes les 15 minutes
+  message: 'Trop de messages envoyés. Veuillez réessayer dans 15 minutes.'
+});
+
 export default defineEventHandler(async (event) => {
+  // Appliquer le rate limiting
+  await rateLimiter(event);
   try {
     const body = await readBody<ContactRequestBody>(event);
 
     // 1. Honeypot Check
     // Ensure the honeypot field name matches the one added to the form
     if (body.honeypot && body.honeypot.length > 0) {
-      console.log('Honeypot field filled, likely spam.');
       // Return a generic success response to confuse bots
 // Return a generic success response even if the honeypot is filled.
       // This prevents bots from easily identifying that their submission was blocked based on the honeypot field.
@@ -57,13 +66,12 @@ export default defineEventHandler(async (event) => {
     }
 
     // 4. Process Valid Submission
-    const recipientEmail = 'arobin9999@gmail.com';
+    const recipientEmail = process.env.RECIPIENT_EMAIL || event.context.cloudflare?.env?.RECIPIENT_EMAIL || 'contact@example.com';
     
     // Get the API key from environment
     const resendApiKey = process.env.RESEND_API_KEY || event.context.cloudflare?.env?.RESEND_API_KEY;
     
     if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured');
       throw createError({
         statusCode: 500,
         statusMessage: 'Email service not configured',
@@ -96,17 +104,14 @@ export default defineEventHandler(async (event) => {
 
       if (!emailResponse.ok) {
         const errorData = await emailResponse.json();
-        console.error('Resend API error:', errorData);
         throw new Error('Email service error');
       }
 
       const result = await emailResponse.json();
-      console.log('Email sent successfully:', result);
 
       // 5. Return Success Response
       return { success: true, message: 'Message sent successfully!' };
     } catch (emailError) {
-      console.error('Failed to send email:', emailError);
       throw createError({
         statusCode: 500,
         statusMessage: 'Failed to send email',
@@ -122,7 +127,6 @@ export default defineEventHandler(async (event) => {
        throw error;
     }
     
-    console.error('Error processing contact form:', error);
     throw createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

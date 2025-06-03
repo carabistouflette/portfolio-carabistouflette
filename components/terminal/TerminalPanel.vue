@@ -39,10 +39,10 @@
     
     <div class="terminal-content h-[calc(100%-40px)] px-4 pb-4 flex flex-col">
       <div ref="outputArea" class="terminal-output flex-grow overflow-y-auto mb-2 text-text pr-2">
-        <div v-for="(line, index) in outputLines" :key="index" v-html="line"></div>
+        <div v-for="(line, index) in outputLines" :key="index" v-html="sanitizeTerminal(line)"></div>
       </div>
       <div class="terminal-input flex items-center h-8">
-        <span class="prompt text-subtext0 mr-2" v-html="prompt"></span>
+        <span class="prompt text-subtext0 mr-2" v-html="sanitizeTerminal(prompt)"></span>
         <input
           ref="inputFieldRef"
           v-model="commandInput"
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, computed, onMounted } from 'vue'
 import { useTerminal } from '~/composables/useTerminal'
+import { useSanitize } from '~/composables/useSanitize'
 
 const props = defineProps({
   isVisible: {
@@ -74,6 +75,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const { currentDirectory, executeCommand } = useTerminal()
+const { sanitizeTerminal } = useSanitize()
 
 const commandInput = ref('')
 const outputLines = ref<string[]>([
