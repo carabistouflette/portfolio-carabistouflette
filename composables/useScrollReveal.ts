@@ -82,6 +82,12 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
 
   // Apply initial styles to element
   const applyInitialStyles = (element: HTMLElement) => {
+    // Skip animation for project pages to fix display issue
+    if (typeof window !== 'undefined' && window.location.pathname.includes('/projects/')) {
+      Object.assign(element.style, getFinalStyles())
+      element.classList.add(animationClass)
+      return
+    }
     const styles = getInitialStyles(direction)
     Object.assign(element.style, styles)
   }
@@ -109,6 +115,19 @@ export const useScrollReveal = (options: ScrollRevealOptions = {}) => {
 
   // Register element for observation
   const registerElement = (element: HTMLElement | HTMLElement[]) => {
+    // Skip animation entirely for project pages
+    if (typeof window !== 'undefined' && window.location.pathname.includes('/projects/')) {
+      const elementsArray = Array.isArray(element) ? element : [element]
+      elementsArray.forEach((el) => {
+        if (el) {
+          Object.assign(el.style, getFinalStyles())
+          el.classList.add(animationClass)
+          el.classList.add('revealed')
+        }
+      })
+      return
+    }
+    
     if (!observer.value) return
 
     const elementsArray = Array.isArray(element) ? element : [element]

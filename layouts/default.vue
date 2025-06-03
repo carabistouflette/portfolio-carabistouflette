@@ -1,6 +1,8 @@
 <template>
-  <PageLoader>
-    <div class="min-h-screen flex flex-col bg-base text-text relative">
+  <!-- Temporarily disable PageLoader for debugging -->
+  <div v-if="!isProjectPage">
+    <PageLoader>
+      <div class="min-h-screen flex flex-col bg-base text-text relative">
       <!-- Skip to content link for accessibility -->
       <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-mauve text-base px-4 py-2 rounded-md font-medium">
         Aller au contenu principal
@@ -68,16 +70,91 @@
         </Teleport>
       </ClientOnly>
     </div>
-  </PageLoader>
+    </PageLoader>
+  </div>
+  <!-- Direct rendering for project pages -->
+  <div v-else class="min-h-screen flex flex-col bg-base text-text relative">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-mauve text-base px-4 py-2 rounded-md font-medium">
+      Aller au contenu principal
+    </a>
+    <!-- Animated background pattern -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute w-full h-full">
+        <!-- Floating particles -->
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        
+        <!-- Gradient mesh -->
+        <div class="absolute inset-0 opacity-20">
+          <div class="noise-pattern"></div>
+        </div>
+      </div>
+    </div>
+    
+    <TheHeader class="relative z-20" />
+    <main id="main-content" class="flex-grow relative z-10" tabindex="-1">
+      <slot />
+    </main>
+    <TheFooter
+      class="relative z-10"
+      :social-links="{
+        linkedin: 'https://linkedin.com/in/alexis-robin-41703a2ab',
+        email: 'mailto:alexis.robin@etu.umontpellier.fr',
+        phone: 'tel:+33761460496'
+      }"
+    />
+    
+    <!-- Terminal Toggle Button -->
+    <button
+      @click="toggleTerminal"
+      class="fixed bottom-4 right-4 z-[9999] bg-surface0 hover:bg-surface1 text-text p-3 rounded-lg shadow-lg transition-all duration-200 hover:scale-105 group focus:outline-none focus:ring-2 focus:ring-mauve focus:ring-offset-2 focus:ring-offset-base"
+      :class="{ 'bg-surface1': isTerminalVisible }"
+      :aria-label="isTerminalVisible ? 'Fermer le terminal' : 'Ouvrir le terminal'"
+      :aria-expanded="isTerminalVisible"
+      aria-controls="terminal-panel"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <span class="absolute -top-8 right-0 bg-surface2 text-text text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        Terminal (Ctrl+`)
+      </span>
+    </button>
+    
+    <!-- Simple Cursor -->
+    <ClientOnly>
+      <Teleport to="body">
+        <SimpleCursor :enabled="true" />
+      </Teleport>
+    </ClientOnly>
+    
+    <!-- Terminal Panel -->
+    <ClientOnly>
+      <Teleport to="body">
+        <TerminalPanel 
+          :is-visible="isTerminalVisible" 
+          @close="isTerminalVisible = false"
+        />
+      </Teleport>
+    </ClientOnly>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, provide, onMounted, onUnmounted } from 'vue'
+import { ref, provide, onMounted, onUnmounted, computed } from 'vue'
+import { useRoute } from '#app'
 import TerminalPanel from '~/components/terminal/TerminalPanel.vue'
 import PageLoader from '~/components/layout/PageLoader.vue'
 import SimpleCursor from '~/components/ui/SimpleCursor.vue'
 import { useScrollRevealList } from '~/composables/useScrollReveal'
 import { usePageTransitions } from '~/composables/usePageTransitions'
+
+// Check if we're on a project page
+const route = useRoute()
+const isProjectPage = computed(() => route.path.includes('/projects/'))
 
 // Terminal state
 const isTerminalVisible = ref(false)

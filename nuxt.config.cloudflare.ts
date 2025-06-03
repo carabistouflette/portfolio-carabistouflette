@@ -77,7 +77,7 @@ export default defineNuxtConfig({
         publicDir: '.output/public'
       },
       prerender: {
-        routes: ['/', '/projects', '/contact']
+        routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
       }
     },
   

@@ -125,11 +125,11 @@ const projects = ref([
   },
   {
     id: 6,
-    title: 'Dashboard analytique',
-    description: 'Tableau de bord interactif pour la visualisation de données. Graphiques temps réel et export de rapports.',
-    category: 'Développement Web',
-    technologies: ['React', 'D3.js', 'Node.js'],
-    hasDetailsPage: false
+    title: 'Jeu Train - Java/JavaFX',
+    description: 'Projet universitaire (SAE) implémentant le jeu de société Train. Application des principes de POO et développement d\'IHM avec JavaFX.',
+    category: 'Développement Logiciel',
+    technologies: ['Java', 'JavaFX', 'POO', 'IHM'],
+    hasDetailsPage: true
   }
 ])
 
@@ -145,7 +145,9 @@ const categoryClasses: Record<string, string> = {
   'Administration Réseau': 'bg-green/20 text-green',
   'Base de Données': 'bg-yellow/20 text-yellow',
   'Web': 'bg-mauve/20 text-mauve',
-  'Sécurité & Cryptographie': 'bg-red/20 text-red'
+  'Sécurité & Cryptographie': 'bg-red/20 text-red',
+  'Développement Logiciel': 'bg-lavender/20 text-lavender',
+  'Développement Web': 'bg-sapphire/20 text-sapphire'
 }
 
 // Filtered projects based on search and category filters
@@ -191,7 +193,8 @@ const navigateToProject = async (projectId: number) => {
     await navigateTo('/projects/bulk-csv-smag')
   } else if (projectId === 4) {
     await navigateTo('/projects/voting-app')
-  } else {
+  } else if (projectId === 6) {
+    await navigateTo('/projects/train-game')
   }
 }
 

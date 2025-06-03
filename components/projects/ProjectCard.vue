@@ -205,7 +205,9 @@ const categoryClass = computed(() => {
     'Programmation Bas Niveau': 'category-lowlevel',
     'Administration Réseau': 'category-network',
     'Base de Données': 'category-database',
-    'Web': 'category-web'
+    'Web': 'category-web',
+    'Sécurité & Cryptographie': 'category-security',
+    'Développement Logiciel': 'category-software'
   }
   
   return categories[props.project.category as keyof typeof categories] || 'category-default'
@@ -381,6 +383,18 @@ useHead({
   background: linear-gradient(135deg, rgba(203, 166, 247, 0.2), rgba(203, 166, 247, 0.3));
   color: var(--mauve);
   border-color: rgba(203, 166, 247, 0.3);
+}
+
+.category-security {
+  background: linear-gradient(135deg, rgba(243, 139, 168, 0.2), rgba(243, 139, 168, 0.3));
+  color: var(--red);
+  border-color: rgba(243, 139, 168, 0.3);
+}
+
+.category-software {
+  background: linear-gradient(135deg, rgba(180, 190, 254, 0.2), rgba(180, 190, 254, 0.3));
+  color: var(--lavender);
+  border-color: rgba(180, 190, 254, 0.3);
 }
 
 .category-default {

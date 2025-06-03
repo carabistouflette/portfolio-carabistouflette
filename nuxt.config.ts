@@ -101,7 +101,7 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: ['/', '/projects', '/contact']
+      routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
     }
   },
 
@@ -128,7 +128,7 @@ export default defineNuxtConfig({
   sitemap: {
     hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com',
     gzip: true,
-    routes: ['/', '/projects', '/contact']
+    routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
   },
 
   runtimeConfig: { // Added runtime configuration

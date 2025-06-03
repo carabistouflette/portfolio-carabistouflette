@@ -29,9 +29,9 @@
     
     <!-- Page content with animation -->
     <div 
-      v-show="!isLoading"
+      v-show="!isLoading || isProjectPage"
       class="page-content"
-      :class="{ 'content-ready': contentReady }"
+      :class="{ 'content-ready': contentReady || isProjectPage }"
     >
       <slot />
     </div>
@@ -41,11 +41,16 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { usePageReady } from '~/composables/usePageReady'
+import { useRoute } from '#app'
 
 const { setPageReady } = usePageReady()
-const isLoading = ref(true)
+const route = useRoute()
+
+// Disable loader for project pages to fix display issue
+const isProjectPage = computed(() => route.path.includes('/projects/'))
+const isLoading = ref(!isProjectPage.value)
 const progress = ref(0)
-const contentReady = ref(false)
+const contentReady = ref(isProjectPage.value)
 
 const loadingTexts = [
   'Initializing...',
@@ -68,6 +73,15 @@ const onLoaderHidden = () => {
 
 onMounted(async () => {
   await nextTick()
+  
+  // If it's a project page, set everything as ready immediately
+  if (isProjectPage.value) {
+    isLoading.value = false
+    contentReady.value = true
+    progress.value = 100
+    setPageReady(true)
+    return
+  }
   
   // Simulate progress while loading resources
   let currentProgress = 0
@@ -122,12 +136,14 @@ onMounted(async () => {
       })
     )
     
-    // Minimum loading time
-    await new Promise(resolve => setTimeout(resolve, 500))
+    // Minimum loading time (shorter for project pages)
+    const minLoadTime = isProjectPage.value ? 200 : 500
+    await new Promise(resolve => setTimeout(resolve, minLoadTime))
   }
   
-  const maxLoadTime = 5000
+  const maxLoadTime = 3000
   const loadingTimeout = setTimeout(() => {
+    console.warn('PageLoader: Force hiding loader after timeout')
     isLoading.value = false
   }, maxLoadTime)
   
