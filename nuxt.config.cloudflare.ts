@@ -72,12 +72,22 @@ export default defineNuxtConfig({
     nitro: {
       preset: 'cloudflare-pages',
       output: {
-        dir: '.output/public',
-        serverDir: '.output/public/_worker.js',
+        dir: '.output',
         publicDir: '.output/public'
       },
       prerender: {
         routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
+      },
+      // Polyfills et configuration sp\u00e9cifique
+      externals: {
+        external: ['whatwg-url', 'node:url', 'node:buffer', 'node:util', 'node:querystring', 'node:stream'],
+        traceInclude: ['node_modules']
+      },
+      rollupConfig: {
+        output: {
+          entryFileNames: '_worker.js',
+          format: 'esm'
+        }
       }
     },
   
