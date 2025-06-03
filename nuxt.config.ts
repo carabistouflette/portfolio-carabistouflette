@@ -11,7 +11,9 @@ export default defineNuxtConfig({
   ],
 
   icon: {
-    collections: ['heroicons', 'mdi', 'logos', 'simple-icons']
+    serverBundle: {
+      collections: ['heroicons', 'mdi', 'logos', 'simple-icons', 'vscode-icons']
+    }
   },
 
   image: {
