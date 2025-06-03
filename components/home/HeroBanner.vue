@@ -1,20 +1,20 @@
 <template>
   <section 
     ref="sectionRef" 
-    class="relative py-section-padding-md md:py-section-padding-lg overflow-hidden hero-section" 
+    class="relative py-12 md:py-section-padding-lg overflow-hidden hero-section min-h-screen flex items-center" 
     @scroll="handleScroll"
     aria-label="Section d'introduction avec profil et présentation"
   >
     <!-- Enhanced background decoration -->
     <div ref="backgroundRef" class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- Animated gradient orbs with parallax -->
-      <div class="parallax-orb absolute top-1/4 right-1/4 w-96 h-96" data-speed="0.5">
+      <div class="parallax-orb absolute top-1/4 right-1/4 w-64 md:w-96 h-64 md:h-96" data-speed="0.5">
         <div class="orb-gradient orb-1"></div>
       </div>
-      <div class="parallax-orb absolute bottom-1/4 left-1/4 w-64 h-64" data-speed="0.3">
+      <div class="parallax-orb absolute bottom-1/4 left-1/4 w-48 md:w-64 h-48 md:h-64" data-speed="0.3">
         <div class="orb-gradient orb-2"></div>
       </div>
-      <div class="parallax-orb absolute top-3/4 right-1/3 w-80 h-80" data-speed="0.7">
+      <div class="parallax-orb absolute top-3/4 right-1/3 w-56 md:w-80 h-56 md:h-80" data-speed="0.7">
         <div class="orb-gradient orb-3"></div>
       </div>
       
@@ -50,24 +50,61 @@
 
     <div class="container-custom relative z-10">
       <div class="flex flex-col items-center text-center md:flex-row md:text-left md:justify-between">
+        <!-- Mobile Profile (shown only on mobile) -->
+        <div class="mobile-profile block md:hidden mt-8 mb-12 order-first hero-animate-item hero-delay-1">
+          <div class="relative profile-container-mobile mx-auto">
+            <!-- Glow effect background -->
+            <div class="absolute inset-0 -inset-4">
+              <div class="absolute inset-0 bg-gradient-to-r from-mauve via-blue to-peach rounded-full blur-2xl opacity-40 animate-pulse-slow"></div>
+            </div>
+            
+            <div class="profile-wrapper-mobile">
+              <div class="profile-circle-mobile w-48 h-48 rounded-full mx-auto flex items-center justify-center relative z-10" @click="handleLogoClick">
+                <div class="profile-inner-mobile absolute inset-0 rounded-full bg-gradient-to-br from-mauve via-blue to-lavender"></div>
+                <img 
+                  :src="props.profileImage" 
+                  alt="Logo personnel d'Alexis Robin, développeur full stack et étudiant en informatique" 
+                  class="w-24 h-24 relative z-20 profile-image drop-shadow-2xl"
+                  loading="eager"
+                  importance="high"
+                >
+                <div class="profile-glow-mobile absolute inset-0 rounded-full"></div>
+                <!-- Extra shine layer -->
+                <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 via-transparent to-transparent"></div>
+              </div>
+            </div>
+            
+            <!-- Enhanced mobile decorative elements -->
+            <div class="float-element-mobile absolute -top-6 -right-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-peach to-yellow rounded-full blur-md opacity-80"></div>
+            </div>
+            <div class="float-element-mobile absolute -bottom-6 -left-6" style="animation-delay: 1.5s;">
+              <div class="w-20 h-20 bg-gradient-to-tr from-green to-teal rounded-full blur-md opacity-80"></div>
+            </div>
+            <div class="float-element-mobile absolute top-1/2 -right-10 -translate-y-1/2" style="animation-delay: 0.7s;">
+              <div class="w-10 h-10 bg-gradient-to-bl from-sapphire to-blue rounded-full blur-sm opacity-70"></div>
+            </div>
+          </div>
+        </div>
+        
         <div class="md:w-7/12 space-y-gap-md">
-          <h1 class="font-bold leading-tight hero-animate-item !text-4xl md:!text-5xl lg:!text-6xl">
-            <span class="gradient-text gradient-animate typing-text" ref="titleRef">{{ displayedTitle }}</span>
+          <h1 class="font-bold leading-tight hero-animate-item !text-5xl sm:!text-6xl md:!text-5xl lg:!text-6xl mb-4 text-text">
+            <span class="gradient-text gradient-animate typing-text block sm:inline" ref="titleRef">{{ displayedTitle }}</span>
             <span class="typing-cursor" v-if="isTyping">|</span>
           </h1>
-          <h2 class="!text-xl md:!text-2xl font-medium text-subtext0 mb-gap-lg hero-animate-item hero-delay-1">
+          <h2 class="!text-lg sm:!text-xl md:!text-2xl font-medium text-subtext0 mb-6 hero-animate-item hero-delay-1 px-4 sm:px-0">
             {{ props.subtitle }}
           </h2>
-          <p class="text-lg mb-gap-lg max-w-2xl hero-animate-item hero-delay-2">
+          <p class="text-base sm:text-lg mb-8 max-w-2xl hero-animate-item hero-delay-2 px-4 sm:px-0 leading-relaxed text-subtext0">
             {{ props.description }}
           </p>
-          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-gap-md hero-animate-item hero-delay-3">
+          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4 hero-animate-item hero-delay-3 mt-12 mb-16 sm:mb-0">
             <Button 
               :to="props.primaryButton.to" 
               variant="solid" 
               color="mauve" 
               :iconRight="props.primaryButton.iconRight"
-              class="ripple-button"
+              class="ripple-button w-full sm:w-auto px-8 py-3 text-base"
               @click="createRipple"
               :aria-label="`${props.primaryButton.text} - Accéder à la page des projets`"
             >
@@ -77,7 +114,7 @@
               v-if="props.secondaryButton" 
               :to="props.secondaryButton.to" 
               variant="outline"
-              class="ripple-button"
+              class="ripple-button w-full sm:w-auto px-8 py-3 text-base"
               @click="createRipple"
               :aria-label="`${props.secondaryButton.text} - Navigation secondaire`"
             >
@@ -161,7 +198,7 @@ const titleRef = ref<HTMLElement>();
 // Typing animation state
 const displayedTitle = ref('');
 const isTyping = ref(true);
-const typingSpeed = 150; // Ralenti de 80ms à 150ms
+const typingSpeed = 100; // Ajusté pour mobile
 
 // Scroll progress state
 const scrollProgress = ref(0);
@@ -202,7 +239,7 @@ const detectDeviceCapabilities = () => {
 
 const getOptimalParticleCount = () => {
   if (!shouldAnimate.value) return 0
-  return isMobile.value ? 8 : 20
+  return isMobile.value ? 5 : 20
 }
 
 const getAnimationSmoothness = () => {
@@ -903,7 +940,7 @@ html {
 
 .typing-cursor {
   display: inline-block;
-  background-color: var(--text);
+  background-color: #cdd6f4;
   width: 2px;
   margin-left: 2px;
   animation: typingBlink 1s infinite;
@@ -991,6 +1028,114 @@ html {
   opacity: 0.25;
 }
 
+/* Hero section mobile optimization */
+@media (max-width: 640px) {
+  .hero-section {
+    min-height: calc(100vh - 60px);
+  }
+}
+
+/* Mobile Profile Styles */
+.mobile-profile {
+  order: -1;
+}
+
+.profile-container-mobile {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.profile-wrapper-mobile {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.profile-circle-mobile {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35),
+              0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: var(--surface0);
+}
+
+.profile-circle-mobile:active {
+  transform: scale(0.95);
+}
+
+.profile-inner-mobile {
+  animation: profileRotate 30s linear infinite;
+  opacity: 0.95;
+}
+
+.profile-glow-mobile {
+  background: radial-gradient(circle at center, 
+    rgba(203, 166, 247, 0.9), 
+    rgba(137, 180, 250, 0.7) 40%, 
+    rgba(250, 179, 135, 0.4) 70%, 
+    transparent 100%);
+  filter: blur(25px);
+  animation: pulseGlowMobile 3s ease-in-out infinite;
+  transform: scale(1.1);
+}
+
+@keyframes pulseGlowMobile {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.float-element-mobile {
+  animation: floatMobile 4s ease-in-out infinite;
+}
+
+@keyframes floatMobile {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) translateX(5px) scale(1.1);
+  }
+}
+
+/* Mobile orb adjustments */
+@media (max-width: 768px) {
+  .orb-gradient {
+    filter: blur(30px) saturate(150%);
+    opacity: 0.4;
+  }
+  
+  .mesh-gradient {
+    opacity: 0.6;
+    filter: blur(40px) saturate(130%);
+    background-size: 300% 300%;
+  }
+  
+  .bg-grid-pattern {
+    opacity: 0.08;
+    background-size: 25px 25px;
+    transform: perspective(400px) rotateX(45deg);
+  }
+  
+  /* Add mobile-specific gradient animation */
+  @keyframes mobileGradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    25% { background-position: 50% 0%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 100%; }
+  }
+  
+  .gradient-animate {
+    animation: mobileGradientShift 10s ease-in-out infinite;
+  }
+}
+
 /* Responsive enhancements */
 @media (max-width: 768px) {
   .particle {
@@ -1016,6 +1161,40 @@ html {
   .profile-container:hover {
     transform: none;
   }
+  
+  /* Mobile-specific text adjustments */
+  .gradient-animate {
+    background-size: 200% 200%;
+    animation-duration: 6s;
+  }
+  
+  .typing-cursor {
+    width: 3px;
+    height: 1.2em;
+  }
+  
+  /* Improve button touch targets */
+  .ripple-button {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  /* Stagger delays adjusted for mobile */
+  .hero-delay-1 { animation-delay: 0.05s; }
+  .hero-delay-2 { animation-delay: 0.1s; }
+  .hero-delay-3 { animation-delay: 0.15s; }
+  .hero-delay-4 { animation-delay: 0.2s; }
+  
+  /* Faster animations on mobile */
+  .hero-animate-item {
+    animation-duration: 0.6s;
+  }
+  
+  /* Enhanced mobile particle styles */
+  .particle {
+    box-shadow: 0 0 20px currentColor;
+  }
+  
 }
 
 /* Reduced motion preferences */
