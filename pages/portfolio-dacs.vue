@@ -364,8 +364,8 @@ const apprentissagesCritiques = ref([
         title: 'Manipuler des données hétérogènes',
         justification: 'Le projet médiathèque m\'a permis de gérer différents types de données : utilisateurs, catalogues de livres, historiques d\'emprunts, chacun avec ses spécificités et contraintes.',
         exemples: [
-          'Gestion de données multimédias (livres, CD, DVD)',
-          'Intégration de données externes (ISBN, APIs catalogues)',
+          'Gestion de différents types de données structurées',
+          'Traitement et modification d\'images dans les applications',
           'Traitement de formats hétérogènes (JSON, XML, CSV)'
         ]
       }
