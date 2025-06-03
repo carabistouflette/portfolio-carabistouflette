@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { watch } from 'vue'
 
 export interface GitHubUser {
   login: string
@@ -74,7 +75,30 @@ export const useGitHub = (username: string = 'carabistouflette'): UseGitHubRetur
         stats.value = data.stats
       }
     } catch (e) {
-      error.value = e as Error
+      // Si l'API serveur échoue (ex: en mode statique), utiliser l'API GitHub directement
+      console.warn('API serveur indisponible, utilisation de l\'API GitHub directe')
+      
+      try {
+        // Import dynamique pour éviter les problèmes de build
+        const { useGitHubClient } = await import('./useGitHubClient')
+        const clientData = useGitHubClient(username)
+        
+        // Attendre que les données soient chargées
+        await new Promise(resolve => {
+          const unwatch = watch(() => clientData.loading.value, (newVal) => {
+            if (!newVal && (clientData.user.value || clientData.error.value)) {
+              user.value = clientData.user.value
+              repos.value = clientData.repos.value
+              stats.value = clientData.stats.value
+              error.value = clientData.error.value
+              unwatch()
+              resolve(undefined)
+            }
+          }, { immediate: true })
+        })
+      } catch (clientError) {
+        error.value = clientError as Error
+      }
     } finally {
       loading.value = false
     }
@@ -113,7 +137,27 @@ export const useGitHubRepo = (owner: string, repo: string) => {
       const { data } = await $fetch(`/api/github/repo/${owner}/${repo}`)
       repoData.value = data
     } catch (e) {
-      error.value = e as Error
+      // Si l'API serveur échoue, utiliser l'API GitHub directement
+      console.warn('API serveur indisponible pour le repo, utilisation de l\'API GitHub directe')
+      
+      try {
+        const { useGitHubRepoClient } = await import('./useGitHubClient')
+        const clientData = useGitHubRepoClient(owner, repo)
+        
+        // Attendre que les données soient chargées
+        await new Promise(resolve => {
+          const unwatch = watch(() => clientData.loading.value, (newVal) => {
+            if (!newVal && (clientData.repo.value || clientData.error.value)) {
+              repoData.value = clientData.repo.value
+              error.value = clientData.error.value
+              unwatch()
+              resolve(undefined)
+            }
+          }, { immediate: true })
+        })
+      } catch (clientError) {
+        error.value = clientError as Error
+      }
     } finally {
       loading.value = false
     }
