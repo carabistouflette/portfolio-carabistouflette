@@ -2,9 +2,6 @@ name = "portfolio-alexis"
 compatibility_date = "2025-03-18"
 pages_build_output_dir = ".output/public"
 
-[build]
-command = "npm run pages:build"
-
 [env.production]
 vars = { ENVIRONMENT = "production" }
 # Add RESEND_API_KEY as a secret using: wrangler pages secret put RESEND_API_KEY
