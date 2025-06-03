@@ -137,6 +137,84 @@
         </div>
       </div>
     </section>
+
+    <!-- Apprentissages Critiques Section -->
+    <section class="section-padding bg-base">
+      <div class="container-custom">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-text mb-6">
+            Apprentissages Critiques validés
+          </h2>
+          <p class="text-lg text-subtext1 max-w-3xl mx-auto">
+            Détail des apprentissages critiques (AC) de niveau 2 validés à travers mes projets et expériences
+          </p>
+        </div>
+
+        <div class="space-y-16">
+          <!-- AC par compétence -->
+          <div 
+            v-for="competence in apprentissagesCritiques" 
+            :key="competence.id"
+            class="max-w-5xl mx-auto"
+          >
+            <!-- Header de la compétence -->
+            <div class="flex items-center mb-8">
+              <div 
+                class="w-14 h-14 rounded-xl flex items-center justify-center mr-4"
+                :class="competence.iconBg"
+              >
+                <Icon :name="competence.icon" class="w-7 h-7" :class="competence.iconColor" />
+              </div>
+              <h3 class="text-2xl font-bold text-text">{{ competence.title }}</h3>
+            </div>
+
+            <!-- Grille des AC -->
+            <div class="grid gap-6">
+              <div 
+                v-for="(ac, index) in competence.acs" 
+                :key="`${competence.id}-ac${index}`"
+                class="group relative overflow-hidden"
+              >
+                <div class="p-6 rounded-2xl border transition-all duration-300 hover:shadow-lg"
+                     :class="`border-${competence.color}/30 bg-${competence.color}/5 hover:bg-${competence.color}/10`">
+                  <!-- AC Title -->
+                  <div class="flex items-start mb-4">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg font-bold text-sm mr-4"
+                          :class="`bg-${competence.color}/20 text-${competence.color}`">
+                      AC{{ index + 1 }}
+                    </span>
+                    <h4 class="font-semibold text-text flex-1">{{ ac.title }}</h4>
+                  </div>
+                  
+                  <!-- Justification -->
+                  <div class="pl-14">
+                    <p class="text-subtext1 text-sm leading-relaxed mb-4">{{ ac.justification }}</p>
+                    
+                    <!-- Exemples concrets -->
+                    <div class="space-y-2">
+                      <div 
+                        v-for="exemple in ac.exemples" 
+                        :key="exemple"
+                        class="flex items-start text-sm"
+                      >
+                        <Icon name="heroicons:arrow-right" :class="`text-${competence.color} mt-0.5 mr-2 flex-shrink-0`" class="w-4 h-4" />
+                        <span class="text-subtext0">{{ exemple }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Hover effect -->
+                <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div class="absolute -top-1/2 -right-1/2 w-full h-full rounded-full blur-3xl"
+                       :class="`bg-${competence.color}/10`"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -196,6 +274,147 @@ const skills = ref([
       'Collaboration étroite en équipe sur l\'ensemble des projets universitaires',
       'Suivi de projet méthodique lors du stage professionnel en entreprise',
       'Gestion des besoins clients et adaptation aux retours utilisateurs'
+    ]
+  }
+])
+
+const apprentissagesCritiques = ref([
+  {
+    id: 'optimiser-ac',
+    title: 'Compétence Optimiser',
+    icon: 'heroicons:cog-6-tooth',
+    color: 'peach',
+    iconBg: 'bg-peach/20',
+    iconColor: 'text-peach',
+    acs: [
+      {
+        title: 'Choisir des structures de données complexes adaptées au problème',
+        justification: 'Dans l\'application de vote, j\'ai sélectionné des structures cryptographiques complexes comme El Gamal pour garantir la sécurité. J\'ai également optimisé les requêtes SQL avec des index et des jointures efficaces pour améliorer les performances.',
+        exemples: [
+          'Structures cryptographiques El Gamal pour le vote sécurisé',
+          'Optimisation des requêtes SQL complexes avec indexation stratégique',
+          'Choix de structures de données adaptées aux contraintes de performance'
+        ]
+      },
+      {
+        title: 'Utiliser des techniques algorithmiques adaptées pour des problèmes complexes',
+        justification: 'J\'ai réalisé une analyse comparative approfondie entre les algorithmes cryptographiques El Gamal et RSA, en évaluant leurs propriétés mathématiques avec des preuves DDH (Decisional Diffie-Hellman).',
+        exemples: [
+          'Analyse comparative El Gamal vs RSA pour la cryptographie',
+          'Implémentation de preuves mathématiques DDH',
+          'Sélection d\'algorithmes selon les contraintes de sécurité'
+        ]
+      },
+      {
+        title: 'Comprendre les enjeux et moyens de sécurisation des données et du code',
+        justification: 'L\'application de vote intègre une sécurité cryptographique complète avec preuve DDH. J\'ai mis en place un système de stockage sécurisé pour les votes chiffrés, garantissant la confidentialité et l\'intégrité des données.',
+        exemples: [
+          'Implémentation de la preuve DDH pour la sécurité cryptographique',
+          'Stockage sécurisé des votes avec chiffrement homomorphe',
+          'Protection contre les attaques par analyse des temps d\'exécution'
+        ]
+      },
+      {
+        title: 'Évaluer l\'impact environnemental et sociétal des solutions proposées',
+        justification: 'J\'ai sélectionné des architectures logicielles en considérant leur efficacité énergétique et leur maintenabilité. Le choix de Spring Boot a été fait en évaluant son empreinte mémoire et ses performances.',
+        exemples: [
+          'Choix d\'architectures selon les contraintes énergétiques',
+          'Sélection de Spring Boot pour son efficacité',
+          'Évaluation de l\'impact des choix technologiques'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'gerer-ac',
+    title: 'Compétence Gérer',
+    icon: 'heroicons:circle-stack',
+    color: 'green',
+    iconBg: 'bg-green/20',
+    iconColor: 'text-green',
+    acs: [
+      {
+        title: 'Optimiser les modèles de données de l\'entreprise',
+        justification: 'J\'ai conçu des schémas relationnels optimisés pour des applications métier complexes. Dans le projet médiathèque, j\'ai modélisé efficacement les relations entre utilisateurs, livres et emprunts.',
+        exemples: [
+          'Conception de schémas relationnels pour applications métier',
+          'Modélisation optimisée pour la médiathèque (utilisateurs, livres, emprunts)',
+          'Normalisation des bases de données jusqu\'à la 3NF'
+        ]
+      },
+      {
+        title: 'Assurer la confidentialité des données (intégrité et sécurité)',
+        justification: 'Dans l\'application de vote, j\'ai implémenté un système complet de chiffrement pour le stockage des utilisateurs et des votes. La gestion des accès et l\'authentification garantissent la confidentialité.',
+        exemples: [
+          'Stockage des votes avec chiffrement homomorphe',
+          'Système d\'authentification multi-facteurs',
+          'Gestion fine des droits d\'accès par rôles'
+        ]
+      },
+      {
+        title: 'Organiser la restitution de données à travers la programmation et la visualisation',
+        justification: 'J\'ai développé une intégration complète entre les bases de données et les applications Java/Spring, avec mise en place de contraintes d\'intégrité et de politiques de sécurité strictes.',
+        exemples: [
+          'Intégration JPA/Hibernate avec Spring Boot',
+          'API REST pour la restitution des données',
+          'Tableaux de bord pour la visualisation des statistiques'
+        ]
+      },
+      {
+        title: 'Manipuler des données hétérogènes',
+        justification: 'Le projet médiathèque m\'a permis de gérer différents types de données : utilisateurs, catalogues de livres, historiques d\'emprunts, chacun avec ses spécificités et contraintes.',
+        exemples: [
+          'Gestion de données multimédias (livres, CD, DVD)',
+          'Intégration de données externes (ISBN, APIs catalogues)',
+          'Traitement de formats hétérogènes (JSON, XML, CSV)'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'conduire-ac',
+    title: 'Compétence Conduire',
+    icon: 'heroicons:users',
+    color: 'blue',
+    iconBg: 'bg-blue/20',
+    iconColor: 'text-blue',
+    acs: [
+      {
+        title: 'Identifier les processus présents dans une organisation en vue d\'améliorer les systèmes d\'information',
+        justification: 'Lors de mon stage professionnel, j\'ai analysé et documenté les processus de l\'entreprise pour proposer des améliorations. J\'ai appliqué une approche méthodique pour comprendre les flux de travail existants.',
+        exemples: [
+          'Analyse des processus métier durant le stage',
+          'Documentation des workflows existants',
+          'Proposition d\'améliorations des systèmes'
+        ]
+      },
+      {
+        title: 'Formaliser les besoins du client et de l\'utilisateur',
+        justification: 'J\'ai développé une expertise dans la gestion des besoins clients, avec une adaptation constante aux retours utilisateurs. Cette compétence s\'est affinée à travers tous mes projets universitaires.',
+        exemples: [
+          'Rédaction de cahiers des charges détaillés',
+          'Sessions de recueil des besoins utilisateurs',
+          'Adaptation itérative selon les retours'
+        ]
+      },
+      {
+        title: 'Identifier les critères de faisabilité d\'un projet informatique',
+        justification: 'J\'ai appliqué des méthodologies agiles pour évaluer la faisabilité des projets. La communication en équipe pluridisciplinaire m\'a permis d\'identifier les contraintes techniques et organisationnelles.',
+        exemples: [
+          'Évaluation des contraintes techniques et budgétaires',
+          'Analyse de faisabilité avec méthodologies agiles',
+          'Estimation des charges et planification réaliste'
+        ]
+      },
+      {
+        title: 'Définir et mettre en œuvre une démarche de suivi de projet',
+        justification: 'La collaboration étroite en équipe sur l\'ensemble des projets universitaires m\'a permis de maîtriser le suivi de projet. J\'ai géré efficacement les retours clients et les ajustements nécessaires.',
+        exemples: [
+          'Mise en place de tableaux Kanban pour le suivi',
+          'Organisation de réunions de sprint hebdomadaires',
+          'Gestion des livrables et du versioning avec Git'
+        ]
+      }
     ]
   }
 ])
