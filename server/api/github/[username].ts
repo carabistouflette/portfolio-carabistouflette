@@ -13,8 +13,10 @@ export default defineEventHandler(async (event) => {
     const cacheKey = `github:${username}`
     const cached = await useStorage('github').getItem(cacheKey)
     
-    if (cached && Date.now() - (cached as any).timestamp < 3600000) {
-      return { data: (cached as any).data }
+    if (cached && typeof cached === 'object' && 'timestamp' in cached && 'data' in cached) {
+      if (Date.now() - (cached.timestamp as number) < 3600000) {
+        return { data: cached.data }
+      }
     }
 
     // Headers pour l'API GitHub
@@ -54,7 +56,13 @@ export default defineEventHandler(async (event) => {
 
     // Récupérer l'activité récente
     const eventsResponse = await fetch(`https://api.github.com/users/${username}/events/public?per_page=10`, { headers })
-    let recentActivity: any[] = []
+    interface ActivityItem {
+      type: string;
+      repo: string;
+      date: string;
+      description: string;
+    }
+    let recentActivity: ActivityItem[] = []
     if (eventsResponse.ok) {
       const eventsData = await eventsResponse.json()
       recentActivity = formatActivity(eventsData)
@@ -84,7 +92,13 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-function calculateStats(repos: any[]) {
+interface Repository {
+  stargazers_count?: number;
+  forks_count?: number;
+  language?: string | null;
+}
+
+function calculateStats(repos: Repository[]) {
   let totalStars = 0
   let totalForks = 0
   const languages: Record<string, number> = {}
@@ -106,7 +120,21 @@ function calculateStats(repos: any[]) {
   }
 }
 
-function formatActivity(events: any[]): any[] {
+interface GitHubEvent {
+  type: string;
+  repo: { name: string };
+  created_at: string;
+  payload: {
+    commits?: { length: number };
+    ref_type?: string;
+    ref?: string;
+    action?: string;
+    pull_request?: { number: number };
+    issue?: { number: number };
+  };
+}
+
+function formatActivity(events: GitHubEvent[]): ActivityItem[] {
   return events
     .filter(event => ['PushEvent', 'CreateEvent', 'PullRequestEvent', 'IssuesEvent'].includes(event.type))
     .slice(0, 5)

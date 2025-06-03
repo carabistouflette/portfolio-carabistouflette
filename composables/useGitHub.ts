@@ -75,7 +75,6 @@ export const useGitHub = (username: string = 'carabistouflette'): UseGitHubRetur
       }
     } catch (e) {
       error.value = e as Error
-      console.error('Erreur lors de la récupération des données GitHub:', e)
     } finally {
       loading.value = false
     }
@@ -115,7 +114,6 @@ export const useGitHubRepo = (owner: string, repo: string) => {
       repoData.value = data
     } catch (e) {
       error.value = e as Error
-      console.error('Erreur lors de la récupération du repo:', e)
     } finally {
       loading.value = false
     }

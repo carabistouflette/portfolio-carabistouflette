@@ -152,7 +152,6 @@ export const useAnimations = () => {
    */
   const hexToRGBA = (hex: string, alpha = 1): string => {
     if (!hex || !hex.startsWith('#') || (hex.length !== 4 && hex.length !== 7)) {
-      console.error('Invalid HEX color format provided to hexToRGBA:', hex);
       return ''; // Return empty or a default color?
     }
 
@@ -190,7 +189,6 @@ export const useAnimations = () => {
     const element = document.getElementById(elementId)
 
     if (!element) {
-      console.warn(`Smooth scroll target element with ID "${elementId}" not found.`);
       return
     }
 

@@ -14,8 +14,10 @@ export default defineEventHandler(async (event) => {
     const cacheKey = `github:repo:${owner}:${repo}`
     const cached = await useStorage('github').getItem(cacheKey)
     
-    if (cached && Date.now() - (cached as any).timestamp < 3600000) {
-      return { data: (cached as any).data }
+    if (cached && typeof cached === 'object' && 'timestamp' in cached && 'data' in cached) {
+      if (Date.now() - (cached.timestamp as number) < 3600000) {
+        return { data: cached.data }
+      }
     }
 
     // Headers pour l'API GitHub

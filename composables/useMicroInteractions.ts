@@ -135,7 +135,10 @@ export function useMicroInteractions(options: MicroInteractionOptions = {}) {
     if (!enableSound || typeof Audio === 'undefined') return
 
     // Create audio context for better performance
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextClass) return;
+    
+    const audioContext = new AudioContextClass()
     
     const frequencies = {
       click: 800,

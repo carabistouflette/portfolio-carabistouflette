@@ -74,7 +74,6 @@ export const useResourceLoading = () => {
   const preloadImages = async (images: Array<{ src: string; priority?: boolean }>) => {
     const promises = images.map(({ src, priority }) => 
       preloadImage(src, { priority }).catch(err => {
-        console.warn(`Image preload failed for ${src}:`, err);
       })
     );
 

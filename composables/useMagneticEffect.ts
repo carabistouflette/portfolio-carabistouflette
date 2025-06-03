@@ -60,7 +60,6 @@ export function useMagneticEffect(
     const scale = 1 + scaleFactor * pullRatio
 
     smoothTransform.value = `translate(${translateX.toFixed(2)}px, ${translateY.toFixed(2)}px) scale(${scale.toFixed(3)})`
-    // console.log('[MagneticEffect] Updating transform:', smoothTransform.value); // Remove log
 
     // Optional: Use requestAnimationFrame for potentially smoother updates,
     // though watcher might be sufficient with CSS transitions.
@@ -84,7 +83,6 @@ export function useMagneticEffect(
         isOutside.value = mouseEffect.isOutside.value
         elementHeight.value = mouseEffect.elementHeight.value
         elementWidth.value = mouseEffect.elementWidth.value
-        // console.log('[MagneticEffect] Initialized for target:', newTarget); // Remove Log
 
         // Setup watcher that depends on useMouseInElement refs
         watch([elementX, elementY, isOutside], updateEffect, { immediate: true }) // Remove logging wrapper

@@ -5,7 +5,6 @@ export default defineNitroPlugin((nitroApp) => {
   // Ce plugin sera automatiquement chargé par Nitro lors du démarrage
   // Il peut être utilisé pour ajouter des fonctionnalités spécifiques à Cloudflare
   
-  console.log('Initialisation du plugin Cloudflare')
   
   // Exemple de middleware global pour ajouter des en-têtes de sécurité
   nitroApp.hooks.hook('request', (event) => {
