@@ -55,11 +55,10 @@
             v-for="(skill, index) in skills" 
             :key="skill.id"
             ref="skillCards"
-            class="skill-card group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105 cursor-pointer"
+            class="skill-card group relative p-8 rounded-3xl border border-overlay0 bg-mantle hover:border-overlay1 transition-all duration-500 hover:scale-105"
             :data-index="index"
             @mouseenter="handleHover(index)"
             @mouseleave="handleLeave(index)"
-            @click="toggleSkillDetails(skill.id)"
           >
             <!-- Skill header -->
             <div class="text-center mb-8">
@@ -107,11 +106,6 @@
             <!-- Pulse effect on hover -->
             <div class="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 pointer-events-none">
               <div class="absolute inset-0 rounded-3xl animate-ping" :class="`bg-${skill.color}/10`"></div>
-            </div>
-            
-            <!-- Click indicator -->
-            <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <Icon name="heroicons:arrow-right-circle" class="w-6 h-6" :class="skill.iconColor" />
             </div>
           </div>
         </div>
@@ -616,14 +610,6 @@ const handleLeave = (index: number) => {
   }
 }
 
-// Toggle des détails de compétences
-const toggleSkillDetails = (skillId: string) => {
-  if (expandedSkills.value.has(skillId)) {
-    expandedSkills.value.delete(skillId)
-  } else {
-    expandedSkills.value.add(skillId)
-  }
-}
 
 // Toggle des AC
 const toggleAcDetails = (competenceId: string, acIndex: number) => {
