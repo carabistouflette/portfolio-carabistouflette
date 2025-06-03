@@ -66,7 +66,7 @@ const navigationItems = [
     color: 'blue' as const
   },
   {
-    path: '/portfolio-dacs',
+    path: '/portfolio-apprentissage',
     label: 'Portfolio d\'apprentissage',
     icon: 'heroicons:academic-cap',
     color: 'peach' as const
