@@ -70,7 +70,10 @@ export default defineNuxtConfig({
   
     // Optimisation pour Cloudflare Pages - Mode statique uniquement
     nitro: {
-      preset: 'cloudflare-pages-static',
+      preset: 'static',
+      output: {
+        publicDir: '.output/public'
+      },
       prerender: {
         routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
       }
