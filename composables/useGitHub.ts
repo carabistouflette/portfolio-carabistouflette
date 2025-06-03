@@ -38,21 +38,16 @@ export const useGitHub = (username: string = 'carabistouflette'): UseGitHubRetur
       try {
         // Import dynamique pour éviter les problèmes de build
         const { useGitHubClient } = await import('./useGitHubClient')
-        const clientData = useGitHubClient(username)
+        const clientData = useGitHubClient(username, false) // false pour éviter l'auto-fetch
         
-        // Attendre que les données soient chargées
-        await new Promise(resolve => {
-          const unwatch = watch(() => clientData.loading.value, (newVal) => {
-            if (!newVal && (clientData.user.value || clientData.error.value)) {
-              user.value = clientData.user.value
-              repos.value = clientData.repos.value
-              stats.value = clientData.stats.value
-              error.value = clientData.error.value
-              unwatch()
-              resolve(undefined)
-            }
-          }, { immediate: true })
-        })
+        // Appeler fetch manuellement
+        await clientData.fetch!()
+        
+        // Copier les données
+        user.value = clientData.user.value
+        repos.value = clientData.repos.value
+        stats.value = clientData.stats.value
+        error.value = clientData.error.value
       } catch (clientError) {
         error.value = clientError as Error
       }
@@ -99,19 +94,14 @@ export const useGitHubRepo = (owner: string, repo: string) => {
       
       try {
         const { useGitHubRepoClient } = await import('./useGitHubClient')
-        const clientData = useGitHubRepoClient(owner, repo)
+        const clientData = useGitHubRepoClient(owner, repo, false)
         
-        // Attendre que les données soient chargées
-        await new Promise(resolve => {
-          const unwatch = watch(() => clientData.loading.value, (newVal) => {
-            if (!newVal && (clientData.repo.value || clientData.error.value)) {
-              repoData.value = clientData.repo.value
-              error.value = clientData.error.value
-              unwatch()
-              resolve(undefined)
-            }
-          }, { immediate: true })
-        })
+        // Appeler fetch manuellement
+        await clientData.fetch!()
+        
+        // Copier les données
+        repoData.value = clientData.repo.value
+        error.value = clientData.error.value
       } catch (clientError) {
         error.value = clientError as Error
       }

@@ -8,6 +8,7 @@ interface UseGitHubReturn {
   loading: Ref<boolean>
   error: Ref<Error | null>
   refresh: () => Promise<void>
+  fetch?: () => Promise<void>
 }
 
 const calculateStats = (repos: GitHubRepo[]): Omit<GitHubStats, 'recentActivity'> => {
@@ -64,7 +65,7 @@ const formatActivity = (events: GitHubEvent[]): GitHubActivity[] => {
     })
 }
 
-export const useGitHubClient = (username: string = 'carabistouflette'): UseGitHubReturn => {
+export const useGitHubClient = (username: string = 'carabistouflette', autoFetch: boolean = true): UseGitHubReturn => {
   const user = ref<GitHubUser | null>(null)
   const repos = ref<GitHubRepo[]>([])
   const stats = ref<GitHubStats | null>(null)
@@ -128,10 +129,12 @@ export const useGitHubClient = (username: string = 'carabistouflette'): UseGitHu
     await fetchGitHubData()
   }
 
-  // Charger les données au montage
-  onMounted(() => {
-    fetchGitHubData()
-  })
+  // Charger les données au montage seulement si autoFetch est true
+  if (autoFetch) {
+    onMounted(() => {
+      fetchGitHubData()
+    })
+  }
 
   return {
     user,
@@ -139,12 +142,13 @@ export const useGitHubClient = (username: string = 'carabistouflette'): UseGitHu
     stats,
     loading,
     error,
-    refresh
+    refresh,
+    fetch: fetchGitHubData
   }
 }
 
 // Composable pour récupérer les stats d'un repo spécifique
-export const useGitHubRepoClient = (owner: string, repo: string) => {
+export const useGitHubRepoClient = (owner: string, repo: string, autoFetch: boolean = true) => {
   const repoData = ref<GitHubRepo | null>(null)
   const loading = ref(false)
   const error = ref<Error | null>(null)
@@ -171,15 +175,18 @@ export const useGitHubRepoClient = (owner: string, repo: string) => {
     }
   }
 
-  onMounted(() => {
-    fetchRepoData()
-  })
+  if (autoFetch) {
+    onMounted(() => {
+      fetchRepoData()
+    })
+  }
 
   return {
     repo: repoData,
     loading,
     error,
-    refresh: fetchRepoData
+    refresh: fetchRepoData,
+    fetch: fetchRepoData
   }
 }
 
