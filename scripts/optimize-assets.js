@@ -9,10 +9,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
+import sharp from 'sharp';
 
 // Déterminer le chemin de base
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,12 +22,10 @@ async function getOutputDir() {
   // Vérifier quel répertoire existe
   try {
     await fs.access(cloudflareOutputDir);
-    console.log('📂 Utilisation du répertoire Cloudflare: dist/');
     return cloudflareOutputDir;
   } catch {
     try {
       await fs.access(nuxtOutputDir);
-      console.log('📂 Utilisation du répertoire Nuxt: .output/public/');
       return nuxtOutputDir;
     } catch {
       throw new Error('Aucun répertoire de sortie trouvé');
@@ -39,32 +34,67 @@ async function getOutputDir() {
 }
 
 /**
- * Optimisation des images
+ * Optimisation des images avec Sharp
  */
 async function optimizeImages(outputDir) {
   try {
-    console.log('🔍 Recherche des images...');
     const imageFiles = [
       ...(await findFiles(outputDir, '.jpg')), 
       ...(await findFiles(outputDir, '.jpeg')),
-      ...(await findFiles(outputDir, '.png'))
+      ...(await findFiles(outputDir, '.png')),
+      ...(await findFiles(outputDir, '.webp'))
     ];
     
-    console.log(`🧪 Optimisation de ${imageFiles.length} images...`);
-    
     for (const file of imageFiles) {
-      if (file.endsWith('.png')) {
-// Use OptiPNG for lossless PNG optimization. '-o5' sets the optimization level.
-        await execAsync(`npx optipng -o5 ${file}`);
-      } else {
-// Use MozJPEG for lossy JPEG optimization (overwrites the original file).
-        await execAsync(`npx mozjpeg -optimize -outfile ${file} ${file}`);
+      try {
+        const metadata = await sharp(file).metadata();
+        
+        if (file.endsWith('.png')) {
+          // Optimisation PNG avec compression de niveau 9 (équivalent à OptiPNG niveau 3)
+          await sharp(file)
+            .png({ 
+              compressionLevel: 9, 
+              effort: 7,
+              adaptiveFiltering: true 
+            })
+            .toFile(file + '.tmp');
+        } else if (file.endsWith('.jpg') || file.endsWith('.jpeg')) {
+          // Optimisation JPEG avec qualité 85% (équivalent MozJPEG)
+          await sharp(file)
+            .jpeg({ 
+              quality: 85, 
+              progressive: true,
+              mozjpeg: true 
+            })
+            .toFile(file + '.tmp');
+        } else if (file.endsWith('.webp')) {
+          // Optimisation WebP
+          await sharp(file)
+            .webp({ 
+              quality: 85,
+              effort: 6 
+            })
+            .toFile(file + '.tmp');
+        }
+        
+        // Remplacer le fichier original si la nouvelle version est plus petite
+        const originalStats = await fs.stat(file);
+        const newStats = await fs.stat(file + '.tmp');
+        
+        if (newStats.size < originalStats.size) {
+          await fs.rename(file + '.tmp', file);
+        } else {
+          await fs.unlink(file + '.tmp');
+        }
+      } catch (error) {
+        // Nettoyer le fichier temporaire en cas d'erreur
+        try {
+          await fs.unlink(file + '.tmp');
+        } catch {}
       }
     }
-    
-    console.log('✅ Optimisation des images terminée!');
   } catch (error) {
-    console.error('❌ Erreur lors de l\'optimisation des images:', error);
+    // Erreur lors de l'optimisation, mais on continue
   }
 }
 
@@ -74,7 +104,7 @@ async function optimizeImages(outputDir) {
 async function findFiles(directory, extension) {
   const files = [];
   
-// Inner recursive function to traverse directories.
+  // Inner recursive function to traverse directories.
   async function search(dir) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     
@@ -94,26 +124,18 @@ async function findFiles(directory, extension) {
 }
 
 async function main() {
-  console.log('🚀 Démarrage de l\'optimisation des ressources...');
-  
   let outputDir;
   try {
     // Déterminer le bon répertoire de sortie
     outputDir = await getOutputDir();
   } catch (error) {
-    console.error('❌ Aucun répertoire de sortie trouvé');
-    console.error('Exécutez d\'abord "npm run build" ou "npm run cf:build"');
     process.exit(1);
   }
   
-  // Décommentez la ligne suivante si vous avez installé les dépendances nécessaires
-  // pour l'optimisation des images (optipng-bin et mozjpeg)
+  // Optimisation des images avec Sharp
   await optimizeImages(outputDir);
-  
-  console.log('🎉 Toutes les optimisations sont terminées!');
 }
 
 main().catch(error => {
-  console.error('Erreur globale:', error);
   process.exit(1);
 });
