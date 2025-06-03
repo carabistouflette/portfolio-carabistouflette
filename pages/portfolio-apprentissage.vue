@@ -899,32 +899,7 @@ useSeoMeta({
   animation: slide-in-exemple 0.5s ease-out forwards;
 }
 
-/* Effets de brillance */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.skill-card:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-  pointer-events: none;
-}
+/* Effet de brillance supprimé pour réduire la distraction visuelle */
 
 /* Glow effect on hover */
 .ac-card:hover {
