@@ -132,5 +132,3 @@ export const useGitHubRepo = (owner: string, repo: string) => {
   }
 }
 
-// Réexporter la fonction formatNumber depuis utils
-export { formatNumber } from '~/utils/github'

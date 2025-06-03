@@ -138,7 +138,8 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, watchEffect } from 'vue'
 import { useHead } from '#imports'
-import { useGitHubRepo, formatNumber } from '~/composables/useGitHub'
+import { useGitHubRepo } from '~/composables/useGitHub'
+import { formatNumber } from '~/utils/github'
 import { useCardInteractions } from '~/composables/useMicroInteractions'
 
 // Props

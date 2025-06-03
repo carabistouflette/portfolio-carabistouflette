@@ -94,7 +94,8 @@
 </template>
 
 <script setup lang="ts">
-import { useGitHub, formatNumber } from '~/composables/useGitHub'
+import { useGitHub } from '~/composables/useGitHub'
+import { formatNumber } from '~/utils/github'
 
 interface Props {
   username?: string
