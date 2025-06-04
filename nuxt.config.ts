@@ -91,7 +91,8 @@ export default defineNuxtConfig({
 
   css: [
     '~/assets/css/main.css',
-    '~/assets/css/ai-fixes.css'
+    '~/assets/css/ai-fixes.css',
+    '~/assets/css/ai-animations.css'
   ],
 
   tailwindcss: {
