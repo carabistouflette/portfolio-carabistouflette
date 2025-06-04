@@ -573,33 +573,4 @@ onUnmounted(() => {
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .timeline-header,
-  .timeline-item,
-  .timeline-line,
-  .timeline-line-glow,
-  .timeline-dot,
-  .timeline-dot-pulse,
-  .timeline-dot-ring,
-  .timeline-card,
-  .timeline-connector,
-  .timeline-end {
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  .timeline-visible .timeline-card,
-  .timeline-visible .timeline-dot,
-  .timeline-visible .timeline-connector,
-  .timeline-visible.timeline-end {
-    opacity: 1;
-    transform: none;
-  }
-  
-  .timeline-line-animate {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
 </style>

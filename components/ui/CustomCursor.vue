@@ -484,10 +484,4 @@ onUnmounted(() => {
   }
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .custom-cursor-container {
-    display: none;
-  }
-}
 </style>

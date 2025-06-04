@@ -137,14 +137,4 @@ const customStyle = computed(() => {
   }
 }
 
-/* Support pour reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-animated {
-    animation: none;
-  }
-  
-  .skeleton-shimmer {
-    display: none;
-  }
-}
 </style>

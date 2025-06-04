@@ -163,16 +163,4 @@ defineExpose({
     0 0 10px rgba(203, 166, 247, 0.5);
 }
 
-/* Support pour reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .liquid-char {
-    transform: none !important;
-    animation: none !important;
-  }
-  
-  .is-liquid .liquid-char {
-    filter: none;
-    text-shadow: none;
-  }
-}
 </style>

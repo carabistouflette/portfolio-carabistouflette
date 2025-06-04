@@ -21,6 +21,30 @@
     </span>
     <span class="button-ripple" ref="rippleRef"></span>
   </NuxtLink>
+  <a
+    ref="elementRef"
+    v-else-if="href"
+    :href="href"
+    :target="target"
+    :rel="rel"
+    :class="buttonClasses"
+    :style="magneticStyle"
+    data-magnetic
+    data-cursor-type="pointer"
+    data-cursor-text="CLICK"
+    :data-cursor-color="`var(--${color})`"
+    @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
+    <span class="button-bg" :class="`bg-${color}`"></span>
+    <span class="button-content">
+      <Icon v-if="iconLeft" :name="iconLeft" class="w-5 h-5 mr-2" />
+      <span v-if="$slots.default"><slot /></span>
+      <Icon v-if="iconRight" :name="iconRight" class="w-5 h-5 ml-2" />
+    </span>
+    <span class="button-ripple" ref="rippleRef"></span>
+  </a>
   <button
     ref="elementRef"
     v-else
@@ -60,6 +84,18 @@ type ButtonSize = 'sm' | 'md' | 'lg';
 const props = defineProps({
   to: {
     type: [String, Object], // Simplify type, NuxtLink handles it
+    default: undefined
+  },
+  href: {
+    type: String,
+    default: undefined
+  },
+  target: {
+    type: String,
+    default: undefined
+  },
+  rel: {
+    type: String,
     default: undefined
   },
   type: {

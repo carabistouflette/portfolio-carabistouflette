@@ -104,34 +104,4 @@ useHead({
   transform: scale(1.1);
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .page-enter-active,
-  .page-leave-active,
-  .layout-enter-active,
-  .layout-leave-active,
-  .fade-enter-active,
-  .fade-leave-active,
-  .slide-up-enter-active,
-  .slide-up-leave-active,
-  .scale-enter-active,
-  .scale-leave-active {
-    transition: none !important;
-  }
-  
-  .page-enter-from,
-  .page-leave-to,
-  .layout-enter-from,
-  .layout-leave-to,
-  .fade-enter-from,
-  .fade-leave-to,
-  .slide-up-enter-from,
-  .slide-up-leave-to,
-  .scale-enter-from,
-  .scale-leave-to {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-  }
-}
 </style>

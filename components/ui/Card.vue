@@ -372,24 +372,4 @@ onUnmounted(() => {
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .card-base,
-  .card-image-container,
-  .glass-layer-2,
-  .image-overlay,
-  .card-shine {
-    transition-duration: 0.01ms !important;
-  }
-  
-  .card-hover:hover {
-    transform: none;
-  }
-  
-  .skeleton-line,
-  .skeleton-image {
-    animation: none;
-    opacity: 0.6;
-  }
-}
 </style>

@@ -211,11 +211,4 @@ onUnmounted(() => {
   animation: indicatorEntry 0.6s ease-out;
 }
 
-/* Support reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .nav-indicator {
-    transition: none !important;
-    animation: none !important;
-  }
-}
 </style>

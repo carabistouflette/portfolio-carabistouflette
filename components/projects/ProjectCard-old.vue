@@ -603,4 +603,40 @@ useHead({
   transform: translateY(0) scale(0.98);
 }
 
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .project-card,
+  .project-category-badge,
+  .tech-tag,
+  .github-badge,
+  .details-button {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .project-card:hover {
+    transform: none !important;
+  }
+  
+  .project-card:hover .project-category-badge {
+    transform: rotate(2deg) !important;
+  }
+  
+  .tech-tag:hover,
+  .github-badge:hover,
+  .details-button:hover {
+    transform: none !important;
+    animation: none !important;
+  }
+  
+  @keyframes borderGlow,
+  @keyframes techTagBounce,
+  @keyframes techTagGlow,
+  @keyframes starPulse,
+  @keyframes forkSpin {
+    to {
+      transform: none;
+    }
+  }
+}
 </style>

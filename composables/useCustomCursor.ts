@@ -236,9 +236,8 @@ export const useCustomCursor = (options: CursorOptions = {}) => {
   onMounted(() => {
     // Only enable on desktop devices
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     
-    if (!isMobile && !prefersReducedMotion && enabled) {
+    if (!isMobile && enabled) {
       init()
     }
   })

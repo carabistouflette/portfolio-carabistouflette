@@ -179,26 +179,4 @@ const onAfterLeave = (el: Element) => {
   will-change: transform, opacity, filter;
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .page-fade-enter-active,
-  .page-fade-leave-active,
-  .page-slide-enter-active,
-  .page-slide-leave-active,
-  .page-morph-enter-active,
-  .page-morph-leave-active,
-  .page-liquid-enter-active,
-  .page-liquid-leave-active,
-  .page-reveal-enter-active,
-  .page-reveal-leave-active {
-    transition-duration: 0.1s !important;
-  }
-  
-  .page-morph-enter-from,
-  .page-morph-leave-to,
-  .page-liquid-enter-from,
-  .page-liquid-leave-to {
-    filter: none !important;
-  }
-}
 </style>

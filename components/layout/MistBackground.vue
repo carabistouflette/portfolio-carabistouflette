@@ -186,12 +186,4 @@ onUnmounted(() => {
   }
 }
 
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .mist-layer,
-  .orb,
-  .grid-pattern {
-    animation: none !important;
-  }
-}
 </style>

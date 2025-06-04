@@ -170,12 +170,4 @@ onMounted(() => {
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .scroll-reveal,
-  .scroll-reveal * {
-    animation: none !important;
-    transition: opacity 0.01ms !important;
-  }
-}
 </style>

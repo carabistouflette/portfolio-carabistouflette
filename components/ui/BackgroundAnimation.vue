@@ -13,7 +13,7 @@
           height: `${orb.size}px`,
           background: `radial-gradient(circle, ${orb.color}60 0%, transparent 70%)`,
           filter: `blur(${config.floatingOrbs?.blurAmount || 40}px)`,
-          animation: isAnimationEnabled ? `float-orb-${orb.id} ${20 + orb.animationDelay}s infinite ease-in-out` : 'none'
+          animation: `float-orb-${orb.id} ${20 + orb.animationDelay}s infinite ease-in-out`
         }"
       />
     </div>
@@ -30,7 +30,7 @@
           width: `${shape.size}px`,
           height: `${shape.size}px`,
           opacity: shape.opacity,
-          animation: isAnimationEnabled ? `rotate-shape ${shape.animationDuration}s infinite linear` : 'none'
+          animation: `rotate-shape ${shape.animationDuration}s infinite linear`
         }"
       >
         <svg
@@ -99,7 +99,7 @@
           opacity: particle.opacity,
           background: `radial-gradient(circle, ${config.particles?.color || colors.mauve} 0%, ${config.particles?.color || colors.mauve}80 50%, transparent 70%)`,
           boxShadow: `0 0 ${particle.size * 3}px ${config.particles?.color || colors.mauve}60`,
-          animation: isAnimationEnabled ? `float-particle-${particle.id} ${config.particles?.speed || 20}s infinite ease-in-out` : 'none'
+          animation: `float-particle-${particle.id} ${config.particles?.speed || 20}s infinite ease-in-out`
         }"
       />
     </div>
@@ -151,27 +151,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { config, particles, orbs, shapes, time } = useBackgroundAnimations(props.customConfig)
 
-// Détection de la préférence de mouvement réduit
-const prefersReducedMotion = ref(false)
-
-onMounted(() => {
-  
-  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-  prefersReducedMotion.value = mediaQuery.matches
-  
-  const handleChange = (e: MediaQueryListEvent) => {
-    prefersReducedMotion.value = e.matches
-  }
-  
-  mediaQuery.addEventListener('change', handleChange)
-  
-  onUnmounted(() => {
-    mediaQuery.removeEventListener('change', handleChange)
-  })
-})
-
 // Désactive les animations si mouvement réduit est activé
-const isAnimationEnabled = computed(() => !props.reducedMotion && !prefersReducedMotion.value)
+const isAnimationEnabled = computed(() => !props.reducedMotion)
 
 const generateWavePath = (index: number) => {
   if (!config.value.waves) return ''
@@ -215,7 +196,6 @@ const gradientAnimation = computed(() => {
 })
 
 const generateDynamicStyles = () => {
-  if (!isAnimationEnabled.value) return ''
   
   let styles = ''
   

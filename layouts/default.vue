@@ -237,20 +237,6 @@ useHead({
   box-shadow: 0 0 10px rgba(203, 166, 247, 0.3);
 }
 
-/* Respect user's motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .particle {
-    animation: none !important;
-  }
-  
-  .noise-pattern {
-    animation: none !important;
-  }
-  
-  button {
-    transition: none !important;
-  }
-}
 
 .particle-1 {
   top: 20%;

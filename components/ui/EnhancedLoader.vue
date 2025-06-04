@@ -347,22 +347,4 @@ onUnmounted(() => {
   }
 }
 
-/* Support pour reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .sophisticated-loader *,
-  .loader-particle,
-  .progress-glow {
-    animation: none !important;
-  }
-  
-  .typing-cursor {
-    animation: none;
-    opacity: 1;
-  }
-  
-  .loader-dot {
-    animation: none;
-    transform: scale(1);
-  }
-}
 </style>

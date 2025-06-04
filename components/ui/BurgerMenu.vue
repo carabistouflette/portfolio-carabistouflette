@@ -147,12 +147,4 @@ const { magneticStyle } = useMagneticEffect(burgerRef, {
   outline-offset: 2px;
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .burger-line,
-  .burger-menu {
-    transition: none !important;
-    animation: none !important;
-  }
-}
 </style>

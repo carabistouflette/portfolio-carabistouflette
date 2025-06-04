@@ -41,6 +41,16 @@
             <Button to="/projects" variant="ghost" iconRight="heroicons:sparkles" size="lg">
               Voir mes projets
             </Button>
+            <Button 
+              href="https://drive.google.com/file/d/1GqiZ36q_7qc7Gy1VUmZO1_blf_N_c4FN/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="ghost" 
+              iconRight="heroicons:arrow-down-tray" 
+              size="lg"
+            >
+              Télécharger mon CV
+            </Button>
           </div>
           
           <!-- Quick stats -->
@@ -301,25 +311,4 @@ useIntersectionObserver(
 .about-content > div:last-child > div:nth-child(2) { animation-delay: 0.7s; }
 .about-content > div:last-child > div:nth-child(3) { animation-delay: 0.8s; }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .about-header,
-  .about-content,
-  .skill-card,
-  .skill-progress {
-    animation: none !important;
-    transition: none !important;
-  }
-  
-  .about-header,
-  .about-content,
-  .skill-card.animate-slide-up {
-    opacity: 1;
-    transform: none;
-  }
-  
-  .skill-progress {
-    transition: none !important;
-  }
-}
 </style>

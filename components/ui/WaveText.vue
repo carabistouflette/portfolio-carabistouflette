@@ -178,10 +178,4 @@ defineExpose({
   animation-iteration-count: v-bind(loop ? 'infinite' : '1');
 }
 
-/* Support pour reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .wave-char {
-    animation: none !important;
-  }
-}
 </style>

@@ -304,41 +304,6 @@
   transform: translateY(0);
 }
 
-/* Enhanced reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  /* Disable parallax effects */
-  .parallax-orb,
-  .parallax-bg {
-    transform: none !important;
-  }
-  
-  /* Disable floating animations */
-  .float-element,
-  .particle {
-    animation: none !important;
-  }
-  
-  /* Simplify hover states */
-  .card-hover:hover,
-  .button-base:hover {
-    transform: none !important;
-  }
-  
-  /* Show static loading states */
-  .loader-logo,
-  .progress-bar {
-    animation: none !important;
-  }
-}
 
 
 /* Enhanced focus styles for accessibility */

@@ -46,6 +46,20 @@
         {{ availability.description }}
       </p>
     </div>
+    
+    <!-- CV Download button -->
+    <Button 
+      href="https://drive.google.com/file/d/1GqiZ36q_7qc7Gy1VUmZO1_blf_N_c4FN/view?usp=sharing"
+      target="_blank"
+      rel="noopener noreferrer"
+      variant="solid" 
+      color="mauve"
+      iconRight="heroicons:arrow-down-tray" 
+      size="lg"
+      class="w-full justify-center"
+    >
+      Télécharger mon CV
+    </Button>
   </div>
 </template>
 

@@ -268,19 +268,4 @@ const { magneticStyle } = useMagneticEffect(htmlElementRef, {
   opacity: 0.1;
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .nav-link,
-  .nav-link-content,
-  .nav-link-icon,
-  .nav-link-bg,
-  .nav-link-indicator {
-    transition-duration: 0.01ms !important;
-    animation: none !important;
-  }
-  
-  .nav-link:hover .nav-link-icon {
-    transform: none !important;
-  }
-}
 </style>

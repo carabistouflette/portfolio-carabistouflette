@@ -261,11 +261,7 @@ export const useBackgroundAnimations = (customConfig?: Partial<AnimationConfig>)
   }
 
   onMounted(() => {
-    // Vérifier si l'utilisateur préfère un mouvement réduit
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (!mediaQuery.matches) {
-      animate()
-    }
+    animate()
   })
 
   onUnmounted(() => {

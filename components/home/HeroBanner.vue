@@ -1197,25 +1197,6 @@ html {
   
 }
 
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .particle,
-  .orb-gradient,
-  .mesh-gradient,
-  .profile-inner,
-  .profile-glow,
-  .float-element,
-  .gradient-animate {
-    animation: none;
-  }
-  
-  .ripple-button,
-  .profile-container,
-  .interactive-particle {
-    transition: none;
-    transform: none;
-  }
-}
 
 /* Logo click animation - ultra fluide */
 .logo-click-animation {

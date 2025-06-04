@@ -343,16 +343,4 @@ const formatDate = (dateString: string): string => {
   }
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .stat-card,
-  .language-item,
-  .activity-item {
-    animation: none;
-  }
-  
-  .stat-card:hover {
-    transform: none;
-  }
-}
 </style>

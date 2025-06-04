@@ -258,15 +258,4 @@ button:focus-visible {
   outline-offset: 4px;
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .header-particle {
-    animation: none;
-  }
-  
-  * {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
-}
 </style>

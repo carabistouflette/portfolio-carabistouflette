@@ -436,18 +436,4 @@ const submitForm = async (event: Event) => {
     0 4px 20px -5px rgba(203, 166, 247, 0.3);
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .form-field,
-  .form-input,
-  .form-input-underline,
-  .form-field p {
-    animation: none !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .form-input-error {
-    animation: none;
-  }
-}
 </style>

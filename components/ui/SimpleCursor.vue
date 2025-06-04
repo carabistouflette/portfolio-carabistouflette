@@ -1,6 +1,6 @@
 <template>
   <div 
-    v-if="enabled && !isMobile && !prefersReducedMotion"
+    v-if="enabled && !isMobile"
     class="simple-cursor"
     :style="cursorStyle"
   >
@@ -25,7 +25,6 @@ const cursorY = ref(0)
 const isVisible = ref(false)
 const isHovering = ref(false)
 const isMobile = ref(false)
-const prefersReducedMotion = ref(false)
 
 // Computed
 const cursorStyle = computed(() => ({
@@ -95,12 +94,11 @@ const handleElementLeave = () => {
 const setup = () => {
   // Device detection
   isMobile.value = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-  prefersReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   
   // Firefox detection
   const isFirefox = navigator.userAgent.toLowerCase().includes('firefox')
   
-  if (!props.enabled || isMobile.value || prefersReducedMotion.value) {
+  if (!props.enabled || isMobile.value) {
     return
   }
   
@@ -260,10 +258,4 @@ onUnmounted(() => {
   }
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .simple-cursor {
-    display: none;
-  }
-}
 </style>

@@ -1,15 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 
 export function useVisualEffects() {
-  const isReducedMotion = ref(false)
   const mousePosition = ref({ x: 0, y: 0 })
-  
-  // Détection des préférences de mouvement réduit
-  const checkReducedMotion = () => {
-    if (typeof window !== 'undefined') {
-      isReducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    }
-  }
   
   // Suivi de la position de la souris pour les effets magnétiques
   const updateMousePosition = (event: MouseEvent) => {
@@ -21,7 +13,6 @@ export function useVisualEffects() {
   
   // Effet magnétique pour les éléments
   const applyMagneticEffect = (element: HTMLElement, strength: number = 1) => {
-    if (isReducedMotion.value) return
     
     const handleMouseMove = (e: MouseEvent) => {
       const rect = element.getBoundingClientRect()
@@ -49,7 +40,6 @@ export function useVisualEffects() {
   
   // Effet de parallaxe amélioré
   const applyParallaxEffect = (elements: HTMLElement[], speeds: number[] = [0.5]) => {
-    if (isReducedMotion.value) return
     
     const handleScroll = () => {
       const scrolled = window.pageYOffset
@@ -70,7 +60,6 @@ export function useVisualEffects() {
   
   // Effet de morphing avancé
   const applyMorphingEffect = (element: HTMLElement) => {
-    if (isReducedMotion.value) return
     
     const handleMouseEnter = () => {
       element.style.borderRadius = '24px'
@@ -93,7 +82,6 @@ export function useVisualEffects() {
   
   // Effet de particules flottantes
   const createFloatingParticles = (container: HTMLElement, count: number = 10) => {
-    if (isReducedMotion.value) return
     
     const particles: HTMLElement[] = []
     
@@ -128,10 +116,6 @@ export function useVisualEffects() {
   
   // Animation de révélation en cascade
   const applyCascadeReveal = (elements: HTMLElement[], delay: number = 100) => {
-    if (isReducedMotion.value) {
-      elements.forEach(el => el.style.opacity = '1')
-      return
-    }
     
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -161,7 +145,6 @@ export function useVisualEffects() {
   
   // Effet de brillance sur survol
   const applyShineEffect = (element: HTMLElement) => {
-    if (isReducedMotion.value) return
     
     const shine = document.createElement('div')
     shine.className = 'shine-overlay'
@@ -210,12 +193,7 @@ export function useVisualEffects() {
   }
   
   onMounted(() => {
-    checkReducedMotion()
     window.addEventListener('mousemove', updateMousePosition, { passive: true })
-    
-    // Écouter les changements de préférences
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    mediaQuery.addEventListener('change', checkReducedMotion)
   })
   
   onUnmounted(() => {
@@ -223,7 +201,6 @@ export function useVisualEffects() {
   })
   
   return {
-    isReducedMotion,
     mousePosition,
     applyMagneticEffect,
     applyParallaxEffect,
