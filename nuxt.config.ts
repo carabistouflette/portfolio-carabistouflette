@@ -90,7 +90,8 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '~/assets/css/main.css'
+    '~/assets/css/main.css',
+    '~/assets/css/ai-fixes.css'
   ],
 
   tailwindcss: {
@@ -101,7 +102,7 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
-      routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
+      routes: ['/', '/projects', '/contact', '/ia', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
     }
   },
 
@@ -111,7 +112,8 @@ export default defineNuxtConfig({
       '~/components/layout',
       '~/components/home',
       '~/components/projects',
-      '~/components/contact'
+      '~/components/contact',
+      '~/components/ai'
     ],
     global: true
   },
@@ -128,7 +130,7 @@ export default defineNuxtConfig({
   sitemap: {
     hostname: process.env.NUXT_PUBLIC_SITE_URL || 'https://example.com',
     gzip: true,
-    routes: ['/', '/projects', '/contact', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
+    routes: ['/', '/projects', '/contact', '/ia', '/projects/train-game', '/projects/bulk-csv-smag', '/projects/voting-app']
   },
 
   runtimeConfig: { // Added runtime configuration

@@ -72,6 +72,12 @@ const navigationItems = [
     color: 'peach' as const
   },
   {
+    path: '/ia',
+    label: 'Et l\'IA?',
+    icon: 'heroicons:cpu-chip',
+    color: 'purple' as const
+  },
+  {
     path: '/github',
     label: 'GitHub',
     icon: 'mdi:github',

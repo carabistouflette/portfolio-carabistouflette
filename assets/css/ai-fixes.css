@@ -1,0 +1,244 @@
+/* AI Page Specific Fixes and Enhancements */
+
+/* Glitch effect for AI Hero title */
+@keyframes glitch {
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, -2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(2px, 2px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-2px, -2px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(2px, 2px);
+  }
+}
+
+.glitch {
+  position: relative;
+  animation: glitch-anim 3s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  animation: glitch 0.5s infinite;
+  color: #f38ba8;
+  z-index: -1;
+}
+
+.glitch::after {
+  animation: glitch 0.5s infinite reverse;
+  color: #89b4fa;
+  z-index: -2;
+}
+
+@keyframes glitch-anim {
+  0% {
+    text-shadow: 0.05em 0 0 #f38ba8, -0.05em -0.025em 0 #89b4fa,
+      0.025em 0.05em 0 #a6e3a1;
+  }
+  15% {
+    text-shadow: 0.05em 0 0 #f38ba8, -0.05em -0.025em 0 #89b4fa,
+      0.025em 0.05em 0 #a6e3a1;
+  }
+  16% {
+    text-shadow: -0.05em -0.025em 0 #f38ba8, 0.025em 0.025em 0 #89b4fa,
+      -0.05em -0.05em 0 #a6e3a1;
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 #f38ba8, 0.025em 0.025em 0 #89b4fa,
+      -0.05em -0.05em 0 #a6e3a1;
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 #f38ba8, 0.05em 0 0 #89b4fa,
+      0 -0.05em 0 #a6e3a1;
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 #f38ba8, 0.05em 0 0 #89b4fa,
+      0 -0.05em 0 #a6e3a1;
+  }
+  100% {
+    text-shadow: -0.025em 0 0 #f38ba8, -0.025em -0.025em 0 #89b4fa,
+      -0.025em -0.05em 0 #a6e3a1;
+  }
+}
+
+/* Floating animation for particles */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-20px) translateX(-5px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-10px) translateX(5px) rotate(5deg);
+  }
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulsing rings for philosophy section */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* Typing cursor */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s infinite;
+  color: #a6e3a1;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
+/* Code syntax highlighting colors */
+.code-keyword {
+  color: #cba6f7;
+}
+
+.code-string {
+  color: #a6e3a1;
+}
+
+.code-number {
+  color: #fab387;
+}
+
+.code-function {
+  color: #89b4fa;
+}
+
+.code-comment {
+  color: #6c7086;
+  font-style: italic;
+}
+
+/* Interactive neuron highlight */
+.neuron-active {
+  filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.8));
+  transform: scale(1.2);
+  transition: all 0.3s ease;
+}
+
+/* Chart hover effects */
+.chart-bar {
+  transition: all 0.3s ease;
+}
+
+.chart-bar:hover {
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
+
+/* Gradient text animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-text-animated {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Card hover glow effect */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(147, 51, 234, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* Neural network canvas fixes */
+canvas {
+  image-rendering: crisp-edges;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+}
+
+/* Smooth scroll for sections */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fix for motion-group animations */
+[data-motion-group] > * {
+  will-change: transform, opacity;
+}
